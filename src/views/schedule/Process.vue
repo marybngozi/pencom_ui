@@ -96,29 +96,32 @@
         <table v-for="(pfc, key, i) in items" :key="i" class="table">
           <thead class="thead-dark-blue">
             <tr>
-              <th scope="col">PFC</th>
-              <th scope="col">{{ key }}</th>
-              <th scope="col">Count</th>
-              <th scope="col">Amount</th>
+              <th style="width: 10%" scope="col">PFC</th>
+              <th style="width: 60%" scope="col">{{ key }}</th>
+              <th style="width: 5%" scope="col">Count</th>
+              <th style="width: 20%" cope="col">Amount</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(pfa, k) in pfc" :key="k">
-              <th scope="row"></th>
-              <td>{{ pfa.pfaName }}</td>
-              <td>{{ pfa.count }}</td>
-              <td>{{ pfa.amount | toCurrency }}</td>
+            <tr>
+              <th style="width: 10%" scope="col"></th>
+              <th style="width: 60%" scope="col">Grand Total</th>
+              <th style="width: 5%" scope="col"></th>
+              <th style="width: 20%" scope="col">
+                {{ grandTotal | toCurrency }}
+              </th>
             </tr>
           </tbody>
         </table>
 
         <table class="table">
-          <thead class="thead-dark-blue">
+          <tfoot class="thead-dark-blue">
             <tr>
               <th scope="col">Grand Total</th>
+              <th scope="col" colspan="2"></th>
               <th scope="col">{{ grandTotal | toCurrency }}</th>
             </tr>
-          </thead>
+          </tfoot>
         </table>
       </div>
     </div>

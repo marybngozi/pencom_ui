@@ -35,6 +35,10 @@
                   Company Code:
                   <b>{{ companyCode }}</b>
                 </p>
+                <p>
+                  Company Code:
+                  <b>{{ companyCode }}</b>
+                </p>
               </div>
 
               <div class="col-md-6 col-xs-12 text-right">
@@ -56,45 +60,40 @@
 
             <div class="row p-3 px-5">
               <div class="col-md-12">
-                <table class="table table-striped">
-                  <thead>
+                <table
+                  v-for="(pfc, key, i) in items"
+                  :key="i"
+                  class="table border"
+                >
+                  <thead class="">
                     <tr>
-                      <th
-                        class="border-0 text-uppercase small font-weight-bold"
-                      >
-                        Description
-                      </th>
-                      <th
-                        class="border-0 text-uppercase small font-weight-bold"
-                      >
-                        Pencom Category
-                      </th>
-                      <th
-                        class="border-0 text-uppercase small font-weight-bold"
-                      >
-                        Period
-                      </th>
-                      <th
-                        class="border-0 text-uppercase small font-weight-bold"
-                      >
-                        Amount
-                      </th>
-                      <th
-                        class="border-0 text-uppercase small font-weight-bold"
-                      >
-                        Paid
-                      </th>
+                      <th style="width: 10%" scope="col">PFC</th>
+                      <th style="width: 60%" scope="col">{{ key }}</th>
+                      <th style="width: 5%" scope="col">Count</th>
+                      <th style="width: 20%" cope="col">Amount</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Pencom Payment</td>
-                      <td>{{ itemName }}</td>
-                      <td>{{ month }}, {{ year }}</td>
-                      <td>{{ amount | toCurrency }}</td>
-                      <td>{{ paymentStatus == 0 ? "Not paid" : "Paid" }}</td>
+                    <tr v-for="(pfa, k) in pfc" :key="k">
+                      <th></th>
+                      <td>{{ pfa.pfaName }}</td>
+                      <td>{{ pfa.count }}</td>
+                      <td>{{ pfa.amount | toCurrency }}</td>
                     </tr>
                   </tbody>
+                </table>
+
+                <table class="table">
+                  <thead class="">
+                    <tr>
+                      <th style="width: 10%" scope="col"></th>
+                      <th style="width: 60%" scope="col">Grand Total</th>
+                      <th style="width: 5%" scope="col"></th>
+                      <th style="width: 20%" scope="col">
+                        {{ grandTotal | toCurrency }}
+                      </th>
+                    </tr>
+                  </thead>
                 </table>
               </div>
             </div>
@@ -174,6 +173,8 @@ export default {
       year: null,
       month: null,
       paymentStatus: null,
+      items: [],
+      grandTotal: 0,
     };
   },
 
@@ -188,7 +189,7 @@ export default {
       }
 
       // Generating QRcode for the route
-      const qText = `${location.origin}/${this.$route.fullPath}`;
+      const qText = `${location.origin}${this.$route.fullPath}`;
 
       // With promises
       this.qCode = await QRCode.toDataURL(qText);
@@ -205,6 +206,7 @@ export default {
       const { data } = res;
 
       const value = data.data;
+      this.items = data.items;
       this.companyCode = value.companyCode;
       this.companyName = value.companyName;
       this.itemName = value.itemName;
@@ -214,6 +216,28 @@ export default {
       this.paymentStatus = value.item.paymentStatus;
       this.invoiceNo = value.item.invoiceNo;
 
+      // get the totals
+      this.grandTotal = 0;
+      for (const key in this.items) {
+        if (Object.hasOwnProperty.call(this.items, key)) {
+          const pfc = this.items[key];
+
+          const total = pfc.reduce((a, obj) => {
+            return a + obj.amount;
+          }, 0);
+          const count = pfc.reduce((a, obj) => {
+            return a + obj.count;
+          }, 0);
+
+          pfc.push({
+            pfaName: "Total",
+            count: count,
+            amount: total,
+          });
+
+          this.grandTotal += total;
+        }
+      }
       this.showMandate = true;
     } catch (err) {
       console.log(err);

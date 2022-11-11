@@ -2,61 +2,36 @@
   <section class="dash rounded px-3 pb-5 pt-2">
     <div class="coln">
       <div class="form">
-        <h4 class="mb-4">List Processed Schedule</h4>
+        <h4 class="mb-4">List Contributions</h4>
 
-        <div class="mt-4">
-          <label for="itemCode"> Item </label>
-          <select
-            name="itemCode"
-            v-model="form.itemCode"
-            id="itemCode"
-            class="form-control"
-          >
-            <option :value="null">- select an Item -</option>
-            <option
-              v-for="item in allItems"
-              :value="item.itemCode"
-              :key="item.itemCode"
+        <div class="mt-3">
+          <label class="d-flex justify-content-between" for="dateStart">
+            <span> Date range (From) </span>
+            <span class="fs-8 text-info"
+              >Based on the date of contribution</span
             >
-              {{ item.itemName }}
-            </option>
-          </select>
+          </label>
+          <input
+            id="dateStart"
+            v-model="form.dateStart"
+            class="form-control input"
+            type="date"
+            placeholder="new password"
+          />
         </div>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="year">
-            <span> Year </span>
-            <span class="fs-8 text-info">As contained in the upload</span>
-          </label>
-          <select
-            name="year"
-            v-model="form.year"
-            id="year"
-            class="form-control"
-          >
-            <option :value="null">- select a year -</option>
-            <option v-for="year in years" :value="year" :key="year">
-              {{ year }}
-            </option>
-          </select>
-        </div>
-
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="month">
-            <span> Month </span>
-            <span class="fs-8 text-info">As contained in the upload</span>
-          </label>
-          <select
-            name="month"
-            v-model="form.month"
-            id="month"
-            class="form-control"
-          >
-            <option :value="null">- select a month -</option>
-            <option v-for="(month, i) in $months" :value="i" :key="i">
-              {{ month }}
-            </option>
-          </select>
+        <div class="mt-2">
+          <label for="dateEnd"> Date range (To) </label>
+          <input
+            id="dateEnd"
+            v-model="form.dateEnd"
+            class="form-control input"
+            type="date"
+            placeholder="repeat new password"
+          />
+          <small v-if="dateNotReady" class="text-danger">
+            Both dates should be provided or none
+          </small>
         </div>
 
         <button
@@ -64,7 +39,7 @@
           @click="getProcessedSchedule"
           class="btn mt-4 w-100 button"
         >
-          <span>Get Processed Schedule</span>
+          <span>Get Contributions</span>
           <span
             v-if="getting"
             class="spinner-border spinner-border-sm text-light ml-3"
@@ -89,7 +64,7 @@
           show-empty
         >
           <template #cell(itemCode)="data">
-            {{ getItem(data.value) }}
+            {{ data.item.item[0].itemName }}
           </template>
 
           <template #cell(createdAt)="data">
@@ -100,36 +75,13 @@
             {{ $months[data.item.month] }}, {{ data.item.year }}
           </template>
 
-          <template #cell(paymentStatus)="data">
+          <template #cell(paid)="data">
             <span v-if="data.value == 0">Not Paid</span>
             <span v-if="data.value == 1">Paid</span>
           </template>
 
           <template #cell(amount)="data">
             {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(action)="data">
-            <router-link
-              v-if="data.item.paymentStatus == 0"
-              class="btn btn-sm btn-primary mr-3"
-              :to="`make-payment/${data.item.invoiceNo}`"
-            >
-              Make Payment
-            </router-link>
-
-            <button
-              class="btn btn-sm btn-info mr-3"
-              @click="fetchItems([data.item.invoiceNo])"
-            >
-              Show Items
-            </button>
-            <router-link
-              class="btn btn-sm btn-info"
-              :to="`schedule-mandate/${data.item.invoiceNo}`"
-            >
-              View Mandate
-            </router-link>
           </template>
         </b-table>
 
@@ -202,7 +154,7 @@ import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 
 export default {
-  name: "ListProcessed",
+  name: "ListContribution",
   data() {
     return {
       getting: false,
@@ -212,9 +164,8 @@ export default {
       currentPageItem: 1,
       fetchedItems: [],
       form: {
-        itemCode: null,
-        year: null,
-        month: null,
+        dateStart: null,
+        dateEnd: null,
       },
       items: [],
       fields: [
@@ -227,7 +178,7 @@ export default {
           label: "Period",
         },
         {
-          key: "paymentStatus",
+          key: "paid",
           label: "Payment Status",
         },
         {
@@ -237,10 +188,6 @@ export default {
         {
           key: "createdAt",
           label: "Uploaded",
-        },
-        {
-          key: "action",
-          label: "Actions",
         },
       ],
       fieldsItem: [
@@ -266,15 +213,12 @@ export default {
   async beforeCreate() {
     try {
       this.getting = true;
-
-      const api = "schedule/list-processed";
+      const api = "schedule/get-contribution";
       const res = await secureAxios.post(api, this.form);
-
       this.getting = false;
       if (!res) {
         return;
       }
-
       const { data } = res;
       this.items = data.data;
     } catch (err) {
@@ -295,8 +239,14 @@ export default {
     rows() {
       return this.items.length;
     },
-    rowsItem() {
-      return this.fetchedItems.length;
+    getReady() {
+      return this.form.itemCode && !this.dateNotReady;
+    },
+    dateNotReady() {
+      return (
+        (this.form.dateStart && !this.form.dateEnd) ||
+        (!this.form.dateStart && this.form.dateEnd)
+      );
     },
   },
 

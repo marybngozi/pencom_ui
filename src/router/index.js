@@ -212,6 +212,17 @@ const routes = [
           free: true,
         },
       },
+      {
+        path: "/list-transaction",
+        component: () =>
+          import(
+            /* webpackChunkName: "account" */ "../views/staff/ListTransaction.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+          free: false,
+        },
+      },
     ],
   },
   {

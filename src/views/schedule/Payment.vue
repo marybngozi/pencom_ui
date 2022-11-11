@@ -26,7 +26,7 @@
             <p class="bg-light py-3 px-4">
               Month:
               <span class="font-weight-bold">
-                {{ paymentDetails.month }}
+                {{ $months[paymentDetails.month] }}
               </span>
             </p>
           </div>
