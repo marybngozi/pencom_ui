@@ -1,11 +1,11 @@
 <template>
-  <div class="about">
+  <div class="">
     <section
       id="moreInfo"
-      class="d-flex flex-column justify-content-center align-iteml-center"
+      class="d-flex flex-column justify-content-center align-items-center"
     >
       <p
-        v-if="!verifyError && !verified"
+        v-if="verifying && !verifyError && !verified"
         class="text-center fw-bold text-secondary"
       >
         <span class="spinner-border" style="width: 4rem; height: 4rem"></span>
@@ -49,46 +49,50 @@ export default {
 
   data() {
     return {
+      verifying: false,
       verifyError: false,
       verified: false,
     };
   },
 
-  mounted() {
+  async beforeCreate() {
     if (!this.$route.params.token) {
       this.$router.push({ path: "/" });
     }
     const token = this.$route.params.token;
 
-    const api = "auth/verify";
+    try {
+      this.verifying = true;
+      const api = "auth/verify";
 
-    // verify token
-    guestAxios
-      .post(api, {
+      // verify token
+      const res = await guestAxios.post(api, {
         token: token,
-      })
-      .then((res) => {
-        if (res.response && res.response.status == 404) {
-          // show the error message
-          this.verifyError = true;
-        } else {
-          this.verified = true;
-          this.$swal({
-            icon: "success",
-            text: "Your account have been successfully verified!",
-            allowOutsideClick: false,
-            confirmButtonText: "Proceed",
-          }).then((res) => {
-            if (res.isConfirmed) {
-              this.$router.push({ path: "/" });
-              return;
-            }
-          });
-        }
       });
+
+      if (!res) {
+        this.verifyError = true;
+        return;
+      }
+      this.verified = true;
+      this.verifying = false;
+      this.$router.push({ path: "/" });
+
+      this.$swal({
+        icon: "success",
+        text: res.data.message,
+      });
+    } catch (err) {
+      console.log(err);
+      this.verifying = false;
+      this.$router.push({ path: "/" });
+    }
   },
 };
 </script>
 <style scoped>
 @import "../assets/css/guest.css";
+#moreInfo {
+  height: 60vh;
+}
 </style>
