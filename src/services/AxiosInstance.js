@@ -42,7 +42,9 @@ secureAxios.interceptors.response.use(
       return false;
     }
 
-    const error_message = err.response.data.message;
+    const error_message = err.response.data.message
+      ? err.response.data.message
+      : err.response.data.errors.message;
 
     Swal.fire({
       title: "Error!",
