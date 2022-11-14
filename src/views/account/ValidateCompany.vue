@@ -3,73 +3,83 @@
     <div class="coln">
       <h4 class="mb-4">Validate Company Code</h4>
 
-      <div v-if="stage == 1" class="form">
-        <div class="mt-3">
-          <label for="companyCode">
-            <span class="text-danger">*</span>
-            Company Code
-          </label>
-          <input
-            id="companyCode"
-            v-model="form1.companyCode"
-            class="form-control input"
-            type="text"
-            placeholder="company code"
-          />
-        </div>
+      <div v-if="!companyCode">
+        <div v-if="stage == 1" class="form">
+          <div class="mt-3">
+            <label for="companyCode">
+              <span class="text-danger">*</span>
+              Company Code
+            </label>
+            <input
+              id="companyCode"
+              v-model="form1.companyCode"
+              class="form-control input"
+              type="text"
+              placeholder="company code"
+            />
+          </div>
 
-        <button
-          :disabled="!checkReady || checking"
-          @click="checkCompanyCode"
-          class="btn mt-4 w-100 button"
-        >
-          <span>Check code</span>
-          <span
-            v-if="checking"
-            class="spinner-border spinner-border-sm text-light ml-3"
-            role="status"
-          ></span>
-        </button>
-      </div>
-
-      <div v-if="stage == 2" class="form">
-        <div class="mt-3">
-          <label for="token">
-            <span class="text-danger">*</span>
-            Enter Token
-          </label>
-          <input
-            id="token"
-            v-model="form2.token"
-            class="form-control input"
-            type="text"
-            placeholder="enter token"
-          />
-        </div>
-
-        <div class="d-flex justify-content-end">
-          <button class="btn fs-9 btn-link" @click="resendToken">
-            Resend Token
+          <button
+            :disabled="!checkReady || checking"
+            @click="checkCompanyCode"
+            class="btn mt-4 w-100 button"
+          >
+            <span>Check code</span>
+            <span
+              v-if="checking"
+              class="spinner-border spinner-border-sm text-light ml-3"
+              role="status"
+            ></span>
           </button>
         </div>
 
-        <button
-          :disabled="!tokenReady || verifying"
-          @click="checkToken"
-          class="btn mt-4 w-100 button"
-        >
-          <span>Verify Token</span>
-          <span
-            v-if="verifying"
-            class="spinner-border spinner-border-sm text-light ml-3"
-            role="status"
-          ></span>
-        </button>
+        <div v-if="stage == 2" class="form">
+          <div class="mt-3">
+            <label for="token">
+              <span class="text-danger">*</span>
+              Enter Token
+            </label>
+            <input
+              id="token"
+              v-model="form2.token"
+              class="form-control input"
+              type="text"
+              placeholder="enter token"
+            />
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button class="btn fs-9 btn-link" @click="resendToken">
+              Resend Token
+            </button>
+          </div>
+
+          <button
+            :disabled="!tokenReady || verifying"
+            @click="checkToken"
+            class="btn mt-4 w-100 button"
+          >
+            <span>Verify Token</span>
+            <span
+              v-if="verifying"
+              class="spinner-border spinner-border-sm text-light ml-3"
+              role="status"
+            ></span>
+          </button>
+        </div>
+      </div>
+
+      <div v-else class="form">
+        <div class="alert alert-success d-flex justify-content-between">
+          <span>Company Validated</span>
+          <i class="fa fa-check"></i>
+        </div>
       </div>
     </div>
   </section>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 
 export default {
@@ -88,6 +98,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["companyCode"]),
+
     checkReady() {
       return !!this.form1.companyCode;
     },
@@ -97,6 +109,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["setCompanyCode"]),
+
     async checkCompanyCode() {
       if (!this.checkReady) {
         this.$swal({
@@ -195,6 +209,7 @@ export default {
         });
 
         // go to dashboard
+        this.setCompanyCode();
         this.$router.push("/app");
       } catch (err) {
         console.log(err);

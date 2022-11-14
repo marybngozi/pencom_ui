@@ -103,13 +103,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th style="width: 10%" scope="col"></th>
-              <th style="width: 60%" scope="col">Grand Total</th>
-              <th style="width: 5%" scope="col"></th>
-              <th style="width: 20%" scope="col">
-                {{ grandTotal | toCurrency }}
-              </th>
+            <tr v-for="(pfa, k) in pfc" :key="k">
+              <th></th>
+              <td style="width: 10%" scope="col">{{ pfa.pfaName }}</td>
+              <td style="width: 10%" scope="col">{{ pfa.count }}</td>
+              <td style="width: 10%" scope="col">
+                {{ pfa.amount | toCurrency }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -190,6 +190,14 @@ export default {
         }
 
         const { data } = res;
+
+        if (!data.data.data.length) {
+          this.$swal({
+            icon: "error",
+            text: "No record found",
+          });
+          return;
+        }
 
         this.items = data.data.summary;
         this.scheduleItems = data.data.data;

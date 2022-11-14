@@ -63,6 +63,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setCompanyCode(state, companyCode) {
+      state.user.companyCode = companyCode;
+    },
     saveUser(state, user) {
       state.user = user;
     },
