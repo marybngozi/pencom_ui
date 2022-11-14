@@ -116,9 +116,15 @@
           <template #cell(action)="data">
             <button
               class="btn btn-sm btn-primary mr-2"
-              @click="getItems([data.item._id])"
+              @click="getItems(data.item._id)"
             >
               View Schedules
+            </button>
+            <button
+              class="btn btn-sm btn-info mr-2"
+              @click="downloadFile(data.item._id)"
+            >
+              Download
             </button>
             <button
               class="btn btn-sm btn-danger"
@@ -149,12 +155,15 @@
         scrollable
         :cancel-disabled="true"
         title="Schedule Items"
+        class=""
       >
+        <!-- centered -->
         <b-table
           id="item-table"
           :fields="fieldsItem"
           outlined
           small
+          responsive
           striped
           :busy="fetching"
           hover
@@ -167,7 +176,27 @@
             {{ data.value | moment("DD-MM-YYYY") }}
           </template>
 
+          <template #cell(pfaCode)="data">
+            {{ data.item.pfa[0].pfaName }}
+          </template>
+
           <template #cell(amount)="data">
+            {{ data.value | toCurrency }}
+          </template>
+
+          <template #cell(employeeNormalContribution)="data">
+            {{ data.value | toCurrency }}
+          </template>
+
+          <template #cell(employerNormalContribution)="data">
+            {{ data.value | toCurrency }}
+          </template>
+
+          <template #cell(employeeVoluntaryContribution)="data">
+            {{ data.value | toCurrency }}
+          </template>
+
+          <template #cell(employerVoluntaryContribution)="data">
             {{ data.value | toCurrency }}
           </template>
 
@@ -201,6 +230,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
+import exportFromJSON from "export-from-json";
 
 export default {
   name: "ListSchdeule",
@@ -253,6 +283,26 @@ export default {
           label: "RSA PIN",
         },
         {
+          key: "pfaCode",
+          label: "PFA",
+        },
+        {
+          key: "employeeNormalContribution",
+          label: "Employee Normal Contribution",
+        },
+        {
+          key: "employerNormalContribution",
+          label: "Employer Normal Contribution",
+        },
+        {
+          key: "employeeVoluntaryContribution",
+          label: "Employee Voluntary Contribution",
+        },
+        {
+          key: "employerVoluntaryContribution",
+          label: "Employer Voluntary Contribution",
+        },
+        {
           key: "amount",
           label: "Total Amount",
         },
@@ -288,6 +338,40 @@ export default {
   },
 
   methods: {
+    async downloadFile(uploadBatchId) {
+      this.fetchedItems = await this.fetchItems(uploadBatchId);
+
+      const fileName = "Schedule Upload";
+      const exportType = exportFromJSON.types.csv;
+
+      if (this.fetchedItems.length) {
+        exportFromJSON({
+          data: this.formatTableData(this.fetchedItems),
+          fileName,
+          exportType,
+        });
+      }
+    },
+
+    formatTableData(data) {
+      return data.map((d) => {
+        const vd = {
+          "STAFF ID": d.staffId,
+          "RSA PIN": d.rsaPin,
+          AMOUNT: d.amount,
+          "STAFF NAME": `${d.firstName} ${d.lastName}`,
+          "EMPLOYEE NORMAL CONTRIBUTION": d.employeeNormalContribution,
+          "EMPLOYER NORMAL CONTRIBUTION": d.employerNormalContribution,
+          "EMPLOYEE VOLUNTARY CONTRIBUTION": d.employeeVoluntaryContribution,
+          "EMPLOYER VOLUNTARY CONTRIBUTION": d.employerVoluntaryContribution,
+          MONTH: this.$months[d.month],
+          YEAR: d.year,
+          PFA: d.pfa[0].pfaName,
+        };
+        return vd;
+      });
+    },
+
     async getBatches() {
       if (!this.getReady) {
         this.$swal({
