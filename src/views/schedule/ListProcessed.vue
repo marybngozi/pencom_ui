@@ -110,25 +110,33 @@
           </template>
 
           <template #cell(action)="data">
-            <router-link
-              v-if="data.item.paymentStatus == 0"
-              class="btn btn-sm btn-primary mr-3"
-              :to="`make-payment/${data.item.invoiceNo}`"
-            >
-              Make Payment
-            </router-link>
-
             <button
-              class="btn btn-sm btn-info mr-3"
-              @click="fetchItems([data.item.invoiceNo])"
+              class="btn btn-sm btn-info m-1"
+              @click="fetchItems(data.item.invoiceNo)"
             >
               Show Items
             </button>
+
+            <button
+              class="btn btn-sm btn-secondary m-1"
+              @click="downloadItems(data.item.invoiceNo)"
+            >
+              Download
+            </button>
+
             <router-link
-              class="btn btn-sm btn-info"
+              class="btn btn-sm btn-info m-1"
               :to="`schedule-mandate/${data.item.invoiceNo}`"
             >
-              View Mandate
+              Mandate
+            </router-link>
+
+            <router-link
+              v-if="data.item.paymentStatus == 0"
+              class="btn btn-sm btn-primary m-1"
+              :to="`make-payment/${data.item.invoiceNo}`"
+            >
+              Make Payment
             </router-link>
           </template>
         </b-table>
@@ -159,6 +167,7 @@
           :fields="fieldsItem"
           outlined
           small
+          responsive
           striped
           :busy="fetching"
           hover
@@ -167,6 +176,14 @@
           :current-page="currentPageItem"
           show-empty
         >
+          <template #cell(pfc)="data">
+            {{ data.value.pfcName }}
+          </template>
+
+          <template #cell(pfa)="data">
+            {{ data.value.pfaName }}
+          </template>
+
           <template #cell(createdAt)="data">
             {{ data.value | moment("DD-MM-YYYY") }}
           </template>
@@ -176,11 +193,27 @@
           </template>
 
           <template #cell(rsaPin)="data">
-            {{ data.item.id.rsaPin }}
+            {{ data.item.item.rsaPin }}
+          </template>
+
+          <template #cell(employeeNormalContribution)="data">
+            {{ data.item.item.employeeNormalContribution | toCurrency }}
+          </template>
+
+          <template #cell(employerNormalContribution)="data">
+            {{ data.item.item.employerNormalContribution | toCurrency }}
+          </template>
+
+          <template #cell(employeeVoluntaryContribution)="data">
+            {{ data.item.item.employeeVoluntaryContribution | toCurrency }}
+          </template>
+
+          <template #cell(employerVoluntaryContribution)="data">
+            {{ data.item.item.employerVoluntaryContribution | toCurrency }}
           </template>
 
           <template #cell(staffName)="data">
-            {{ data.item.id.firstName }} {{ data.item.id.lastName }}
+            {{ data.item.item.firstName }} {{ data.item.item.lastName }}
           </template>
         </b-table>
 
@@ -227,6 +260,10 @@ export default {
           label: "Period",
         },
         {
+          key: "invoiceNo",
+          label: "Invoice No",
+        },
+        {
           key: "paymentStatus",
           label: "Payment Status",
         },
@@ -245,6 +282,14 @@ export default {
       ],
       fieldsItem: [
         {
+          key: "pfc",
+          label: "PFC",
+        },
+        {
+          key: "pfa",
+          label: "PFA",
+        },
+        {
           key: "staffName",
           label: "Staff Name",
         },
@@ -255,6 +300,22 @@ export default {
         {
           key: "amount",
           label: "Total Amount",
+        },
+        {
+          key: "employeeNormalContribution",
+          label: "Employee Normal Contribution",
+        },
+        {
+          key: "employerNormalContribution",
+          label: "Employer Normal Contribution",
+        },
+        {
+          key: "employeeVoluntaryContribution",
+          label: "Employee Voluntary Contribution",
+        },
+        {
+          key: "employerVoluntaryContribution",
+          label: "Employer Voluntary Contribution",
         },
         {
           key: "createdAt",
@@ -343,6 +404,39 @@ export default {
 
         this.fetchedItems = data.data;
         this.$bvModal.show("show-items");
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
+    },
+
+    async downloadItems(invoiceNo) {
+      try {
+        this.fetching = true;
+
+        const api = "schedule/download-processed-items";
+
+        const res = await secureAxios.post(
+          api,
+          { invoiceNo },
+          { responseType: "blob" }
+        );
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const fileURL = window.URL.createObjectURL(
+          new Blob([res.data], { type: "application/vnd.ms-excel" })
+        );
+        const fileLink = document.createElement("a");
+
+        fileLink.href = fileURL;
+        fileLink.setAttribute("download", "Processed_schedule.xlsx");
+        document.body.appendChild(fileLink);
+
+        fileLink.click();
       } catch (err) {
         console.log(err);
         this.fetching = false;

@@ -31,13 +31,13 @@
                 <p class="mb-1">
                   Name: <b>{{ companyName }}</b>
                 </p>
-                <p>
+                <p class="mb-1">
                   Company Code:
                   <b>{{ companyCode }}</b>
                 </p>
                 <p>
-                  Company Code:
-                  <b>{{ companyCode }}</b>
+                  Period:
+                  <b>{{ this.month }}, {{ this.year }}</b>
                 </p>
               </div>
 
@@ -60,31 +60,35 @@
 
             <div class="row p-3 px-5">
               <div class="col-md-12">
-                <table
-                  v-for="(pfc, key, i) in items"
-                  :key="i"
-                  class="table border"
-                >
-                  <thead class="">
-                    <tr>
-                      <th style="width: 10%" scope="col">PFC</th>
-                      <th style="width: 60%" scope="col">{{ key }}</th>
-                      <th style="width: 5%" scope="col">Count</th>
-                      <th style="width: 20%" cope="col">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(pfa, k) in pfc" :key="k">
-                      <th></th>
-                      <td>{{ pfa.pfaName }}</td>
-                      <td>{{ pfa.count }}</td>
-                      <td>{{ pfa.amount | toCurrency }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <table class="table border">
+                  <template v-for="(pfc, i) in items">
+                    <thead class="" :key="pfc._id">
+                      <tr>
+                        <th style="width: 10%" scope="col">PFC</th>
+                        <th style="width: 60%" scope="col">
+                          {{ pfc.pfc }}
+                        </th>
+                        <th style="width: 5%" scope="col">Count</th>
+                        <th style="width: 20%" cope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody :key="i">
+                      <tr v-for="(pfa, k) in pfc.pfas" :key="k">
+                        <th></th>
+                        <td>{{ pfa.pfa }}</td>
+                        <td>{{ pfa.itemCount }}</td>
+                        <td>{{ pfa.pfaAmount | toCurrency }}</td>
+                      </tr>
+                      <tr>
+                        <th>Total</th>
+                        <td></td>
+                        <td>{{ pfc.itemCount }}</td>
+                        <td>{{ pfc.pfcAmount | toCurrency }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
 
-                <table class="table">
-                  <thead class="">
+                  <tfoot>
                     <tr>
                       <th style="width: 10%" scope="col"></th>
                       <th style="width: 60%" scope="col">Grand Total</th>
@@ -93,7 +97,7 @@
                         {{ grandTotal | toCurrency }}
                       </th>
                     </tr>
-                  </thead>
+                  </tfoot>
                 </table>
               </div>
             </div>
@@ -110,7 +114,7 @@
                     <h5 class="">Note to Agent</h5>
                     <span>
                       Proceed to any Bank to make Payment to fund your wallet.
-                      Mandate also sent to email ({{ userEmail }})
+                      Mandate also sent to email
                     </span>
                   </div>
                   <div class="mt-5">
@@ -210,34 +214,50 @@ export default {
       this.companyCode = value.companyCode;
       this.companyName = value.companyName;
       this.itemName = value.itemName;
-      this.amount = value.item.amount;
-      this.month = value.item.month;
-      this.year = value.item.year;
-      this.paymentStatus = value.item.paymentStatus;
-      this.invoiceNo = value.item.invoiceNo;
+      this.amount = this.items[0].invoiceAmount;
+      this.month = this.$months[this.items[0].month];
+      this.year = this.items[0].year;
+      this.paymentStatus = this.items[0].paymentStatus;
+      this.invoiceNo = this.items[0].invoiceNo;
 
       // get the totals
-      this.grandTotal = 0;
-      for (const key in this.items) {
-        if (Object.hasOwnProperty.call(this.items, key)) {
-          const pfc = this.items[key];
+      this.grandTotal = this.items[0].invoiceAmount;
+      // for (const pfc of this.items) {
+      //   const total = pfc.reduce((a, obj) => {
+      //     return a + obj.amount;
+      //   }, 0);
+      //   const count = pfc.reduce((a, obj) => {
+      //     return a + obj.count;
+      //   }, 0);
 
-          const total = pfc.reduce((a, obj) => {
-            return a + obj.amount;
-          }, 0);
-          const count = pfc.reduce((a, obj) => {
-            return a + obj.count;
-          }, 0);
+      //   pfc.push({
+      //     pfaName: "Total",
+      //     count: count,
+      //     amount: total,
+      //   });
 
-          pfc.push({
-            pfaName: "Total",
-            count: count,
-            amount: total,
-          });
+      //   this.grandTotal += total;
+      // }
+      // for (const key in this.items) {
+      //   if (Object.hasOwnProperty.call(this.items, key)) {
+      //     const pfc = this.items[key];
 
-          this.grandTotal += total;
-        }
-      }
+      //     const total = pfc.reduce((a, obj) => {
+      //       return a + obj.amount;
+      //     }, 0);
+      //     const count = pfc.reduce((a, obj) => {
+      //       return a + obj.count;
+      //     }, 0);
+
+      //     pfc.push({
+      //       pfaName: "Total",
+      //       count: count,
+      //       amount: total,
+      //     });
+
+      //     this.grandTotal += total;
+      //   }
+      // }
       this.showMandate = true;
     } catch (err) {
       console.log(err);

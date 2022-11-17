@@ -87,7 +87,7 @@
       </div>
 
       <!-- Batch list table -->
-      <div v-if="items.length" class="mt-5 mb-4">
+      <div v-if="fetched" class="mt-5 mb-4">
         <b-table
           id="my-table"
           :fields="fields"
@@ -101,6 +101,9 @@
           :current-page="currentPage"
           show-empty
         >
+          <template #empty>
+            <center>No records found</center>
+          </template>
           <template #cell(createdAt)="data">
             {{ data.value | moment("DD-MM-YYYY") }}
           </template>
@@ -239,6 +242,7 @@ export default {
       getting: false,
       deleting: false,
       fetching: false,
+      fetched: false,
       deleteBatch: false,
       perPage: 10,
       currentPage: 1,
@@ -383,17 +387,19 @@ export default {
 
       try {
         this.getting = true;
+        this.fetched = false;
 
         const api = "schedule/list-batch";
         const res = await secureAxios.post(api, this.form);
 
         this.getting = false;
+        this.fetched = true;
         if (!res) {
           return;
         }
 
         const { data } = res;
-
+        // console.log({ res });
         this.items = data.data;
       } catch (err) {
         console.log(err);

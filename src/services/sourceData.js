@@ -28,12 +28,11 @@ export const downloader = async (filePath) => {
     if (!res) {
       return;
     }
-    console.log(res);
 
-    var fileURL = window.URL.createObjectURL(
+    const fileURL = window.URL.createObjectURL(
       new Blob([res.data], { type: "application/vnd.ms-excel" })
     );
-    var fileLink = document.createElement("a");
+    const fileLink = document.createElement("a");
 
     fileLink.href = fileURL;
     console.log(filePath);
