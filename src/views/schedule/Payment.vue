@@ -113,10 +113,9 @@
             >
               <span class="text-info font-weight-bold">Web Payment</span>
               <br /><br />
-              <small class="text-black-50"
-                >Your payment will be Booked<br />You should go to the bank and
-                make payment using your Invoice number</small
-              >
+              <small class="text-black-50">
+                Click to Pay using Quickteller, Bank Transfer, Card or USSD
+              </small>
             </button>
           </div>
 
