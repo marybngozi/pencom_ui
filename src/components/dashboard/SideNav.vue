@@ -10,7 +10,12 @@
           alt="user image"
         />
         <div class="ml-3">
-          <h6 class="text-white m-0 mt-1">{{ username }}</h6>
+          <h6
+            :title="username"
+            class="text-white m-0 mt-1 d-inline-block text-truncate"
+          >
+            {{ username }}
+          </h6>
           <small class="">{{ userEmail }}</small>
         </div>
       </div>
@@ -137,7 +142,8 @@ button:hover {
   box-shadow: none;
 }
 #sideNav h6 {
-  line-height: 10px;
+  width: 80%;
+  line-height: 15px;
 }
 #sideNav small {
   color: #bfb8b8;

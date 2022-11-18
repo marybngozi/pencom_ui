@@ -38,7 +38,7 @@
               v-model="form.dateStart"
               class="form-control input"
               type="date"
-              placeholder="new password"
+              placeholder="dd/mm/yyyy"
             />
           </div>
 
@@ -49,7 +49,7 @@
               v-model="form.dateEnd"
               class="form-control input"
               type="date"
-              placeholder="repeat new password"
+              placeholder="dd/mm/yyyy"
             />
             <small v-if="dateNotReady" class="text-danger">
               Both dates should be provided or none

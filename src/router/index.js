@@ -223,6 +223,28 @@ const routes = [
           free: false,
         },
       },
+      {
+        path: "/view-contribution",
+        component: () =>
+          import(
+            /* webpackChunkName: "account" */ "../views/pfa/ListContribution.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+          free: false,
+        },
+      },
+      {
+        path: "/create-subadmin",
+        component: () =>
+          import(
+            /* webpackChunkName: "account" */ "../views/pfa/CreateSubadmin.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+          free: false,
+        },
+      },
     ],
   },
   {
