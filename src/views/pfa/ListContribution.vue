@@ -80,8 +80,8 @@
           :current-page="currentPage"
           show-empty
         >
-          <template #cell(itemCode)="data">
-            {{ getItem(data.value) }}
+          <template #cell(pfaName)="data">
+            {{ data.value }}
           </template>
 
           <template #cell(createdAt)="data">
@@ -92,11 +92,6 @@
             {{ $months[data.item.month] }}, {{ data.item.year }}
           </template>
 
-          <template #cell(paymentStatus)="data">
-            <span v-if="data.value == 0">Not Paid</span>
-            <span v-if="data.value == 1">Paid</span>
-          </template>
-
           <template #cell(amount)="data">
             {{ data.value | toCurrency }}
           </template>
@@ -104,32 +99,28 @@
           <template #cell(action)="data">
             <button
               class="btn btn-sm btn-info m-1"
-              @click="fetchItems(data.item.invoiceNo)"
+              @click="fetchItems(data.item.pfaCode, data.item.batchId)"
             >
               Show Items
             </button>
 
             <button
+              disabled
               class="btn btn-sm btn-secondary m-1"
               @click="downloadItems(data.item.invoiceNo)"
             >
               Download
             </button>
 
-            <router-link
+            <button
+              v-b-tooltip.hover
+              title="Transmit transaction to the PFA"
               class="btn btn-sm btn-info m-1"
-              :to="`schedule-mandate/${data.item.invoiceNo}`"
+              @click="downloadItems(data.item.invoiceNo)"
+              disabled
             >
-              Mandate
-            </router-link>
-
-            <router-link
-              v-if="data.item.paymentStatus == 0"
-              class="btn btn-sm btn-primary m-1"
-              :to="`make-payment/${data.item.invoiceNo}`"
-            >
-              Make Payment
-            </router-link>
+              Transmit
+            </button>
           </template>
         </b-table>
 
@@ -177,35 +168,35 @@
           </template>
 
           <template #cell(createdAt)="data">
-            {{ data.value | moment("DD-MM-YYYY") }}
+            {{ data.item.schedule.createdAt | moment("DD-MM-YYYY") }}
           </template>
 
           <template #cell(amount)="data">
-            {{ data.value | toCurrency }}
+            {{ data.item.schedule.amount | toCurrency }}
           </template>
 
           <template #cell(rsaPin)="data">
-            {{ data.item.item.rsaPin }}
+            {{ data.item.schedule.rsaPin }}
           </template>
 
           <template #cell(employeeNormalContribution)="data">
-            {{ data.item.item.employeeNormalContribution | toCurrency }}
+            {{ data.item.schedule.employeeNormalContribution | toCurrency }}
           </template>
 
           <template #cell(employerNormalContribution)="data">
-            {{ data.item.item.employerNormalContribution | toCurrency }}
+            {{ data.item.schedule.employerNormalContribution | toCurrency }}
           </template>
 
           <template #cell(employeeVoluntaryContribution)="data">
-            {{ data.item.item.employeeVoluntaryContribution | toCurrency }}
+            {{ data.item.schedule.employeeVoluntaryContribution | toCurrency }}
           </template>
 
           <template #cell(employerVoluntaryContribution)="data">
-            {{ data.item.item.employerVoluntaryContribution | toCurrency }}
+            {{ data.item.schedule.employerVoluntaryContribution | toCurrency }}
           </template>
 
           <template #cell(staffName)="data">
-            {{ data.item.item.firstName }} {{ data.item.item.lastName }}
+            {{ data.item.schedule.firstName }} {{ data.item.schedule.lastName }}
           </template>
         </b-table>
 
@@ -244,20 +235,20 @@ export default {
       items: [],
       fields: [
         {
-          key: "itemCode",
-          label: "Item",
+          key: "pfaName",
+          label: "PFA",
+        },
+        {
+          key: "companyName",
+          label: "Company",
         },
         {
           key: "period",
           label: "Period",
         },
         {
-          key: "invoiceNo",
-          label: "Invoice No",
-        },
-        {
-          key: "paymentStatus",
-          label: "Payment Status",
+          key: "itemCount",
+          label: "Count",
         },
         {
           key: "amount",
@@ -265,7 +256,7 @@ export default {
         },
         {
           key: "createdAt",
-          label: "Uploaded",
+          label: "Date",
         },
         {
           key: "action",
@@ -273,10 +264,6 @@ export default {
         },
       ],
       fieldsItem: [
-        {
-          key: "pfc",
-          label: "PFC",
-        },
         {
           key: "pfa",
           label: "PFA",
@@ -387,13 +374,13 @@ export default {
       }
     },
 
-    async fetchItems(invoiceNo) {
+    async fetchItems(pfaCode, batchId) {
       try {
         this.fetching = true;
 
         const api = "payment/get-item-contribution";
 
-        const res = await secureAxios.post(api, { invoiceNo });
+        const res = await secureAxios.post(api, { pfaCode, batchId });
 
         this.fetching = false;
         if (!res) {
