@@ -70,7 +70,7 @@
           </button>
         </div>
 
-        <div class="w-40 d-flex align-items-center">
+        <div class="w-40 mt-5">
           <div class="alert alert-info" role="alert">
             <h5 class="">View uploaded schedules</h5>
             <ul>
@@ -131,7 +131,7 @@
             </button>
             <button
               class="btn btn-sm btn-danger"
-              @click="deleteSchedule([data.item._id])"
+              @click="deleteSchedule(data.item.uploadBatchId)"
             >
               Delete
             </button>
@@ -163,14 +163,17 @@
         <!-- centered -->
         <b-table
           id="item-table"
+          ref="table"
+          :key="key"
           :fields="fieldsItem"
+          sticky-header="600px"
           outlined
           small
           responsive
           striped
           :busy="fetching"
           hover
-          :items="fetchedItems"
+          :items="fetchItems"
           :per-page="perPage"
           :current-page="currentPageItem"
           show-empty
@@ -180,7 +183,7 @@
           </template>
 
           <template #cell(pfaCode)="data">
-            {{ data.item.pfa[0].pfaName }}
+            {{ data.item.pfa.pfaName }}
           </template>
 
           <template #cell(amount)="data">
@@ -226,6 +229,11 @@
           limit="10"
         >
         </b-pagination>
+
+        <template #modal-footer="{ ok }">
+          <!-- Emulate built in modal footer ok and cancel button actions -->
+          <b-button variant="info" @click="ok()"> OK </b-button>
+        </template>
       </b-modal>
     </div>
   </section>
@@ -233,7 +241,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
-import exportFromJSON from "export-from-json";
+// import exportFromJSON from "export-from-json";
 
 export default {
   name: "ListSchdeule",
@@ -245,6 +253,9 @@ export default {
       fetched: false,
       deleteBatch: false,
       perPage: 10,
+      uploadBatchId: null,
+      rowsItem: 0,
+      key: 1,
       currentPage: 1,
       currentPageItem: 1,
       fetchedItems: [],
@@ -327,9 +338,6 @@ export default {
     rows() {
       return this.items.length;
     },
-    rowsItem() {
-      return this.fetchItems.length;
-    },
     getReady() {
       return this.form.itemCode && !this.dateNotReady;
     },
@@ -343,17 +351,35 @@ export default {
 
   methods: {
     async downloadFile(uploadBatchId) {
-      this.fetchedItems = await this.fetchItems(uploadBatchId);
+      try {
+        this.fetching = true;
 
-      const fileName = "Schedule Upload";
-      const exportType = exportFromJSON.types.csv;
+        const api = "schedule/download-uploaded-items";
 
-      if (this.fetchedItems.length) {
-        exportFromJSON({
-          data: this.formatTableData(this.fetchedItems),
-          fileName,
-          exportType,
-        });
+        const res = await secureAxios.post(
+          api,
+          { uploadBatchId },
+          { responseType: "blob" }
+        );
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const fileURL = window.URL.createObjectURL(
+          new Blob([res.data], { type: "application/vnd.ms-excel" })
+        );
+        const fileLink = document.createElement("a");
+
+        fileLink.href = fileURL;
+        fileLink.setAttribute("download", "Uploaded_schedule.xlsx");
+        document.body.appendChild(fileLink);
+
+        fileLink.click();
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
       }
     },
 
@@ -370,7 +396,7 @@ export default {
           "EMPLOYER VOLUNTARY CONTRIBUTION": d.employerVoluntaryContribution,
           MONTH: this.$months[d.month],
           YEAR: d.year,
-          PFA: d.pfa[0].pfaName,
+          PFA: d.pfa.pfaName,
         };
         return vd;
       });
@@ -407,51 +433,82 @@ export default {
       }
     },
 
-    async fetchItems(uploadBatchId) {
+    async fetchItems({ currentPage }) {
       try {
-        this.fetching = true;
+        const api = `schedule/list-schedule?page=${currentPage}`;
 
-        const api = "schedule/list-schedule";
+        const res = await secureAxios.post(api, {
+          uploadBatchId: this.uploadBatchId,
+        });
 
-        const res = await secureAxios.post(api, { uploadBatchId });
-
-        this.fetching = false;
         if (!res) {
           return [];
         }
 
         const { data } = res;
 
+        this.rowsItem = data.meta.total;
+
         return data.data;
       } catch (err) {
         console.log(err);
-        this.fetching = false;
+        return [];
       }
     },
 
     async getItems(uploadBatchId) {
-      this.fetchedItems = await this.fetchItems(uploadBatchId);
+      this.uploadBatchId = uploadBatchId;
 
-      if (!this.fetchedItems.length) return;
+      // show the modal and get the items
       this.$bvModal.show("show-items");
     },
 
+    // delete schedule by batchId
     async deleteSchedule(uploadBatchId) {
-      this.selectedItems = await this.fetchItems(uploadBatchId);
+      // warn
+      const result = await this.$swal({
+        icon: "question",
+        title: `Are you sure you want to remove all schedules in this batch?`,
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+      });
 
-      this.deleteBatch = true;
-      await this.removeSchedule(this.selectedItems.map((item) => item.id));
+      if (!result.isConfirmed) {
+        return;
+      }
 
-      // refresh the table data
-      this.getBatches();
+      try {
+        this.deleting = true;
+
+        const api = "schedule/delete-batch";
+
+        const res = await secureAxios.post(api, { uploadBatchId });
+
+        this.deleting = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.getBatches();
+
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
+      } catch (err) {
+        console.log(err);
+        this.deleting = false;
+      }
     },
 
     async removeSchedule(arr) {
       // warn
-      const adj = arr.length > 1 ? "this batch of" : "this";
       const result = await this.$swal({
         icon: "question",
-        title: `Are you sure you want to remove ${adj} schedule?`,
+        title: `Are you sure you want to remove this schedule?`,
         showDenyButton: true,
         confirmButtonText: "Yes",
         denyButtonText: "No",
@@ -475,13 +532,10 @@ export default {
 
         const { data } = res;
 
-        if (!this.deleteBatch) {
-          this.fetchedItems = this.fetchedItems.filter(
-            (item) => item.id != arr[0]
-          );
-        }
-
-        this.deleteBatch = false;
+        /* this.fetchedItems = this.fetchedItems.filter(
+          (item) => item.id != arr[0]
+        ); */
+        this.$refs.table.refresh();
 
         this.$swal({
           icon: "success",

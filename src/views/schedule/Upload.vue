@@ -1,125 +1,147 @@
 <template>
   <section class="dash rounded px-3 pb-5 pt-2">
     <div class="coln">
-      <div class="form">
-        <h4 class="mb-4">Upload Schedule</h4>
+      <h4 class="mb-4">Upload Schedule</h4>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="itemCode">
-            <span>
-              <span class="text-danger">*</span>
-              Item
-            </span>
-            <span class="fs-8 text-primary">
-              Select an Item to see the template
-            </span>
-          </label>
-          <select
-            name="itemCode"
-            v-model="form.itemCode"
-            id="itemCode"
-            class="form-control"
-          >
-            <option :value="null">- select an Item -</option>
-            <option
-              v-for="item in allItems"
-              :value="item.itemCode"
-              :key="item.itemCode"
+      <!-- Top section -->
+      <div class="d-flex justify-content-around">
+        <div class="form w-50">
+          <div class="mt-4">
+            <label class="d-flex justify-content-between" for="itemCode">
+              <span>
+                <span class="text-danger">*</span>
+                Item
+              </span>
+              <span class="fs-8 text-primary">
+                Select an Item to see the template
+              </span>
+            </label>
+            <select
+              name="itemCode"
+              v-model="form.itemCode"
+              id="itemCode"
+              class="form-control"
             >
-              {{ item.itemName }}
-            </option>
-          </select>
-          <small
-            v-if="form.itemCode"
-            class="d-flex justify-content-between text-info"
-          >
-            <button
-              @click="downloadFile(item.excelSamplePath)"
-              class="btn btn-sm btn-info mt-2 d-btn"
+              <option :value="null">- select an Item -</option>
+              <option
+                v-for="item in allItems"
+                :value="item.itemCode"
+                :key="item.itemCode"
+              >
+                {{ item.itemName }}
+              </option>
+            </select>
+            <small
+              v-if="form.itemCode"
+              class="d-flex justify-content-between text-info"
             >
-              Download Schedule template
-            </button>
-            <button
-              @click="downloadFile(item.excelPfaCodes)"
-              class="btn btn-sm btn-info mt-2 d-btn"
+              <button
+                @click="downloadFile(item.excelSamplePath)"
+                class="btn btn-sm btn-info mt-2 d-btn"
+              >
+                Download Schedule template
+              </button>
+              <button
+                @click="downloadFile(item.excelPfaCodes)"
+                class="btn btn-sm btn-info mt-2 d-btn"
+              >
+                Download PFA codes
+              </button>
+            </small>
+          </div>
+
+          <div class="mt-4">
+            <label class="d-flex justify-content-between" for="year">
+              <span>
+                <span class="text-danger">*</span>
+                Year
+              </span>
+              <span class="fs-8 text-primary">Year of contribution</span>
+            </label>
+            <select
+              name="year"
+              v-model="form.year"
+              id="year"
+              class="form-control"
             >
-              Download PFA codes
-            </button>
-          </small>
-        </div>
+              <option :value="null">- select a year -</option>
+              <option v-for="year in years" :value="year" :key="year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="year">
-            <span>
-              <span class="text-danger">*</span>
-              Year
+          <div class="mt-4">
+            <label class="d-flex justify-content-between" for="month">
+              <span>
+                <span class="text-danger">*</span>
+                Month
+              </span>
+              <span class="fs-8 text-primary">Month of contribution</span>
+            </label>
+            <select
+              name="month"
+              v-model="form.month"
+              id="month"
+              class="form-control"
+            >
+              <option :value="null">- select a month -</option>
+              <option v-for="(month, i) in $months" :value="i" :key="i">
+                {{ month }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mt-5 custom-file">
+            <input
+              type="file"
+              class="custom-file-input"
+              id="customFile"
+              ref="customFile"
+              aria-describedby="inputGroupFileAddon01"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              v-on:change="onChangeFileUpload"
+            />
+            <span v-if="form.fileUpload" class="text-sm ml-1 text-info">
+              {{ form.fileUpload.name }}
             </span>
-            <span class="fs-8 text-primary">Year of contribution</span>
-          </label>
-          <select
-            name="year"
-            v-model="form.year"
-            id="year"
-            class="form-control"
+            <label class="custom-file-label" for="customFile">
+              Choose Excel file to Upload
+            </label>
+          </div>
+
+          <button
+            :disabled="!sendReady || sending"
+            @click="sendSchdeule"
+            class="btn mt-5 w-100 button"
           >
-            <option :value="null">- select a year -</option>
-            <option v-for="year in years" :value="year" :key="year">
-              {{ year }}
-            </option>
-          </select>
+            <span>Send Schedule for Validation</span>
+            <span
+              v-if="sending"
+              class="spinner-border spinner-border-sm text-light ml-3"
+              role="status"
+            ></span>
+          </button>
         </div>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="month">
-            <span>
-              <span class="text-danger">*</span>
-              Month
-            </span>
-            <span class="fs-8 text-primary">Month of contribution</span>
-          </label>
-          <select
-            name="month"
-            v-model="form.month"
-            id="month"
-            class="form-control"
-          >
-            <option :value="null">- select a month -</option>
-            <option v-for="(month, i) in $months" :value="i" :key="i">
-              {{ month }}
-            </option>
-          </select>
+        <div class="w-50 mt-5">
+          <div class="alert alert-info" role="alert">
+            <h5 class="">Send your schedule for validation before upload</h5>
+            <ul>
+              <li class="my-2 mx-1">
+                The upload file should comply with the upload template.
+              </li>
+              <li class="m-1">
+                The upload template download button shows when you select the
+                Item.
+              </li>
+              <li class="m-1">
+                The PFA codes which will be included on the upload file is also
+                available for download when item is selected.
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <div class="mt-5 custom-file">
-          <input
-            type="file"
-            class="custom-file-input"
-            id="customFile"
-            ref="customFile"
-            aria-describedby="inputGroupFileAddon01"
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-            v-on:change="onChangeFileUpload"
-          />
-          <span v-if="form.fileUpload" class="text-sm ml-1 text-info">
-            {{ form.fileUpload.name }}
-          </span>
-          <label class="custom-file-label" for="customFile">
-            Choose Excel file to Upload
-          </label>
-        </div>
-
-        <button
-          :disabled="!sendReady || sending"
-          @click="sendSchdeule"
-          class="btn mt-5 w-100 button"
-        >
-          <span>Send Schedule for Validation</span>
-          <span
-            v-if="sending"
-            class="spinner-border spinner-border-sm text-light ml-3"
-            role="status"
-          ></span>
-        </button>
       </div>
     </div>
   </section>

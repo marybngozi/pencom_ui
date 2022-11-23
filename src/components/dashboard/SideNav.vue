@@ -132,6 +132,7 @@ export default {
   left: 0px;
   overflow-x: hidden;
   transition: 0.5s;
+  z-index: 900;
 }
 a {
   display: block;
@@ -159,7 +160,7 @@ button:hover {
   background: transparent;
 }
 a.nav-link-item {
-  padding: 1.2rem 2rem;
+  padding: 0.9rem 2rem;
   background: transparent;
   transition: all;
   color: #ffffff;

@@ -1,85 +1,106 @@
 <template>
   <section class="dash rounded px-3 pb-5 pt-2">
     <div class="coln">
-      <div class="form mb-5">
-        <h4 class="mb-4">Process Schedule</h4>
+      <h4 class="mb-4">Process Schedule</h4>
 
-        <div class="mt-4">
-          <label for="itemCode">
-            <span class="text-danger">*</span>
-            Item
-          </label>
-          <select
-            name="itemCode"
-            v-model="form.itemCode"
-            id="itemCode"
-            class="form-control"
-          >
-            <option :value="null">- select an Item -</option>
-            <option
-              v-for="item in allItems"
-              :value="item.itemCode"
-              :key="item.itemCode"
+      <!-- Top section -->
+      <div class="d-flex justify-content-around">
+        <div class="form w-50">
+          <div class="mt-4">
+            <label for="itemCode">
+              <span class="text-danger">*</span>
+              Item
+            </label>
+            <select
+              name="itemCode"
+              v-model="form.itemCode"
+              id="itemCode"
+              class="form-control"
             >
-              {{ item.itemName }}
-            </option>
-          </select>
-        </div>
+              <option :value="null">- select an Item -</option>
+              <option
+                v-for="item in allItems"
+                :value="item.itemCode"
+                :key="item.itemCode"
+              >
+                {{ item.itemName }}
+              </option>
+            </select>
+          </div>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="year">
-            <span>
-              <span class="text-danger">*</span>
-              Year
-            </span>
-            <span class="fs-8 text-info">As contained in the upload</span>
-          </label>
-          <select
-            name="year"
-            v-model="form.year"
-            id="year"
-            class="form-control"
+          <div class="mt-4">
+            <label class="d-flex justify-content-between" for="year">
+              <span>
+                <span class="text-danger">*</span>
+                Year
+              </span>
+              <span class="fs-8 text-info">As contained in the upload</span>
+            </label>
+            <select
+              name="year"
+              v-model="form.year"
+              id="year"
+              class="form-control"
+            >
+              <option :value="null">- select a year -</option>
+              <option v-for="year in years" :value="year" :key="year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mt-4">
+            <label class="d-flex justify-content-between" for="month">
+              <span>
+                <span class="text-danger">*</span>
+                Month
+              </span>
+              <span class="fs-8 text-info">As contained in the upload</span>
+            </label>
+            <select
+              name="month"
+              v-model="form.month"
+              id="month"
+              class="form-control"
+            >
+              <option :value="null">- select a month -</option>
+              <option v-for="(month, i) in $months" :value="i" :key="i">
+                {{ month }}
+              </option>
+            </select>
+          </div>
+
+          <button
+            :disabled="!getReady || getting"
+            @click="getSummary"
+            class="btn mt-5 w-100 button"
           >
-            <option :value="null">- select a year -</option>
-            <option v-for="year in years" :value="year" :key="year">
-              {{ year }}
-            </option>
-          </select>
+            <span>Get Summary</span>
+            <span
+              v-if="getting"
+              class="spinner-border spinner-border-sm text-light ml-3"
+              role="status"
+            ></span>
+          </button>
         </div>
 
-        <div class="mt-4">
-          <label class="d-flex justify-content-between" for="month">
-            <span>
-              <span class="text-danger">*</span>
-              Month
-            </span>
-            <span class="fs-8 text-info">As contained in the upload</span>
-          </label>
-          <select
-            name="month"
-            v-model="form.month"
-            id="month"
-            class="form-control"
-          >
-            <option :value="null">- select a month -</option>
-            <option v-for="(month, i) in $months" :value="i" :key="i">
-              {{ month }}
-            </option>
-          </select>
+        <div class="w-50 mt-5">
+          <div class="alert alert-info" role="alert">
+            <h5 class="">Processed schedule for payment</h5>
+            <ul>
+              <li class="my-2 mx-1">
+                Select the item, <b>Pension Contributions</b>
+              </li>
+              <li class="m-1">
+                Select the Month and Year of the contributions
+              </li>
+              <li class="m-1">
+                Click on <b>Process Schedule</b> on the top of the schedule
+                listing to process the contributions for payment
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <button
-          :disabled="!getReady || getting"
-          @click="getSummary"
-          class="btn mt-4 w-100 button"
-        >
-          <span>Get Summary</span>
-          <span
-            v-if="getting"
-            class="spinner-border spinner-border-sm text-light ml-3"
-            role="status"
-          ></span>
-        </button>
       </div>
 
       <div v-if="items" class="my-4 pb-5">
@@ -191,16 +212,7 @@ export default {
 
         const { data } = res;
 
-        if (!data.data.data.length) {
-          this.$swal({
-            icon: "error",
-            text: "No record found",
-          });
-          return;
-        }
-
         this.items = data.data.summary;
-        this.scheduleItems = data.data.data;
 
         // get the totals
         this.grandTotal = 0;
@@ -262,7 +274,6 @@ export default {
             ...this.processForm,
             scheduleUrl: `${location.origin}${location.pathname}/schedule-mandate`,
           },
-          payData: this.scheduleItems,
         });
 
         this.processing = false;
@@ -271,8 +282,6 @@ export default {
         }
 
         const { data } = res;
-
-        console.log(data);
 
         this.$swal({
           icon: "success",

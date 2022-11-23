@@ -1,6 +1,8 @@
 <template>
   <section class="dash rounded px-3 pb-5 pt-2">
     <div class="coln">
+      <h4 class="mb-4">List Company Admin Staff</h4>
+
       <!-- List of staff -->
       <div class="mt-5 pb-4">
         <b-table

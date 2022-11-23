@@ -1,5 +1,5 @@
 <template>
-  <header class="py-3 pe-4 d-flex justify-content-between">
+  <header class="py-3 pr-3 d-flex justify-content-between">
     <div class="col-7 col-lg-3">
       <img src="@/assets/images/logo_black.svg" id="logo" alt="logo" />
     </div>
@@ -126,7 +126,7 @@ li a:focus {
     width: auto;
   }
   header {
-    padding-left: 2rem;
+    padding-left: 0.1rem;
     height: 4.4rem;
   }
   #navDiv {

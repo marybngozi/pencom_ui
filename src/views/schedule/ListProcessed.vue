@@ -112,7 +112,7 @@
           <template #cell(action)="data">
             <button
               class="btn btn-sm btn-info m-1"
-              @click="fetchItems(data.item.invoiceNo)"
+              @click="getItems(data.item.invoiceNo)"
             >
               Show Items
             </button>
@@ -170,8 +170,9 @@
           responsive
           striped
           :busy="fetching"
+          sticky-header="600px"
           hover
-          :items="fetchedItems"
+          :items="fetchItems"
           :per-page="perPage"
           :current-page="currentPageItem"
           show-empty
@@ -226,6 +227,11 @@
           limit="10"
         >
         </b-pagination>
+
+        <template #modal-footer="{ ok }">
+          <!-- Emulate built in modal footer ok and cancel button actions -->
+          <b-button variant="info" @click="ok()"> OK </b-button>
+        </template>
       </b-modal>
     </div>
   </section>
@@ -242,7 +248,9 @@ export default {
       fetching: false,
       perPage: 10,
       currentPage: 1,
+      rowsItem: 0,
       currentPageItem: 1,
+      invoiceNo: null,
       fetchedItems: [],
       form: {
         itemCode: null,
@@ -356,9 +364,6 @@ export default {
     rows() {
       return this.items.length;
     },
-    rowsItem() {
-      return this.fetchedItems.length;
-    },
   },
 
   methods: {
@@ -387,26 +392,31 @@ export default {
       }
     },
 
-    async fetchItems(invoiceNo) {
+    async getItems(invoiceNo) {
+      this.invoiceNo = invoiceNo;
+
+      // show the modal and get the items
+      this.$bvModal.show("show-items");
+    },
+
+    async fetchItems({ currentPage }) {
       try {
-        this.fetching = true;
+        const api = `schedule/list-processed-items?page=${currentPage}`;
 
-        const api = "schedule/list-processed-items";
+        const res = await secureAxios.post(api, { invoiceNo: this.invoiceNo });
 
-        const res = await secureAxios.post(api, { invoiceNo });
-
-        this.fetching = false;
         if (!res) {
-          return;
+          return [];
         }
 
         const { data } = res;
 
-        this.fetchedItems = data.data;
-        this.$bvModal.show("show-items");
+        this.rowsItem = data.meta.total;
+
+        return data.data;
       } catch (err) {
         console.log(err);
-        this.fetching = false;
+        return [];
       }
     },
 

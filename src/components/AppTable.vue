@@ -11,6 +11,7 @@
       :per-page="perPage"
       :current-page="currentPage"
       show-empty
+      :busy.sync="isBusy"
       :selectable="selectable"
       @row-selected="onRowSelected"
     >
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 export default {
   name: "AppTable",
   props: {
@@ -46,9 +48,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    form: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
+      isBusy: false,
       selectedItems: [],
       perPage: 3,
       currentPage: 1,
@@ -63,6 +70,25 @@ export default {
     onRowSelected(data) {
       this.selectedItems = data;
       console.log(this.selectedItems);
+    },
+
+    async myProvider(ctx) {
+      try {
+        this.isBusy = true;
+        const api = `/some/url?page=${ctx.currentPage}&size=${ctx.perPage}`;
+        const response = await secureAxios.post(api, this.form);
+
+        if (!response) {
+          return [];
+        }
+
+        const { data } = response;
+
+        return data.data;
+      } catch (error) {
+        this.isBusy = false;
+        return [];
+      }
     },
   },
 };

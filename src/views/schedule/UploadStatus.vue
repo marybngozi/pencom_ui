@@ -4,24 +4,30 @@
       <h4 class="mb-4">Upload Schedule Status</h4>
 
       <div class="">
-        <div v-if="items.length" class="alert alert-primary" role="alert">
+        <div v-if="items.length" class="alert alert-info" role="alert">
           <h5 class="">
             Your schedule has been received for validation and has
             <b class="text-danger">not</b> been uploaded
           </h5>
           <ul>
             <li class="m-1">
-              While the status is <b class="text-secondary">processing</b>, you
-              can either send another schedule or take a break 🙂
+              While the validation status is showing
+              <b class="text-secondary">processing</b>, you can close the window
+              and come back later using the <b>View Pending Schedule</b> menu on
+              the menu list to know if the file has finished processing.
             </li>
             <li class="m-1">
-              On the <b class="text-danger">failure</b> of the validation, you
-              can <b>download</b> the schedule with details of validation and
-              delete the schedule
+              After processing, if the validation status on the file shows
+              <b class="text-danger">failure</b>, download the file, view the
+              reason for failure on the excel file, update
+              <i>(Make sure to remove the STATUS column)</i> and re-upload. On
+              the of the validation, you can <b>download</b> the schedule with
+              details of validation and delete the schedule
             </li>
             <li class="m-1">
-              On the <b class="text-success">success</b> of the validation, you
-              can <b>upload</b> the schedule or delete if you have reason to
+              If the validation status is
+              <b class="text-success">success</b> please proceed and upload the
+              file.
             </li>
           </ul>
         </div>
@@ -57,7 +63,7 @@
               {{ data.value }}
             </span>
             <span v-else-if="data.value == 'failure'" class="text-danger">
-              {{ data.value }}
+              failed
             </span>
             <span v-else class="text-secondary">
               {{ data.value }}

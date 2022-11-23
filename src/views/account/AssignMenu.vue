@@ -3,7 +3,20 @@
     <div class="coln">
       <h4 class="mb-4">Assign Staff Menu</h4>
 
-      <section class="row justify-content-between px-4 mt-4">
+      <!-- loader for fetching datas -->
+      <section
+        v-if="settingUp"
+        style="height: 60vh"
+        class="d-flex justify-content-center align-items-center"
+      >
+        <b-spinner
+          style="width: 3rem; height: 3rem"
+          variant="secondary"
+          label="Large Spinner"
+        ></b-spinner>
+      </section>
+
+      <section v-else class="row justify-content-between px-4 mt-4">
         <div class="col-md-4 pl-4">
           <p class="border-bottom py-2">
             <span class="font-weight-lighter">Staff RSA:</span>
@@ -11,12 +24,13 @@
           </p>
           <p class="border-bottom py-2">
             <span class="font-weight-lighter">Staff name:</span>
-            {{ staffData.firstName }} {{ staffData.firstName }}
+            {{ staffData.firstName }} {{ staffData.lastName }}
           </p>
         </div>
 
         <form action="#" @submit.prevent class="col-md-7 border-left">
           <h6 class="mb-4">Choose Menus</h6>
+          <!-- for main menus -->
           <div
             v-for="(menu, i) in filteredMenus"
             :key="i"
@@ -30,11 +44,11 @@
               class="form-check-input"
               :id="'menu' + menu.id"
             />
-            <label class="form-check-label" :for="'menu' + menu.id">{{
-              menu.name
-            }}</label>
+            <label class="form-check-label" :for="'menu' + menu.id">
+              {{ menu.name }}
+            </label>
 
-            <!-- for subMenus -->
+            <!-- for sub Menus -->
             <div
               v-for="(submenu, i) in menu.subMenus"
               :key="i"
@@ -43,13 +57,12 @@
               <input
                 type="checkbox"
                 :checked="submenu.checked"
-                :value="menu.id + '_' + submenu.id"
+                :value="`${menu.id}_${submenu.id}`"
                 @change="selectOneSub"
-                class="form-check-input"
-                :id="'submenu' + submenu.id"
-                :class="'menu' + menu.id"
+                :class="'form-check-input menu' + menu.id"
+                :id="submenu.id"
               />
-              <label class="form-check-label" :for="'submenu' + submenu.id">{{
+              <label class="form-check-label" :for="submenu.id">{{
                 submenu.name
               }}</label>
             </div>
@@ -57,8 +70,8 @@
 
           <div class="form-group mt-5 text-center px-3">
             <button
-              class="btn btn-primary btn-sm w-100"
-              :disabled="!this.selectedMenus.length || assigning"
+              class="btn button w-100"
+              :disabled="assigning"
               type="submit"
               @click.prevent="assignMenu()"
             >
@@ -72,8 +85,6 @@
               </span>
             </button>
           </div>
-
-          <!-- <pre>{{filteredMenuList}}</pre> -->
         </form>
       </section>
     </div>
@@ -82,19 +93,22 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import { secureAxios } from "../../services/AxiosInstance";
+import { secureAxios } from "../../services/AxiosInstance";
 export default {
   name: "AssignMenu",
 
   data() {
     return {
-      staffMenus: null,
+      assigning: false,
+      settingUp: true,
+      staffMenus: [],
       selectedMenus: [],
       staffData: null,
+      filteredMenus: [],
     };
   },
 
-  /* async beforeCreate() {
+  async beforeCreate() {
     // get the staff's menu
     try {
       const rsaPin = this.$route.params.rsaPin;
@@ -128,36 +142,43 @@ export default {
 
       this.staffMenus = data.data;
       this.staffData = dataD.data;
+      this.filterMenu();
 
-      console.log(this.staffMenus);
+      this.settingUp = false;
     } catch (err) {
       console.log(err);
       this.getting = false;
     }
-  }, */
+  },
 
   computed: {
     ...mapGetters(["userMenus", "companyCode"]),
 
-    filteredMenus() {
-      return this.userMenus.map((menu) => {
+    assignReady() {
+      return this.selectedMenus.length > 0;
+    },
+  },
+
+  methods: {
+    filterMenu() {
+      this.filteredMenus = this.userMenus.map((menu) => {
         const subMenus = menu.subMenus;
         let menuStatus = true;
 
         const newSubMenus = subMenus.map((subMenu) => {
-          const isChecked =
-            this.staffMenus.findIndex(
-              (aMenu) => aMenu.menuId == subMenu.menuId
-            ) != -1
-              ? true
-              : false;
+          const menuIdx = this.staffMenus.findIndex(
+            (aMenu) => aMenu == subMenu.id
+          );
+          const isChecked = menuIdx >= 0 ? true : false;
 
           if (!isChecked) {
             menuStatus = false;
           } else {
+            this.staffMenus.splice(menuIdx, 1);
+            console.log(menuIdx);
             this.selectedMenus.push({
-              userId: this.staffData.id,
-              menuId: subMenu.id,
+              menuId: menu.id,
+              subMenuId: subMenu.id,
             });
           }
 
@@ -175,81 +196,125 @@ export default {
         };
       });
     },
-  },
 
-  methods: {
-    async assignMenu() {},
+    async assignMenu() {
+      // warn
+      const result = await this.$swal({
+        icon: "question",
+        title: "Are you sure you want to assign these menus to this staff?",
+        text: "This staff will be able to perform actions under the assigned menu for this company",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+      });
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      try {
+        this.assigning = true;
+        const selectedStaffMenus = this.selectedMenus.map((m) => m.subMenuId);
+
+        const api = "stat/update-staff-menus";
+        const res = await secureAxios.post(api, {
+          subMenuIds: [...new Set([...this.staffMenus, ...selectedStaffMenus])],
+          userId: this.staffData.id,
+        });
+
+        // 6376f58da11c3d47691f0a54
+        this.assigning = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
+      } catch (err) {
+        console.log(err);
+        this.assigning = false;
+      }
+    },
+
+    selectOneSub(e) {
+      const val = e.target.defaultValue;
+      const [menuId, subMenuId] = val.split("_");
+
+      // if box is checked
+      if (e.target.checked) {
+        // add to the selected
+
+        this.selectedMenus.push({
+          menuId,
+          subMenuId,
+        });
+        return;
+      }
+
+      // if box is un-checked, remove value from selected
+      const dIndex = this.selectedMenus.findIndex(
+        (menu) => menu.subMenuId == subMenuId
+      );
+      this.selectedMenus.splice(dIndex, 1);
+
+      // check if no other submenu in a menu is selected
+      const cIndex = this.selectedMenus.findIndex(
+        (menu) => menu.menuId == menuId
+      );
+      if (cIndex < 0) {
+        document.querySelector(`#menu${menuId}`).checked = false;
+      }
+    },
 
     selectAllSub(e) {
       const menuId = e.target.defaultValue;
 
       // indicate that these submenus with the classname has been selected
+      console.log(e.target.id);
       const classname = e.target.id;
       const subCheckBoxes = document.querySelectorAll(`.${classname}`);
 
-      // if box is checked
-      if (e.target.checked) {
-        const menu = this.menuList.find((menu) => menu.id == menuId);
-        if (menu.hasSubMenu == 0) {
-          this.selectedMenus.push({
-            adminId: this.adminData.adminId,
-            status: 1,
-            menuId,
-            subMenuId: null,
-          });
-        } else {
-          // delete all submenus of from selected list first, if any
-          for (let i = 0; i <= this.selectedMenus.length; i++) {
-            const dIndex = this.selectedMenus.findIndex(
-              (menu) => menu.menuId == menuId
-            );
-            if (dIndex >= 0) {
-              this.selectedMenus.splice(dIndex, 1);
-            }
-          }
+      // filter out the menus for that menuId
+      this.selectedMenus = this.selectedMenus.filter(
+        (sm) => sm.menuId != menuId
+      );
 
-          // get the submenus from the menu list
-          const subMenus = this.menuList.find(
-            (menu) => menu.id == menuId
-          ).subMenus;
-
-          // then add all submenu to the selected list
-          for (let f = 0; f < subMenus.length; f++) {
-            const subMenu = subMenus[f];
-
-            this.selectedMenus.push({
-              adminId: this.adminData.adminId,
-              status: 1,
-              menuId,
-              subMenuId: subMenu.id,
-            });
-          }
-
-          // indicate that submenu boxes are checked
-          subCheckBoxes.forEach((box) => {
-            box.checked = true;
-          });
-        }
-      } else {
-        // if box is un-checked
-        for (let i = 0; i <= this.selectedMenus.length; i++) {
-          const dIndex = this.selectedMenus.findIndex(
-            (menu) => menu.menuId == menuId
-          );
-          if (dIndex >= 0) {
-            this.selectedMenus.splice(dIndex, 1);
-          }
-        }
-
+      // if box is un-checked
+      if (!e.target.checked) {
         subCheckBoxes.forEach((box) => {
           box.checked = false;
         });
+        return;
       }
 
-      // console.log(this.selectedMenus);
+      // if box is checked
+      const menu = this.filteredMenus.find((menu) => menu.id == menuId);
+      // get the submenus from the menu
+      const subMenus = menu.subMenus;
+
+      // then add all submenu to the selected list
+      for (let f = 0; f < subMenus.length; f++) {
+        const subMenu = subMenus[f];
+
+        this.selectedMenus.push({
+          menuId,
+          subMenuId: subMenu.id,
+        });
+      }
+
+      // indicate that submenu boxes are checked
+      subCheckBoxes.forEach((box) => {
+        box.checked = true;
+      });
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+@import "../../assets/css/dashboard.css";
+</style>
