@@ -155,6 +155,7 @@ export default {
       enableWallet: false,
       showModal: false,
       custReference: null,
+      fullPage: false,
     };
   },
 
@@ -213,6 +214,15 @@ export default {
           return;
         }
 
+        const loader = this.$loading.show({
+          // Optional parameters
+          loader: "bars",
+          color: "#0b2238",
+          backgroundColor: "#343232",
+          height: 100,
+          width: 100,
+        });
+
         this.wpaying = true;
 
         const api = "payment/wallet";
@@ -224,6 +234,7 @@ export default {
         });
 
         this.wpaying = false;
+        loader.hide();
         if (!res) {
           return;
         }

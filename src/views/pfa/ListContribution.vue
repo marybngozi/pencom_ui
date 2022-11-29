@@ -66,13 +66,12 @@
       </div>
 
       <!-- Processed schedules -->
-      <div class="mt-5 pb-4">
+      <div class="mt-5 pb-4 mb-5">
         <b-table
           id="my-table"
           :fields="fields"
-          outlined
           small
-          striped
+          outlined
           :busy="getting"
           hover
           :items="items"
@@ -80,8 +79,9 @@
           :current-page="currentPage"
           show-empty
         >
-          <template #cell(pfaName)="data">
-            {{ data.value }}
+          <template #cell(transmitted)="data">
+            <span v-if="data.value" class="text-primary">Sent</span>
+            <span v-else class="text-secondary">Not sent</span>
           </template>
 
           <template #cell(createdAt)="data">
@@ -98,29 +98,43 @@
 
           <template #cell(action)="data">
             <button
+              @click="getPfas(data, data.item._id)"
               class="btn btn-sm btn-info m-1"
-              @click="fetchItems(data.item.pfaCode, data.item.batchId)"
             >
-              Show Items
+              {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
             </button>
 
             <button
-              disabled
               class="btn btn-sm btn-secondary m-1"
-              @click="downloadItems(data.item.invoiceNo)"
+              @click="downloadItems(data.item._id)"
             >
               Download
             </button>
 
             <button
+              v-if="!data.item.transmitted"
               v-b-tooltip.hover
               title="Transmit transaction to the PFA"
-              class="btn btn-sm btn-info m-1"
-              @click="downloadItems(data.item.invoiceNo)"
-              disabled
+              class="btn btn-sm btn-primary m-1"
+              @click="transmit(data.item._id)"
             >
               Transmit
             </button>
+          </template>
+
+          <template #row-details>
+            <b-card bg-variant="light">
+              <!-- START PFA INNER TABLE -->
+              <ListPfaTable
+                :batchId="batchId"
+                :companyCode="companyCode"
+                @showItems="getItems"
+                @getDownloads="downloadItems"
+                @transmit="transmit"
+              />
+
+              <!-- END PFA INNER TABLE -->
+            </b-card>
           </template>
         </b-table>
 
@@ -131,8 +145,6 @@
           aria-controls="my-table"
           size="sm"
           limit="10"
-          page-class="text-blue"
-          next-class="text-blue"
         >
         </b-pagination>
       </div>
@@ -154,49 +166,29 @@
           striped
           :busy="fetching"
           hover
-          :items="fetchedItems"
+          :items="fetchItems"
           :per-page="perPage"
           :current-page="currentPageItem"
           show-empty
         >
-          <template #cell(pfc)="data">
-            {{ data.value.pfcName }}
-          </template>
-
-          <template #cell(pfa)="data">
-            {{ data.value.pfaName }}
-          </template>
-
-          <template #cell(createdAt)="data">
-            {{ data.item.schedule.createdAt | moment("DD-MM-YYYY") }}
-          </template>
-
           <template #cell(amount)="data">
-            {{ data.item.schedule.amount | toCurrency }}
-          </template>
-
-          <template #cell(rsaPin)="data">
-            {{ data.item.schedule.rsaPin }}
+            {{ data.value | toCurrency }}
           </template>
 
           <template #cell(employeeNormalContribution)="data">
-            {{ data.item.schedule.employeeNormalContribution | toCurrency }}
+            {{ data.value | toCurrency }}
           </template>
 
           <template #cell(employerNormalContribution)="data">
-            {{ data.item.schedule.employerNormalContribution | toCurrency }}
+            {{ data.value | toCurrency }}
           </template>
 
           <template #cell(employeeVoluntaryContribution)="data">
-            {{ data.item.schedule.employeeVoluntaryContribution | toCurrency }}
+            {{ data.value | toCurrency }}
           </template>
 
           <template #cell(employerVoluntaryContribution)="data">
-            {{ data.item.schedule.employerVoluntaryContribution | toCurrency }}
-          </template>
-
-          <template #cell(staffName)="data">
-            {{ data.item.schedule.firstName }} {{ data.item.schedule.lastName }}
+            {{ data.value | toCurrency }}
           </template>
         </b-table>
 
@@ -209,6 +201,11 @@
           limit="10"
         >
         </b-pagination>
+
+        <template #modal-footer="{ ok }">
+          <!-- Emulate built in modal footer ok and cancel button actions -->
+          <b-button variant="info" @click="ok()"> OK </b-button>
+        </template>
       </b-modal>
     </div>
   </section>
@@ -216,9 +213,13 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
+import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
 
 export default {
   name: "ListContribution",
+  components: {
+    ListPfaTable,
+  },
   data() {
     return {
       getting: false,
@@ -226,7 +227,10 @@ export default {
       perPage: 10,
       currentPage: 1,
       currentPageItem: 1,
-      fetchedItems: [],
+      batchId: null,
+      companyCode: null,
+      pfaCode: null,
+      rowsItem: 0,
       form: {
         itemCode: null,
         dateStart: null,
@@ -234,10 +238,6 @@ export default {
       },
       items: [],
       fields: [
-        {
-          key: "pfaName",
-          label: "PFA",
-        },
         {
           key: "companyName",
           label: "Company",
@@ -248,7 +248,11 @@ export default {
         },
         {
           key: "itemCount",
-          label: "Count",
+          label: "Contributions count",
+        },
+        {
+          key: "transmitted",
+          label: "Status",
         },
         {
           key: "amount",
@@ -265,20 +269,12 @@ export default {
       ],
       fieldsItem: [
         {
-          key: "pfa",
-          label: "PFA",
-        },
-        {
           key: "staffName",
           label: "Staff Name",
         },
         {
           key: "rsaPin",
           label: "RSA PIN",
-        },
-        {
-          key: "amount",
-          label: "Total Amount",
         },
         {
           key: "employeeNormalContribution",
@@ -297,8 +293,8 @@ export default {
           label: "Employer Voluntary Contribution",
         },
         {
-          key: "createdAt",
-          label: "Uploaded",
+          key: "amount",
+          label: "Total Amount",
         },
       ],
     };
@@ -335,20 +331,12 @@ export default {
     rows() {
       return this.items.length;
     },
-    rowsItem() {
-      return this.fetchedItems.length;
-    },
   },
 
   methods: {
-    getItem(itemCode) {
-      const item = this.allItems.find((item) => item.itemCode == itemCode);
-      return item ? item.itemName : null;
-    },
-
     async getProcessedSchedule() {
       try {
-        if (!this.dateNotReady) {
+        if (this.dateNotReady) {
           this.$swal({
             icon: "error",
             text: "Both dates have to be provided",
@@ -374,42 +362,65 @@ export default {
       }
     },
 
-    async fetchItems(pfaCode, batchId) {
+    async getPfas(data, { batchId, companyCode }) {
+      this.batchId = batchId;
+      this.companyCode = companyCode;
+
+      data.toggleDetails();
+    },
+
+    async getItems({ batchId, companyCode, pfaCode }) {
+      this.batchId = batchId;
+      this.companyCode = companyCode;
+      this.pfaCode = pfaCode;
+
+      this.$bvModal.show("show-items");
+    },
+
+    async fetchItems({ currentPage, perPage }) {
       try {
-        this.fetching = true;
+        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
 
-        const api = "payment/get-item-contribution";
+        const res = await secureAxios.post(api, {
+          pfaCode: this.pfaCode,
+          batchId: this.batchId,
+          companyCode: this.companyCode,
+        });
 
-        const res = await secureAxios.post(api, { pfaCode, batchId });
-
-        this.fetching = false;
         if (!res) {
-          return;
+          return [];
         }
 
         const { data } = res;
 
-        this.fetchedItems = data.data;
-        this.$bvModal.show("show-items");
+        this.rowsItem = data.meta.total;
+        return data.data;
       } catch (err) {
         console.log(err);
-        this.fetching = false;
+        return [];
       }
     },
 
-    async downloadItems(invoiceNo) {
+    async downloadItems({ batchId, companyCode, pfaCode }) {
       try {
-        this.fetching = true;
+        const loader = this.$loading.show({
+          // Optional parameters
+          loader: "bars",
+          color: "#0b2238",
+          backgroundColor: "#343232",
+          height: 100,
+          width: 100,
+        });
 
-        const api = "schedule/download-processed-items";
+        const api = "payment/download-contributions";
 
         const res = await secureAxios.post(
           api,
-          { invoiceNo },
+          { batchId, companyCode, pfaCode },
           { responseType: "blob" }
         );
 
-        this.fetching = false;
+        loader.hide();
         if (!res) {
           return;
         }
@@ -420,10 +431,59 @@ export default {
         const fileLink = document.createElement("a");
 
         fileLink.href = fileURL;
-        fileLink.setAttribute("download", "Processed_schedule.xlsx");
+        fileLink.setAttribute("download", "Contributions.xlsx");
         document.body.appendChild(fileLink);
 
         fileLink.click();
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
+    },
+
+    async transmit({ batchId, companyCode, pfaCode }) {
+      try {
+        const result = await this.$swal({
+          icon: "info",
+          text: "This batch of contribution will be sent to the individual PFA",
+          showDenyButton: true,
+          confirmButtonText: "Proceed",
+          denyButtonText: "No",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        const loader = this.$loading.show({
+          // Optional parameters
+          loader: "bars",
+          color: "#0b2238",
+          backgroundColor: "#343232",
+          height: 100,
+          width: 100,
+        });
+
+        const api = "payment/transmit-contributions";
+
+        const res = await secureAxios.post(api, {
+          batchId,
+          companyCode,
+          pfaCode,
+        });
+
+        loader.hide();
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
+
+        await this.getProcessedSchedule();
       } catch (err) {
         console.log(err);
         this.fetching = false;
@@ -434,4 +494,7 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
+.card-body {
+  padding: 0.25rem;
+}
 </style>

@@ -52,8 +52,12 @@ body {
   font-size: 0.7rem;
 }
 
-.swal2-confirm {
+.swal2-deny {
   background: #ed342b !important;
+  padding: 0.5rem 1.5rem !important;
+}
+.swal2-confirm {
+  background: #0b2238 !important;
   padding: 0.5rem 1.5rem !important;
 }
 </style>

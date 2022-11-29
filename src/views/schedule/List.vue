@@ -241,7 +241,6 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
-// import exportFromJSON from "export-from-json";
 
 export default {
   name: "ListSchdeule",

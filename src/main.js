@@ -13,6 +13,8 @@ import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import Print from "vue-print-nb";
 import VueApexCharts from "vue-apexcharts";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
@@ -21,6 +23,7 @@ Vue.use(VueSweetalert2);
 Vue.use(require("vue-moment"));
 Vue.use(Print);
 Vue.use(VueApexCharts);
+Vue.use(Loading);
 
 Vue.component("apexchart", VueApexCharts);
 Vue.filter("toCurrency", (value) => {

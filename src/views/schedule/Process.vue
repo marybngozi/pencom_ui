@@ -264,6 +264,15 @@ export default {
       }
 
       try {
+        const loader = this.$loading.show({
+          // Optional parameters
+          loader: "bars",
+          color: "#0b2238",
+          backgroundColor: "#343232",
+          height: 100,
+          width: 100,
+        });
+
         this.processing = true;
 
         const api = "schedule/process";
@@ -277,6 +286,7 @@ export default {
         });
 
         this.processing = false;
+        loader.hide();
         if (!res) {
           return;
         }

@@ -20,9 +20,7 @@
               After processing, if the validation status on the file shows
               <b class="text-danger">failure</b>, download the file, view the
               reason for failure on the excel file, update
-              <i>(Make sure to remove the STATUS column)</i> and re-upload. On
-              the of the validation, you can <b>download</b> the schedule with
-              details of validation and delete the schedule
+              <i>(Make sure to remove the STATUS column)</i> and re-upload.
             </li>
             <li class="m-1">
               If the validation status is

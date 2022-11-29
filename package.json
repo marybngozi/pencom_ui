@@ -25,6 +25,7 @@
     "sweetalert2": "^11.3.0",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
+    "vue-loading-overlay": "3.4.2",
     "vue-moment": "^4.1.0",
     "vue-print-nb": "^1.7.5",
     "vue-recaptcha-v3": "^2.0.1",
