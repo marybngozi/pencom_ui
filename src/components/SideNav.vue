@@ -28,7 +28,7 @@
               to="/app"
             >
               <i class="fa fa-tachometer w-3 h-3`"></i>
-              <span class="mx-3">Dashboard</span>
+              <span class="mx-3">Overview</span>
             </router-link>
           </li>
 
@@ -39,14 +39,16 @@
             :id="`sidenavSecEx${i}`"
           >
             <a
-              class="nav-link-item overflow-hidden fs-6 text-nowrap"
+              class="nav-link-item overflow-hidden fs-6 text-nowrap d-flex justify-content-between"
               data-toggle="collapse"
               :data-target="`#collapseSidenavSecEx${i}`"
               aria-expanded="false"
               :aria-controls="`collapseSidenavSecEx${i}`"
             >
-              <i :class="`${menu.icon} w-3 h-3 mr-3`"></i>
-              <span class="mx-3">{{ menu.name }}</span>
+              <span>
+                <i :class="`${menu.icon} w-3 h-3 mr-3`"></i>
+                <span class="mx-3">{{ menu.name }}</span>
+              </span>
               <i class="fa fa-chevron-down w-3 h-3 ml-auto"></i>
             </a>
             <ul
@@ -75,7 +77,11 @@
       <div class="w-100">
         <hr class="my-2" />
 
-        <router-link to="/change-password" class="d-flex nav-link-item">
+        <router-link
+          to="/change-password"
+          class="d-flex nav-link-item align-items-center"
+        >
+          <i class="fa fa-cog mr-2"></i>
           <span class="fw-bold text-white">Change Password</span>
         </router-link>
 

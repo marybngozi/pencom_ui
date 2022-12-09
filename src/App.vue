@@ -3,41 +3,13 @@
 </template>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;700&display=swap");
+
 body {
   overflow: hidden;
 }
-@font-face {
-  font-family: "CircularStd";
-  src: url("./assets/font/CircularStd-Book.ttf");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "CircularStd";
-  src: url("./assets/font/CircularStd-BlackItalic.ttf");
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: "CircularStd";
-  src: url("./assets/font/CircularStd-Bold.ttf");
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: "CircularStd";
-  src: url("./assets/font/CircularStd-Medium.ttf");
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-  font-family: "CircularStd";
-  src: url("./assets/font/CircularStd-MediumItalic.ttf");
-  font-weight: 500;
-  font-style: italic;
-}
 * {
-  font-family: "CircularStd", sans-serif;
+  font-family: "Red Hat Display", sans-serif;
 }
 .fs-6 {
   font-size: 0.975rem;
@@ -50,6 +22,18 @@ body {
 }
 .fs-9 {
   font-size: 0.7rem;
+}
+.fw-3 {
+  font-weight: 300;
+}
+.fw-4 {
+  font-weight: 400;
+}
+.fw-5 {
+  font-weight: 500;
+}
+.fw-7 {
+  font-weight: 700;
 }
 
 .swal2-deny {

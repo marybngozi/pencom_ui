@@ -120,9 +120,12 @@ export default {
       return this.form.email && this.form.password;
     },
   },
+  mounted() {
+    this.logout();
+  },
 
   methods: {
-    ...mapActions(["saveUserInfo", "getMenus"]),
+    ...mapActions(["saveUserInfo", "getMenus", "logout"]),
 
     async login() {
       try {
@@ -154,7 +157,8 @@ export default {
 
         this.saveUserInfo({ user, token });
 
-        this.$router.push({ path: "/app" });
+        // got to dashboard or the requested page
+        this.$router.push(this.$route.query.nextUrl || "/app");
 
         // clear the form
         Object.keys(this.form).forEach((key) => {

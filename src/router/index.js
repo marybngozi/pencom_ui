@@ -272,7 +272,7 @@ router.beforeEach((to, from, next) => {
   if (!localStorage.getItem(process.env.VUE_APP_tokenName)) {
     next({
       path: "/",
-      params: { nextUrl: to.fullPath },
+      query: { nextUrl: to.fullPath },
     });
     return;
   }

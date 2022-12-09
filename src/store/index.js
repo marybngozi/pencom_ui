@@ -7,14 +7,6 @@ import { fetchItems, fetchStates, fetchMenus } from "../services/sourceData";
 
 Vue.use(Vuex);
 
-const getStoreUser = () => {
-  const encryptUser = localStorage.getItem(process.env.VUE_APP_user);
-
-  if (encryptUser) return JSON.parse(atob(encryptUser));
-
-  return null;
-};
-
 export default new Vuex.Store({
   plugins: [
     // persists the data on page reload
@@ -29,10 +21,11 @@ export default new Vuex.Store({
   ],
 
   state: {
-    user: getStoreUser(),
+    user: null,
     items: null,
     allStates: null,
     menus: null,
+    showMainOverlay: false,
   },
 
   getters: {
@@ -44,6 +37,9 @@ export default new Vuex.Store({
       } else {
         return "Company";
       }
+    },
+    userType: (state) => {
+      return state.user ? state.user.userType : null;
     },
     companyCode: (state) => {
       return state.user ? state.user.companyCode : null;
@@ -65,6 +61,7 @@ export default new Vuex.Store({
   mutations: {
     setCompanyCode(state, companyCode) {
       state.user.companyCode = companyCode;
+      state.showMainOverlay = false;
     },
     saveUser(state, user) {
       state.user = user;
@@ -86,27 +83,25 @@ export default new Vuex.Store({
         state[key] = null;
       });
     },
+    toggleMainOverlay(state, value) {
+      state.showMainOverlay = value;
+    },
   },
 
   actions: {
     saveUserInfo({ commit }, { user, token }) {
-      const data = JSON.stringify(user);
-      const encodedString = btoa(data);
-      localStorage.setItem(process.env.VUE_APP_user, encodedString);
       localStorage.setItem(process.env.VUE_APP_tokenName, token);
+
+      console.log(user);
+
+      if (user.userType == 100 && !user.companyCode) {
+        commit("toggleMainOverlay", true);
+      }
 
       commit("saveUser", user);
     },
 
-    refreshUser({ commit }) {
-      const userdata = localStorage.getItem(process.env.VUE_APP_user);
-      const retrived = JSON.parse(atob(userdata));
-
-      commit("saveUser", retrived);
-    },
-
     logout({ commit }) {
-      localStorage.removeItem(process.env.VUE_APP_user);
       localStorage.removeItem(process.env.VUE_APP_tokenName);
 
       commit("clearState");
@@ -122,7 +117,12 @@ export default new Vuex.Store({
         commit("saveStates", await fetchStates());
       }
     },
-    async getMenus({ commit }) {
+    async getMenus({ commit, state }) {
+      if (!state.menus) {
+        commit("saveMenus", await fetchMenus());
+      }
+    },
+    async updateMenus({ commit }) {
       commit("saveMenus", await fetchMenus());
     },
   },

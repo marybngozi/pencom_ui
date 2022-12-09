@@ -1,27 +1,55 @@
 <template>
   <div class="home">
-    <section>
-      <DashHead id="header" :scrolled="true" />
+    <DashHead id="header" :scrolled="true" />
+
+    <b-overlay
+      :z-index="1000"
+      :show="showMainOverlay"
+      rounded="sm"
+      variant="dark"
+      :opacity="0.6"
+    >
+      <template #overlay>
+        <span></span>
+      </template>
 
       <SideNav />
-    </section>
 
-    <main>
-      <div id="main">
-        <router-view />
-      </div>
-    </main>
+      <main>
+        <div id="main">
+          <router-view />
+        </div>
+      </main>
+
+      <Transition name="slide" appear>
+        <PendingAction v-if="!action && showMainOverlay" @show="perform" />
+        <CompanyValidation
+          v-if="action == 'companyValidate'"
+          @hideAll="perform"
+        />
+      </Transition>
+    </b-overlay>
   </div>
 </template>
 <script>
-import DashHead from "@/components/dashboard/DashHead.vue";
-import SideNav from "@/components/dashboard/SideNav.vue";
+import { mapMutations, mapState } from "vuex";
+import DashHead from "@/components/DashHead.vue";
+import SideNav from "@/components/SideNav.vue";
+import PendingAction from "@/components/pages/PendingAction.vue";
+import CompanyValidation from "@/components/pages/CompanyValidation.vue";
 export default {
   name: "AppFrame",
 
   components: {
     DashHead,
     SideNav,
+    PendingAction,
+    CompanyValidation,
+  },
+
+  async beforeCreate() {
+    this.$store.dispatch("getItems");
+    this.$store.dispatch("getMenus");
   },
 
   mounted() {
@@ -43,13 +71,27 @@ export default {
       }
     });
   },
+
+  computed: {
+    ...mapState(["showMainOverlay"]),
+  },
+
+  data() {
+    return {
+      action: null,
+    };
+  },
+
+  methods: {
+    ...mapMutations(["toggleMainOverlay"]),
+
+    perform(action) {
+      this.action = action;
+    },
+  },
 };
 </script>
 <style scoped>
-section {
-  overflow: hidden;
-  max-height: 100vh;
-}
 .home::before {
   content: "";
   background-image: url("../../assets/images/bg-cubic.svg");
@@ -67,12 +109,35 @@ section {
   opacity: 0.03;
 }
 main {
-  background: #f5f6f8;
+  /* background: #f5f6f8; */
+  background: #fff;
 }
 main > div {
   width: 100%;
   min-height: calc(100vh - 71px);
-  padding: 16px 0.9rem;
+  /* padding: 16px 0.9rem; */
+}
+
+.slide-enter-active {
+  transform: translateX(404px);
+  transition: all 0.5s ease-in-out;
+}
+
+.slide-leave-active {
+  transition: all 0.8s ease-in-out;
+}
+
+.slide-enter-to {
+  transform: translateX(0px);
+  /* opacity: 0.4; */
+}
+.slide-enter-from {
+  transform: translateX(400px);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translateX(400px);
+  opacity: 0;
 }
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {

@@ -1,7 +1,9 @@
 <template>
   <header class="py-3 pr-3 d-flex justify-content-between">
     <div class="col-7 col-lg-3">
-      <img src="@/assets/images/logo_black.svg" id="logo" alt="logo" />
+      <router-link to="/app">
+        <img src="@/assets/images/logo_black.svg" id="logo" alt="logo" />
+      </router-link>
     </div>
 
     <div class="col-5 col-lg-8 d-flex justify-content-end mr-0 mr-lg-5">
@@ -22,7 +24,7 @@
 </template>
 
 <script>
-import Hamburger from "../Hamburger.vue";
+import Hamburger from "./Hamburger.vue";
 export default {
   name: "DashHead",
 
@@ -54,9 +56,10 @@ export default {
 <style scoped>
 header {
   background: #ffffff;
-  box-shadow: 0px -2px 4px 2px grey;
+  /* box-shadow: 0px -2px 4px 2px grey; */
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); */
+  border-bottom: 2px solid #03435f22;
   padding-left: 1.1rem;
-  background: transparent;
   height: 4.375rem;
   z-index: 300;
 }
