@@ -1,16 +1,16 @@
 <template>
-  <div class="d-flex justify-content-between">
-    <div class="left border-right pt-5 px-5">
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <div class="left col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
-      <section id="sec1" class="d-flex">
-        <BlueBox />
-        <PinkBox />
+      <section id="sec1" class="d-flex justify-content-between flex-wrap">
+        <BlueBox class="col-md-7 col-12" />
+        <PinkBox class="col-md-5 col-12" />
       </section>
 
       <!-- gray section -->
-      <section id="sec2" class="d-flex">
-        <GrayBox />
-        <GrayBox />
+      <section id="sec2" class="d-flex justify-content-between flex-wrap">
+        <GrayBox class="col-12 col-md-6" />
+        <GrayBox class="col-12 col-md-6" />
       </section>
 
       <!-- graph section -->
@@ -24,7 +24,7 @@
       </section>
     </div>
 
-    <div class="right">
+    <div class="right col-lg-4 pl-3 pr-3">
       <QuickActions />
 
       <UserGuide :instructions="instructions" />
@@ -182,25 +182,33 @@ export default {
 </script>
 
 <style scoped>
-/* @import "../../assets/css/dashboard.css"; */
+#dash {
+  overflow-y: hidden;
+  height: calc(100vh - 68px);
+}
 section#sec1 {
-  gap: 28px;
+  width: 100%;
+  gap: 18px;
+  /* margin: auto; */
 }
 section#sec2 {
+  width: 100%;
   margin-top: 28px;
-  gap: 28px;
+  gap: 18px;
 }
 section#sec3,
 section#sec4 {
+  width: 100%;
+  overflow-x: hidden;
   margin-top: 28px;
 }
 .left {
-  width: 70%;
+  /* width: 70%; */
   overflow-y: scroll;
   height: calc(100vh - 70px);
 }
 .right {
-  width: 30%;
+  /* width: 30%; */
   overflow-y: scroll;
   height: calc(100vh - 70px);
 }
@@ -214,7 +222,7 @@ section#sec4 {
   scrollbar-width: none; /* Firefox */
 }
 .right .out-boxx {
-  padding: 28px;
+  padding: 28px 0;
   border-bottom: 1px solid #f2f2f2;
 }
 .right .notification-boxx {
@@ -231,9 +239,9 @@ section#sec4 {
 .notification-boxx h6 {
   font-weight: 700;
   font-size: 14px;
-  line-height: 19px;
+  line-height: 15px;
   color: #263238;
-  margin-bottom: 2px;
+  margin-bottom: 0px;
 }
 .notification-boxx small {
   font-weight: 400;
@@ -246,5 +254,39 @@ section#sec4 {
   line-height: 13px;
   color: #187a33;
   margin: 0;
+}
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  .right,
+  .left {
+    /* width: 70%; */
+    overflow-y: visible;
+    height: auto;
+  }
+  #dash {
+    overflow-y: scroll;
+  }
+  #dash::-webkit-scrollbar {
+    display: none;
+  }
+  #dash {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .col-md-7 {
+    flex: 0 0 56.333333%;
+    max-width: 56.333333%;
+  }
+  .col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+  .col-md-5 {
+    flex: 0 0 39.666667%;
+    max-width: 39.666667%;
+  }
 }
 </style>

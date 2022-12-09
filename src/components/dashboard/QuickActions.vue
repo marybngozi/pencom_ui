@@ -36,7 +36,7 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 48px 28px 28px;
+  padding: 48px 0 28px;
   border-bottom: 1px solid #f2f2f2;
 }
 h6 {

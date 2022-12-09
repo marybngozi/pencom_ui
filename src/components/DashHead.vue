@@ -6,12 +6,12 @@
       </router-link>
     </div>
 
-    <div class="col-5 col-lg-8 d-flex justify-content-end mr-0 mr-lg-5">
+    <div class="col-5 col-lg-8 d-flex justify-content-end mr-0 mr-mlg-5">
       <button @click="showNavList" class="btn button bell">
         <i class="far fa-bell"></i>
       </button>
 
-      <button id="menuBtn" @click="showNavList" class="btn d-block d-lg-none">
+      <button id="menuBtn" @click="showNavList" class="btn d-block d-mlg-none">
         <Hamburger
           :width="32"
           :height="30"
@@ -123,8 +123,14 @@ li a:focus {
   color: #ffffff !important;
   background: #ed342b !important;
 }
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
+/* Large devices (desktops, 1025px and up) */
+@media (min-width: 1025px) {
+  .mr-mlg-5 {
+    margin-right: 3rem !important;
+  }
+  .d-mlg-none {
+    display: none !important;
+  }
   .btn-dance {
     width: auto;
   }

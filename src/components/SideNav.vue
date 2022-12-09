@@ -183,8 +183,8 @@ a.nav-link-item:active {
 .relative {
   position: relative;
 }
-/*Large devices (desktops, 992px and up)*/
-@media (min-width: 992px) {
+/*Large devices (desktops, 1025px and up)*/
+@media (min-width: 1025px) {
   #sideNav {
     width: 300px;
   }

@@ -15,7 +15,7 @@
           <div class="blue-box">
             <img src="@/assets/images/dart.svg" alt="dart icon" />
 
-            <h6>Employer code verified</h6>
+            <h6>Company code verified</h6>
           </div>
 
           <div class="info">
@@ -44,7 +44,7 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 28px;
+  padding: 28px 0;
   border-bottom: 1px solid #f2f2f2;
 }
 .inner-boxx {
@@ -57,7 +57,7 @@ export default {
   background: #f9f9f9;
   border-radius: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 8px;
 }
 .dp {
@@ -79,7 +79,8 @@ h5 {
   align-items: center;
   padding: 10px;
   gap: 10px;
-  width: 218px;
+  width: 100%;
+  min-width: 150px;
   height: 48px;
   background: #eff7ff;
   border-radius: 24px;

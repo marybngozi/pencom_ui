@@ -5,15 +5,6 @@
     >
       <h6>Total contributions - YTD</h6>
 
-      <!-- <HorizontalSelect
-        :items="years"
-        :default="0"
-        borderColor="#252A2F"
-        width="100px"
-        height="32px"
-        @input="(d) => (yearOption = d)"
-      /> -->
-
       <CustomSelect
         :options="years"
         class="select"
@@ -30,7 +21,7 @@
         type="bar"
         :options="chartOptions"
         height="280"
-        width="100%"
+        width="1000px"
         :series="series"
       ></apexchart>
     </div>
@@ -100,7 +91,7 @@ export default {
             "Dec",
           ],
         },
-        colors: ["#80B7FF", "#109CF1", "#17517E"],
+        colors: ["#80B7FF", "#17517E", "#109CF1"],
         fill: {
           opacity: 1,
         },
@@ -171,14 +162,24 @@ export default {
 <style scoped>
 .boxx {
   width: 100%;
-  min-width: 698px;
-  height: 340px;
+  /* min-width: 808px; */
+  height: 370px;
   background: #ffffff;
   border: 1.29px solid #e0e0e0;
   border-radius: 20px;
-  padding: 0 0 13px;
+  padding: 3px 0 0px;
 }
 h6 {
   margin-bottom: 0px;
+}
+#chart {
+  overflow-x: scroll;
+}
+#chart::-webkit-scrollbar {
+  display: none;
+}
+#chart {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 </style>

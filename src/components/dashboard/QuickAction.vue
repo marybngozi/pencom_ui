@@ -6,7 +6,7 @@
   >
     <img :src="require(`@/assets/images/${iconName}.svg`)" :alt="iconName" />
 
-    <div :style="`color:${color}`">
+    <div :style="`color:${color}`" class="px-2">
       <h6>{{ mainText }}</h6>
       <small>{{ subText }}</small>
     </div>
@@ -68,7 +68,8 @@ a {
   color: inherit;
 }
 .aktion {
-  width: 341px;
+  width: 100%;
+  min-width: 281px;
   height: 56px;
   border-radius: 30px;
   padding: 12px 18px;
@@ -77,7 +78,7 @@ h6 {
   margin-bottom: 0;
   font-weight: 700;
   font-size: 14px;
-  line-height: 19px;
+  line-height: 15px;
 }
 small {
   font-weight: 400;

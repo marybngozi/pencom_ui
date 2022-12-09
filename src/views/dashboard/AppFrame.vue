@@ -139,8 +139,8 @@ main > div {
   transform: translateX(400px);
   opacity: 0;
 }
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
+/* Large devices (desktops, 1025px and up) */
+@media (min-width: 1025px) {
   main {
     display: flex;
     justify-content: flex-end;

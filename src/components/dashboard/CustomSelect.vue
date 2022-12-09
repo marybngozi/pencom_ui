@@ -85,20 +85,15 @@ export default {
 <style scoped>
 .customed-select {
   position: relative;
-  /* width: 100%; */
   text-align: left;
   outline: none;
-  /* height: 44px; */
   font-weight: 400;
   font-size: 12px;
-  /* line-height: 40px; */
 }
 
 .customed-select .selected {
   background-color: transparent;
   border-radius: 30px;
-  /* border: 1px solid #ffffff; */
-  /* color: #fff; */
   padding-left: 1em;
   cursor: pointer;
   user-select: none;
@@ -112,7 +107,7 @@ export default {
 .customed-select .selected:after {
   position: absolute;
   content: "";
-  top: 22px;
+  top: 47%;
   right: 1.8em;
   width: 0;
   height: 0;

@@ -21,7 +21,7 @@ export default {
 
   props: {
     instructions: {
-      type: Array,
+      type: Object,
       required: true,
     },
   },
@@ -30,8 +30,15 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 28px;
+  padding: 28px 0;
   border-bottom: 1px solid #f2f2f2;
+}
+h6 {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  color: #808080;
+  margin-bottom: 24px;
 }
 .red-box {
   padding: 16px;
