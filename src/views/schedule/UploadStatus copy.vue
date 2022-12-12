@@ -1,15 +1,41 @@
 <template>
-  <div id="dash" class="d-flex justify-content-between flex-wrap">
-    <!-- left side -->
-    <div class="left-tab col-lg-9 border-right pt-5 px-5">
-      <h4>Uploaded Pension Schedule Status</h4>
+  <section class="dash rounded px-3 pb-5 pt-2">
+    <div class="coln">
+      <h4 class="mb-4">Upload Schedule Status</h4>
+
+      <div class="">
+        <div v-if="items.length" class="alert alert-info" role="alert">
+          <h5 class="">
+            Your schedule has been received for validation and has
+            <b class="text-danger">not</b> been uploaded
+          </h5>
+          <ul>
+            <li class="m-1">
+              While the validation status is showing
+              <b class="text-secondary">processing</b>, you can close the window
+              and come back later using the <b>View Pending Schedule</b> menu on
+              the menu list to know if the file has finished processing.
+            </li>
+            <li class="m-1">
+              After processing, if the validation status on the file shows
+              <b class="text-danger">failure</b>, download the file, view the
+              reason for failure on the excel file, update
+              <i>(Make sure to remove the STATUS column)</i> and re-upload.
+            </li>
+            <li class="m-1">
+              If the validation status is
+              <b class="text-success">success</b> please proceed and upload the
+              file.
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div class="my-4">
-        <!-- outlined -->
         <b-table
-          class="my-table"
           id="my-table"
           :fields="fields"
+          outlined
           small
           striped
           hover
@@ -18,12 +44,8 @@
           :current-page="currentPage"
           show-empty
         >
-          <template #cell(index)="data">
-            {{ data.index + 1 }}
-          </template>
-
-          <template #cell(period)="data">
-            {{ $months[data.item.month].toUpperCase() }}, {{ data.item.year }}
+          <template #cell(itemCode)="data">
+            {{ getItem(data.value) }}
           </template>
 
           <template #cell(createdAt)="data">
@@ -35,40 +57,39 @@
           </template>
 
           <template #cell(status)="data">
-            <span v-if="data.value == 'success'" class="text-success fw-7">
-              Successful
+            <span v-if="data.value == 'success'" class="text-success">
+              {{ data.value }}
             </span>
             <span v-else-if="data.value == 'failure'" class="text-danger">
-              Failed
+              failed
             </span>
-            <span v-else class="text-secondary"> Pending </span>
+            <span v-else class="text-secondary">
+              {{ data.value }}
+            </span>
           </template>
 
           <template #cell(action)="data">
             <button
               v-if="data.item.status == 'success'"
-              class="btn-xsm bg-blue-light"
+              class="btn btn-sm btn-primary"
               @click="uploadSchedule(data.item.id)"
             >
-              Process
+              Upload
             </button>
-
-            <!-- v-else-if="data.item.status != 'failure'" -->
             <button
-              v-if="data.item.status == 'failure'"
-              class="btn-xsm bg-outline-blue"
+              v-else-if="data.item.status == 'failure'"
+              class="btn btn-sm btn-secondary"
               @click="downloadFile(data.item.filePath)"
             >
               Download
             </button>
-
             <button
               v-b-tooltip.hover
               title="This schedule has not been uploaded"
               v-if="
                 data.item.status == 'success' || data.item.status == 'failure'
               "
-              class="btn-xsm bg-red ml-3"
+              class="btn btn-sm ml-3 btn-danger"
               @click="deleteTask(data.item.id)"
             >
               Delete
@@ -77,7 +98,6 @@
         </b-table>
 
         <b-pagination
-          class="mt-4"
           v-model="currentPage"
           :total-rows="rows"
           :per-page="perPage"
@@ -86,149 +106,40 @@
           limit="10"
           page-class="text-blue"
           next-class="text-blue"
-          align="center"
-          pills
         >
         </b-pagination>
       </div>
     </div>
-
-    <!-- right side -->
-    <div class="right-tab col-lg-3 p-0">
-      <!-- Search Form -->
-      <div class="bg-blue">
-        <div class="inner-boxe">
-          <h5>Search Schedule</h5>
-
-          <!-- form -->
-          <form @submit.prevent="getStatus" class="">
-            <!-- year inout -->
-            <div class="mt-3">
-              <label class="d-flex justify-content-between" for="year">
-                <span>
-                  <span class="text-danger">*</span>
-                  Year
-                </span>
-                <span class="">Year of contribution</span>
-              </label>
-
-              <!-- Years Options -->
-              <CustomSelectInput
-                :options="years"
-                placeHolder="- select a year -"
-                class="select"
-                borderColor="#D2D2D2"
-                v-model="form.year"
-              />
-            </div>
-
-            <!-- month input -->
-            <div class="mt-4">
-              <label class="d-flex justify-content-between" for="month">
-                <span>
-                  <span class="text-danger">*</span>
-                  Month
-                </span>
-                <span class="">Month of contribution</span>
-              </label>
-
-              <!-- Months Options -->
-              <CustomSelectInput
-                :options="months"
-                placeHolder="- select a month -"
-                class="select"
-                borderColor="#D2D2D2"
-                v-model="form.month"
-              />
-            </div>
-
-            <!-- Submit button -->
-            <button :disabled="getting" @click="getStatus" class="button mt-4">
-              <span>Search for schedule</span>
-              <span
-                v-if="getting"
-                class="spinner-border spinner-border-sm text-light ml-3"
-                role="status"
-              ></span>
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- User guide -->
-      <div class="border-bottom">
-        <div class="inner-boxe">
-          <h6>Notice</h6>
-
-          <div class="blue-box">
-            <ul>
-              <li>
-                The 'uploaded schedule status' gives the user opportunity to
-                review the uploaded file.
-              </li>
-              <li>
-                If the file conforms with the schedule upload template, it will
-                return a successful verification status and gives the user the
-                options to process the file.
-              </li>
-              <li>
-                If the file returns a 'failure status', you need to download the
-                failed file to review the reasons stated on the excel file under
-                status, correct them and re-upload again. Remember that the
-                upload template must be maintained after the file is corrected.
-              </li>
-              <li>
-                When the 'uploaded schedule status' shows processing', kindly
-                wait for the file to complete its validation before proceeding
-                with the next step depending on the status returned.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
 
 export default {
   name: "UploadStatus",
-
-  components: { CustomSelectInput },
-
   data() {
     return {
-      form: {
-        year: null,
-        month: null,
-      },
       getting: false,
       perPage: 10,
       currentPage: 1,
       fields: [
         {
-          key: "index",
-          label: "S/N",
-        },
-        {
-          key: "period",
-          label: "Period",
+          key: "itemCode",
+          label: "Item",
         },
         {
           key: "filePath",
-          label: "File name",
-        },
-        {
-          key: "createdAt",
-          label: "Upload Date",
+          label: "File",
         },
         {
           key: "status",
-          label: "Verification Status",
+          label: "Validation Status",
+        },
+        {
+          key: "createdAt",
+          label: "Sent on",
         },
         {
           key: "action",
@@ -264,25 +175,6 @@ export default {
 
     rows() {
       return this.items.length;
-    },
-
-    years() {
-      const yearArr = [];
-      for (let i = new Date().getFullYear(); i >= 2000; i--) {
-        yearArr.push(i);
-      }
-      return yearArr;
-    },
-
-    months() {
-      const monthsArr = [];
-      for (const value in this.$months) {
-        if (Object.hasOwnProperty.call(this.$months, value)) {
-          const label = this.$months[value];
-          monthsArr.push({ label, value });
-        }
-      }
-      return monthsArr;
     },
   },
 
@@ -403,8 +295,4 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
-.bg-blue {
-  background: #ecf7ff;
-  border-bottom: 1px solid #f2f2f2;
-}
 </style>

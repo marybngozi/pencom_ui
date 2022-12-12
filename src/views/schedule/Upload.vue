@@ -1,164 +1,163 @@
 <template>
-  <section class="dash rounded px-3 pb-5 pt-2">
-    <div class="coln">
-      <h4 class="mb-4">Upload Schedule</h4>
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <!-- left side -->
+    <div class="left col-lg-8 border-right pt-5 px-5">
+      <h4 class="m-0">Upload Pension Schedule</h4>
 
-      <!-- Top section -->
-      <div class="d-flex justify-content-around">
-        <div class="form w-50">
-          <div class="mt-4">
-            <label class="d-flex justify-content-between" for="itemCode">
-              <span>
-                <span class="text-danger">*</span>
-                Item
-              </span>
-              <span class="fs-8 text-primary">
-                Select an Item to see the template
-              </span>
-            </label>
-            <select
-              name="itemCode"
-              v-model="form.itemCode"
-              id="itemCode"
-              class="form-control"
-            >
-              <option :value="null">- select an Item -</option>
-              <option
-                v-for="item in allItems"
-                :value="item.itemCode"
-                :key="item.itemCode"
-              >
-                {{ item.itemName }}
-              </option>
-            </select>
-            <small
-              v-if="form.itemCode"
-              class="d-flex justify-content-between text-info"
-            >
-              <button
-                @click="downloadFile(item.excelSamplePath)"
-                class="btn btn-sm btn-info mt-2 d-btn"
-              >
-                Download Schedule template
-              </button>
-              <button
-                @click="downloadFile(item.excelPfaCodes)"
-                class="btn btn-sm btn-info mt-2 d-btn"
-              >
-                Download PFA codes
-              </button>
-            </small>
-          </div>
-
-          <div class="mt-4">
-            <label class="d-flex justify-content-between" for="year">
-              <span>
-                <span class="text-danger">*</span>
-                Year
-              </span>
-              <span class="fs-8 text-primary">Year of contribution</span>
-            </label>
-            <select
-              name="year"
-              v-model="form.year"
-              id="year"
-              class="form-control"
-            >
-              <option :value="null">- select a year -</option>
-              <option v-for="year in years" :value="year" :key="year">
-                {{ year }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mt-4">
-            <label class="d-flex justify-content-between" for="month">
-              <span>
-                <span class="text-danger">*</span>
-                Month
-              </span>
-              <span class="fs-8 text-primary">Month of contribution</span>
-            </label>
-            <select
-              name="month"
-              v-model="form.month"
-              id="month"
-              class="form-control"
-            >
-              <option :value="null">- select a month -</option>
-              <option v-for="(month, i) in $months" :value="i" :key="i">
-                {{ month }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mt-5 custom-file">
-            <input
-              type="file"
-              class="custom-file-input"
-              id="customFile"
-              ref="customFile"
-              aria-describedby="inputGroupFileAddon01"
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              v-on:change="onChangeFileUpload"
-            />
-            <span v-if="form.fileUpload" class="text-sm ml-1 text-info">
-              {{ form.fileUpload.name }}
+      <form @submit.prevent="sendSchdeule" class="">
+        <!-- year inout -->
+        <div class="mt-3">
+          <label class="d-flex justify-content-between" for="year">
+            <span>
+              <span class="text-danger">*</span>
+              Year
             </span>
-            <label class="custom-file-label" for="customFile">
-              Choose Excel file to Upload
-            </label>
-          </div>
+            <span class="">Year of contribution</span>
+          </label>
 
-          <button
-            :disabled="!sendReady || sending"
-            @click="sendSchdeule"
-            class="btn mt-5 w-100 button"
-          >
-            <span>Send Schedule for Validation</span>
-            <span
-              v-if="sending"
-              class="spinner-border spinner-border-sm text-light ml-3"
-              role="status"
-            ></span>
-          </button>
+          <!-- Years Options -->
+          <CustomSelectInput
+            :options="years"
+            placeHolder="- select a year -"
+            class="select"
+            borderColor="#D2D2D2"
+            v-model="form.year"
+          />
         </div>
 
-        <div class="w-50 mt-5">
-          <div class="alert alert-info" role="alert">
-            <h5 class="">Send your schedule for validation before upload</h5>
+        <!-- month input -->
+        <div class="mt-4">
+          <label class="d-flex justify-content-between" for="month">
+            <span>
+              <span class="text-danger">*</span>
+              Month
+            </span>
+            <span class="">Month of contribution</span>
+          </label>
+
+          <!-- Months Options -->
+          <CustomSelectInput
+            :options="months"
+            placeHolder="- select a month -"
+            class="select"
+            borderColor="#D2D2D2"
+            v-model="form.month"
+          />
+        </div>
+
+        <!-- file input -->
+        <div class="mt-4">
+          <label class="d-flex justify-content-between" for="fileUpload">
+            <span>
+              <span class="text-danger">*</span>
+              Choose Excel file
+            </span>
+            <span class="">According to template</span>
+          </label>
+
+          <!-- File Options -->
+          <FileSelect v-model="form.fileUpload" />
+        </div>
+
+        <!-- Submit button -->
+        <button
+          :disabled="!sendReady || sending"
+          @click="sendSchdeule"
+          class="button mt-5"
+        >
+          <span>Upload schedule for verification</span>
+          <span
+            v-if="sending"
+            class="spinner-border spinner-border-sm text-light ml-3"
+            role="status"
+          ></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- right side -->
+    <div class="right col-lg-4 p-0">
+      <!-- User guides -->
+      <div class="border-bottom">
+        <div class="inner-boxe">
+          <h6>Use Guide</h6>
+
+          <div class="blue-box">
             <ul>
-              <li class="my-2 mx-1">
-                The upload file should comply with the upload template.
+              <li>
+                Please ensure that the upload file complies with the
+                <b>style provided in the schedule template</b>. Your upload also
+                needs to be in the appropriate file format: <b>.xlsx</b>
+                <br /><br />
+                Our template can be downloaded through the link below under
+                downloadable files.
               </li>
-              <li class="m-1">
-                The upload template download button shows when you select the
-                Item.
+
+              <li>The month/year is the contribution period.</li>
+
+              <li>
+                The PFA codes which will be used in the upload file is also
+                available below, under downloadable links.
               </li>
-              <li class="m-1">
-                The PFA codes which will be included on the upload file is also
-                available for download when item is selected.
+
+              <li>
+                Kindly ensure that the RSA pins are correct as the system runs a
+                validation process on all supplied RSA pins.
+              </li>
+
+              <li>
+                The total contributions must be correct, do not use special
+                characters like, =, %, Comma(,) etc.
+              </li>
+
+              <li>
+                Do not change the Headings of the columns in the excel upload
+                template.
               </li>
             </ul>
           </div>
         </div>
       </div>
+
+      <!-- Template sections -->
+      <div class="border-bottom">
+        <div class="inner-boxe">
+          <h6>Use Guide</h6>
+
+          <button
+            @click="downloadFile(item.excelSamplePath)"
+            class="button-outline"
+          >
+            Download schedule template
+          </button>
+
+          <button
+            @click="downloadFile(item.excelPfaCodes)"
+            class="button-outline mt-3"
+          >
+            Download PFA Codes
+          </button>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
+import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
+import FileSelect from "@/components/schedule/FileSelect";
 
 export default {
   name: "ListSchdeule",
-  components: {},
+  components: { CustomSelectInput, FileSelect },
+
   data() {
     return {
       sending: false,
       form: {
-        itemCode: null,
+        itemCode: "7000",
         year: null,
         month: null,
         fileUpload: null,
@@ -178,17 +177,25 @@ export default {
     },
     years() {
       const yearArr = [];
-      for (let i = new Date().getFullYear(); i >= 1990; i--) {
+      for (let i = new Date().getFullYear(); i >= 2000; i--) {
         yearArr.push(i);
       }
       return yearArr;
     },
 
-    item() {
-      if (!this.form.itemCode) {
-        return null;
+    months() {
+      const monthsArr = [];
+      for (const value in this.$months) {
+        if (Object.hasOwnProperty.call(this.$months, value)) {
+          const label = this.$months[value];
+          monthsArr.push({ label, value });
+        }
       }
-      return this.allItems.find((item) => item.itemCode == this.form.itemCode);
+      return monthsArr;
+    },
+
+    item() {
+      return this.allItems[0];
     },
   },
 
@@ -230,7 +237,6 @@ export default {
         Object.keys(this.form).forEach((key) => {
           this.form[key] = null;
         });
-        this.$refs.customFile.value = null;
 
         this.$swal({
           icon: "success",
@@ -257,7 +263,4 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
-.d-btn {
-  width: 48%;
-}
 </style>

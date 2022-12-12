@@ -12,7 +12,7 @@
         width="100px"
         height="32px"
         lineHeight="30px"
-        @input="(d) => (yearOption = d)"
+        v-model="yearOption"
       />
     </div>
 

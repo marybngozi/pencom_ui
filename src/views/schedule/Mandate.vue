@@ -222,42 +222,7 @@ export default {
 
       // get the totals
       this.grandTotal = this.items[0].invoiceAmount;
-      // for (const pfc of this.items) {
-      //   const total = pfc.reduce((a, obj) => {
-      //     return a + obj.amount;
-      //   }, 0);
-      //   const count = pfc.reduce((a, obj) => {
-      //     return a + obj.count;
-      //   }, 0);
 
-      //   pfc.push({
-      //     pfaName: "Total",
-      //     count: count,
-      //     amount: total,
-      //   });
-
-      //   this.grandTotal += total;
-      // }
-      // for (const key in this.items) {
-      //   if (Object.hasOwnProperty.call(this.items, key)) {
-      //     const pfc = this.items[key];
-
-      //     const total = pfc.reduce((a, obj) => {
-      //       return a + obj.amount;
-      //     }, 0);
-      //     const count = pfc.reduce((a, obj) => {
-      //       return a + obj.count;
-      //     }, 0);
-
-      //     pfc.push({
-      //       pfaName: "Total",
-      //       count: count,
-      //       amount: total,
-      //     });
-
-      //     this.grandTotal += total;
-      //   }
-      // }
       this.showMandate = true;
     } catch (err) {
       console.log(err);

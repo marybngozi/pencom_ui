@@ -10,7 +10,7 @@
         width="100px"
         height="32px"
         lineHeight="30px"
-        @input="(d) => (yearOption = d)"
+        v-model="yearOption"
       />
     </div>
 
@@ -71,6 +71,13 @@ h6 {
 }
 #table {
   overflow-x: scroll;
+}
+#table::-webkit-scrollbar {
+  display: none;
+}
+#table {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 table {
   width: 100%;

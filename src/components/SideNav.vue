@@ -131,7 +131,7 @@ export default {
 </script>
 <style scoped>
 #sideNav {
-  background: #03435f;
+  background: #17517e;
   height: calc(100vh - 65px);
   width: 0;
   position: absolute;
@@ -139,6 +139,9 @@ export default {
   overflow-x: hidden;
   transition: 0.5s;
   z-index: 900;
+}
+ul li {
+  list-style: none;
 }
 a {
   display: block;
@@ -178,7 +181,7 @@ a.nav-link-item {
 a.nav-link-item:visited,
 a.nav-link-item:hover,
 a.nav-link-item:active {
-  background: #013b54 !important;
+  background: #093f68 !important;
 }
 .relative {
   position: relative;

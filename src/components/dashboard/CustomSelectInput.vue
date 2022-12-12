@@ -6,15 +6,16 @@
     @blur="open = false"
   >
     <div
-      :style="`border: 1px solid ${borderColor}; color:${borderColor}; --borderColor: ${borderColor};`"
+      :style="`border: 1px solid ${borderColor}; color:${color}; --borderColor: ${borderColor};`"
       class="selected"
       :class="{ open: open }"
       @click="open = !open"
     >
-      {{ selectedLabel }}
+      <span v-if="selected">{{ selectedLabel }}</span>
+      <span v-else>{{ placeHolder }}</span>
     </div>
 
-    <div class="items" :class="{ selectHide: !open }">
+    <div ref="items" class="items" :class="{ selectHide: !open }">
       <div
         v-for="(option, i) of options"
         :key="i"
@@ -33,7 +34,7 @@
 
 <script>
 export default {
-  name: "CustomSelect",
+  name: "CustomSelectInput",
 
   props: {
     value: [String, Number],
@@ -44,6 +45,11 @@ export default {
     width: {
       type: String,
       default: "100%",
+    },
+    placeHolder: {
+      type: String,
+      required: false,
+      default: "- select -",
     },
     default: {
       type: String,
@@ -62,6 +68,10 @@ export default {
       type: String,
       default: "#ffffff",
     },
+    color: {
+      type: String,
+      default: "#808080",
+    },
     tabindex: {
       type: Number,
       required: false,
@@ -70,20 +80,8 @@ export default {
   },
   data() {
     return {
-      selectedLabel: this.default
-        ? this.default
-        : this.options.length > 0
-        ? this.options[0].label
-          ? this.options[0].label
-          : this.options[0]
-        : null,
-      selected: this.default
-        ? this.default
-        : this.options.length > 0
-        ? this.options[0].value
-          ? this.options[0].value
-          : this.options[0]
-        : null,
+      selectedLabel: this.default ? this.default : null,
+      selected: this.default ? this.default : null,
       open: false,
     };
   },
@@ -105,7 +103,7 @@ export default {
 .customed-select .selected {
   background-color: transparent;
   border-radius: 30px;
-  padding-left: 1em;
+  padding-left: 1.5em;
   cursor: pointer;
   user-select: none;
 }
@@ -128,18 +126,21 @@ export default {
 
 .customed-select .items {
   color: #fff;
+  background: #ffffff;
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+  /* border-radius: 16px; */
   border-radius: 0px 0px 6px 6px;
   overflow: hidden;
-  border-right: 1px solid #03435f;
+  /* border-right: 1px solid #03435f;
   border-left: 1px solid #03435f;
-  border-bottom: 1px solid #03435f;
+  border-bottom: 1px solid #03435f; */
   position: absolute;
   background-color: #ffffff;
+  height: 350px;
+  overflow-y: scroll;
   left: 0;
   right: 0;
   z-index: 1;
-  max-height: 350px;
-  overflow-y: scroll;
 }
 .customed-select .items::-webkit-scrollbar {
   display: none;
@@ -148,11 +149,16 @@ export default {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
 .customed-select .items div {
   color: #252a2f;
-  padding-left: 1em;
+  /* padding-left: 1.4em; */
+  padding: 10px 20px;
   cursor: pointer;
   user-select: none;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .customed-select .items div:hover {

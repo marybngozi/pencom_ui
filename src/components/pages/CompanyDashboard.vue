@@ -1,6 +1,7 @@
 <template>
   <div id="dash" class="d-flex justify-content-between flex-wrap">
-    <div class="left col-lg-8 border-right pt-5 pl-3 pr-3">
+    <!-- left side -->
+    <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
       <section id="sec1" class="d-flex justify-content-between flex-wrap">
         <BlueBox class="col-md-7 col-12" />
@@ -24,28 +25,37 @@
       </section>
     </div>
 
-    <div class="right col-lg-4 pl-3 pr-3">
-      <QuickActions />
+    <!-- right side -->
+    <div class="right-dash col-lg-4 p-0">
+      <div class="border-bottom">
+        <QuickActions />
+      </div>
 
-      <UserGuide :instructions="instructions" />
+      <div class="border-bottom">
+        <UserGuide :instructions="instructions" />
+      </div>
 
-      <ProfileBox />
+      <div class="border-bottom">
+        <ProfileBox />
+      </div>
 
       <!-- Notification gray box -->
-      <div class="out-boxx">
-        <div
-          class="notification-boxx d-flex justify-content-between align-items-center"
-        >
-          <div>
-            <i class="fa fa-thumbs-up icon"></i>
-          </div>
+      <div class="border-bottom">
+        <div class="out-boxx">
+          <div
+            class="notification-boxx d-flex justify-content-between align-items-center"
+          >
+            <div>
+              <i class="fa fa-thumbs-up icon"></i>
+            </div>
 
-          <div>
-            <h6>Employer code verification</h6>
-            <small>You have completed your verification process</small>
-          </div>
+            <div>
+              <h6>Employer code verification</h6>
+              <small>You have completed your verification process</small>
+            </div>
 
-          <p>Done</p>
+            <p>Done</p>
+          </div>
         </div>
       </div>
     </div>
@@ -53,7 +63,6 @@
 </template>
 
 <script>
-import { secureAxios } from "../../services/AxiosInstance";
 import BlueBox from "@/components/dashboard/BlueBox";
 import PinkBox from "@/components/dashboard/PinkBox";
 import GrayBox from "@/components/dashboard/GrayBox";
@@ -74,83 +83,6 @@ export default {
     QuickActions,
     UserGuide,
     ProfileBox,
-  },
-  async beforeCreate() {
-    // this.$store.dispatch("getItems");
-    // this.$store.dispatch("getMenus");
-
-    try {
-      this.getting = true;
-
-      const api1 = "stat/items-month";
-      const res1 = await secureAxios.get(api1);
-
-      const api2 = "stat/items-year";
-      const res2 = await secureAxios.get(api2);
-
-      const api3 = "stat/year-months";
-      const res3 = await secureAxios.get(api3);
-
-      this.getting = false;
-      if (res1) {
-        this.chartData.month = res1.data.data;
-      }
-      if (res2) {
-        this.chartData.year = res2.data.data;
-      }
-      if (res3) {
-        this.chartData.yearMonth = res3.data.data;
-      }
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
-  },
-
-  computed: {
-    plotPie() {
-      return this.chartData.month.employerNormalContribution != 0;
-    },
-    plotBar() {
-      return this.chartData.year.employerNormalContribution != 0;
-    },
-    plotLine() {
-      return this.chartData.yearMonth.length != 0;
-    },
-    pieSeries() {
-      return [
-        this.chartData.month.employerNormalContribution,
-        this.chartData.month.employeeNormalContribution,
-        this.chartData.month.employerVoluntaryContribution,
-        this.chartData.month.employeeVoluntaryContribution,
-      ];
-    },
-    barSeries() {
-      return [
-        {
-          name: "Contributions",
-          data: [
-            this.chartData.year.employerNormalContribution,
-            this.chartData.year.employeeNormalContribution,
-            this.chartData.year.employerVoluntaryContribution,
-            this.chartData.year.employeeVoluntaryContribution,
-          ],
-        },
-      ];
-    },
-    lineSeries() {
-      let month = new Date().getMonth();
-      const monthsData = new Array(month + 1).fill(0);
-      this.chartData.yearMonth.forEach((data) => {
-        monthsData[data._id - 1] = data.amount.toFixed(2);
-      });
-      return [
-        {
-          name: "Contributions",
-          data: monthsData,
-        },
-      ];
-    },
   },
 
   data() {
@@ -202,30 +134,29 @@ section#sec4 {
   overflow-x: hidden;
   margin-top: 28px;
 }
-.left {
+.left-dash {
   /* width: 70%; */
   overflow-y: scroll;
   height: calc(100vh - 70px);
 }
-.right {
+.right-dash {
   /* width: 30%; */
   overflow-y: scroll;
   height: calc(100vh - 70px);
 }
-.left::-webkit-scrollbar,
-.right::-webkit-scrollbar {
+.left-dash::-webkit-scrollbar,
+.right-dash::-webkit-scrollbar {
   display: none;
 }
-.left,
-.right {
+.left-dash,
+.right-dash {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-.right .out-boxx {
-  padding: 28px 0;
-  border-bottom: 1px solid #f2f2f2;
+.right-dash .out-boxx {
+  padding: 28px;
 }
-.right .notification-boxx {
+.right-dash .notification-boxx {
   height: 57px;
   background: #f9f9f9;
   border-radius: 16px;
@@ -257,7 +188,7 @@ section#sec4 {
 }
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 768px) {
-  .right,
+  .right-dash,
   .left {
     /* width: 70%; */
     overflow-y: visible;

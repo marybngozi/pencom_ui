@@ -7,7 +7,7 @@
     </div>
 
     <div class="col-5 col-lg-8 d-flex justify-content-end mr-0 mr-mlg-5">
-      <button @click="showNavList" class="btn button bell">
+      <button @click="showNavList" class="btn bell">
         <i class="far fa-bell"></i>
       </button>
 
@@ -67,11 +67,10 @@ button:hover {
   box-shadow: none;
   outline: none;
 }
-.button {
-  margin-top: -0.34rem;
-}
 .bell {
+  margin-top: -0.34rem;
   font-size: 1.45rem;
+  outline: none;
 }
 a.btn:focus {
   outline: none;

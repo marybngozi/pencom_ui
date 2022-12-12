@@ -26,11 +26,7 @@
     </div>
 
     <!-- Options section -->
-    <CustomSelect
-      :options="options"
-      class="select"
-      @input="(d) => (viewOption = d)"
-    />
+    <CustomSelect :options="options" class="select" v-model="viewOption" />
   </div>
 </template>
 
@@ -45,9 +41,9 @@ export default {
       viewOption: null,
       yearOption: null,
       options: [
-        "All Contributions",
-        "Employer contributions",
-        "Employee contributions",
+        { label: "All Contributions", value: "all" },
+        { label: "Employer contributions", value: "employer" },
+        { label: "Employee contributions", value: "employee" },
       ],
     };
   },

@@ -9,7 +9,7 @@
           alt="profile picture"
         />
 
-        <div class="right">
+        <div class="profile-right">
           <h5>Appmart Integrated LTD</h5>
 
           <div class="blue-box">
@@ -44,8 +44,8 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 28px 0;
-  border-bottom: 1px solid #f2f2f2;
+  padding: 28px;
+  /* border-bottom: 1px solid #f2f2f2; */
 }
 .inner-boxx {
   box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
@@ -92,17 +92,17 @@ h6 {
   line-height: 140.3%;
   color: #252a2f;
 }
-.right h5 {
+.profile-right h5 {
   color: #808080;
 }
-.right .info {
+.profile-right .info {
   margin-top: 24px;
 }
-.right h6 {
+.profile-right h6 {
   font-weight: 400;
   line-height: 19px;
 }
-.right a {
+.profile-right a {
   text-decoration: none;
   padding: 4px 20px;
   height: 28px;
@@ -114,16 +114,16 @@ h6 {
   line-height: 21px;
   color: #0090ff;
 }
-.right .ddate {
+.profile-right .ddate {
   margin-top: 24px;
 }
-.right .ddate small {
+.profile-right .ddate small {
   font-weight: 500;
   font-size: 10px;
   line-height: 13px;
   color: #808080;
 }
-.right .ddate p {
+.profile-right .ddate p {
   font-weight: 700;
   font-size: 16px;
   line-height: 21px;

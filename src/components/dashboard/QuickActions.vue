@@ -17,7 +17,7 @@
       subText="You have no pending schedule"
       :filled="false"
       color="#263238"
-      path="/view-processed"
+      path="/upload-status"
       class="mt-3"
     />
   </div>
@@ -36,8 +36,7 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 48px 0 28px;
-  border-bottom: 1px solid #f2f2f2;
+  padding: 48px 28px 28px;
 }
 h6 {
   font-weight: 700;

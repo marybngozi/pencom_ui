@@ -93,17 +93,6 @@ const routes = [
         },
       },
       {
-        path: "/list-schedule",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/List.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
         path: "/upload-schedule",
         component: () =>
           import(
@@ -126,21 +115,10 @@ const routes = [
         },
       },
       {
-        path: "/process-schedule",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/Process.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
         path: "/view-processed",
         component: () =>
           import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/ListProcessed.vue"
+            /* webpackChunkName: "dashboard" */ "../views/schedule/ViewProcessed.vue"
           ),
         meta: {
           requiresAuth: true,
