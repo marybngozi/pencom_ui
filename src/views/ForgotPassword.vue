@@ -38,7 +38,7 @@
 
         <p class="mt-4 text-center">
           <span class="text-faint">Back to </span>
-          <router-link to="/"> Sign in</router-link>
+          <router-link to="/auth/login"> Sign in</router-link>
         </p>
       </div>
     </section>
@@ -113,7 +113,7 @@ export default {
           text: data.message,
         });
 
-        this.$router.push("/");
+        this.$router.push("/auth/login");
       } catch (err) {
         console.log(err);
         this.resetting = false;

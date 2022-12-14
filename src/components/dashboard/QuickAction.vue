@@ -69,8 +69,8 @@ a {
 }
 .aktion {
   width: 100%;
-  min-width: 281px;
-  height: 56px;
+  /* min-width: 281px; */
+  min-height: 56px;
   border-radius: 30px;
   padding: 12px 18px;
 }

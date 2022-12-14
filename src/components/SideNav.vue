@@ -1,91 +1,149 @@
 <template>
-  <nav id="sideNav">
-    <div class="py-4">
-      <div class="d-flex mt-4 ml-4">
+  <nav id="sideNav" class="d-flex justify-content-between">
+    <!-- leftNav -->
+    <div id="leftNav">
+      <!-- user picture -->
+      <div class="d-flex justify-content-center">
         <img
-          class="rounded-circle"
-          width="36"
-          height="36"
+          class="rounded"
+          width="40"
+          height="40"
           src="@/assets/images/null_female.png"
           alt="user image"
         />
-        <div class="ml-3">
-          <h6
-            :title="username"
-            class="text-white m-0 mt-1 d-inline-block text-truncate"
-          >
-            {{ username }}
-          </h6>
-          <small class="">{{ userEmail }}</small>
-        </div>
       </div>
 
-      <div class="shadow-md" id="sidenavSecExample">
-        <ul class="relative px-1">
-          <li id="sidenavSecExD" class="relative">
+      <!-- menu icons -->
+      <ul class="">
+        <li class="">
+          <!-- dashboard menu icon -->
+          <router-link
+            class="nav-icon-li"
+            :class="pagePath.includes('app') ? 'active' : ''"
+            to="/app"
+          >
+            <div class="icon-div">
+              <img src="@/assets/images/dashboard.svg" alt="dashboard icon" />
+            </div>
+            <span class="icon-text">Dashboard</span>
+          </router-link>
+        </li>
+
+        <!-- account menu icon -->
+        <li class="">
+          <router-link
+            class="nav-icon-li"
+            :class="pagePath.includes('account') ? 'active' : ''"
+            to="/account/list-staff"
+          >
+            <div class="icon-div">
+              <img src="@/assets/images/account.svg" alt="account icon" />
+            </div>
+            <span class="icon-text">Account</span>
+          </router-link>
+        </li>
+
+        <!-- schedule menu icon -->
+        <li class="">
+          <router-link
+            class="nav-icon-li"
+            :class="pagePath.includes('schedule') ? 'active' : ''"
+            to="/schedule"
+          >
+            <div class="icon-div">
+              <img src="@/assets/images/schedule.svg" alt="schedule icon" />
+            </div>
+            <span class="icon-text">Schedule</span>
+          </router-link>
+        </li>
+      </ul>
+      <!-- menu icons /-->
+    </div>
+
+    <!-- rightNav -->
+    <div id="rightNav">
+      <div class="ml-3">
+        <h6
+          :title="username"
+          class="text-white m-0 mt-1 d-inline-block text-truncate"
+        >
+          {{ username }}
+        </h6>
+        <p class="small">{{ userEmail }}</p>
+      </div>
+
+      <!-- sub-menu links -->
+      <ul class="">
+        <!-- sub menu app -->
+        <li class="" v-if="pagePath.includes('app')">
+          <router-link
+            class="nav-link-item"
+            :class="pagePath == '/app' ? 'active' : ''"
+            to="/app"
+          >
+            Dashboard
+          </router-link>
+        </li>
+
+        <!-- sub menu account -->
+        <div v-if="pagePath.includes('account')">
+          <li class="">
             <router-link
-              class="overflow-hidden fs-6 text-nowrap mt-5 nav-link-item text-white"
-              to="/app"
+              class="nav-link-item"
+              :class="pagePath == '/account/list-staff' ? 'active' : ''"
+              to="/account/list-staff"
             >
-              <i class="fa fa-tachometer w-3 h-3`"></i>
-              <span class="mx-3">Overview</span>
+              Sub-admin staff
+            </router-link>
+          </li>
+        </div>
+
+        <!-- sub menu schedule -->
+        <div v-if="pagePath.includes('schedule')">
+          <li class="">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == '/schedule/upload' ? 'active' : ''"
+              to="/schedule/upload"
+            >
+              Upload schedule
             </router-link>
           </li>
 
-          <li
-            v-for="(menu, i) in userMenus"
-            class="relative"
-            :key="i"
-            :id="`sidenavSecEx${i}`"
-          >
-            <a
-              class="nav-link-item overflow-hidden fs-6 text-nowrap d-flex justify-content-between"
-              data-toggle="collapse"
-              :data-target="`#collapseSidenavSecEx${i}`"
-              aria-expanded="false"
-              :aria-controls="`collapseSidenavSecEx${i}`"
+          <li class="">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == '/schedule/upload-status' ? 'active' : ''"
+              to="/schedule/upload-status"
             >
-              <span>
-                <i :class="`${menu.icon} w-3 h-3 mr-3`"></i>
-                <span class="mx-3">{{ menu.name }}</span>
-              </span>
-              <i class="fa fa-chevron-down w-3 h-3 ml-auto"></i>
-            </a>
-            <ul
-              class="relative accordion-collapse collapse"
-              :id="`collapseSidenavSecEx${i}`"
-              :aria-labelledby="`sidenavSecEx${i}`"
-              data-parent="#sidenavSecExample"
-            >
-              <li
-                v-for="(subMenu, k) in menu.subMenus"
-                :key="k"
-                class="relative"
-              >
-                <router-link
-                  :to="subMenu.path"
-                  class="d-flex fs-7 nav-link-item overflow-hidden text-nowrap"
-                >
-                  {{ subMenu.name }}
-                </router-link>
-              </li>
-            </ul>
+              Uploaded Schedule Status
+            </router-link>
           </li>
-        </ul>
-      </div>
+
+          <li class="">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == '/schedule/view-processed' ? 'active' : ''"
+              to="/schedule/view-processed"
+            >
+              Processed Schedules
+            </router-link>
+          </li>
+        </div>
+      </ul>
+      <!-- sub-menu links /-->
 
       <div class="w-100">
-        <hr class="my-2" />
-
         <router-link
-          to="/change-password"
-          class="d-flex nav-link-item align-items-center"
+          to="/auth/change-password"
+          class="nav-link-item"
+          :class="pagePath == '/schedule/upload' ? 'active' : ''"
         >
           <i class="fa fa-cog mr-2"></i>
           <span class="fw-bold text-white">Change Password</span>
         </router-link>
 
-        <button @click="logoutUser" class="btn d-flex nav-link-btn">
+        <button @click="logoutUser" class="d-flex nav-link-btn">
           <i class="fas fa-sign-out-alt text-white mt-1"></i>
           <p class="fw-bold text-white ml-2">Logout</p>
         </button>
@@ -100,22 +158,16 @@ export default {
 
   computed: {
     ...mapGetters(["username", "userEmail", "userMenus"]),
+
+    pagePath() {
+      console.log(this.$route);
+      return this.$route.path;
+    },
   },
 
   data() {
     return {
-      menus: [
-        {
-          name: "Schedule",
-          icon: "fa fa-suitcase",
-          subMenus: [
-            {
-              name: "Upload Schedule",
-              path: "/upload-schedule",
-            },
-          ],
-        },
-      ],
+      // pagePath: "/app",
     };
   },
 
@@ -140,6 +192,67 @@ export default {
   transition: 0.5s;
   z-index: 900;
 }
+#sideNav h6 {
+  width: 80%;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 21px;
+}
+#sideNav .small {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+#sideNav #leftNav {
+  width: 62px;
+  background: #053a51;
+  height: calc(100vh - 65px);
+  padding-top: 36px;
+}
+#sideNav #rightNav {
+  width: calc(100% - 62px);
+  background: #03435f;
+  height: calc(100vh - 65px);
+  padding-top: 36px;
+}
+#leftNav ul,
+#rightNav ul {
+  margin-top: 29px;
+  padding-left: 0;
+}
+.nav-icon-li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 2px;
+  height: 61px;
+  margin: 16px auto;
+}
+.nav-icon-li .icon-text {
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 11px;
+  color: #ffffff;
+}
+.nav-icon-li > .icon-div {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.nav-icon-li.active > .icon-div {
+  background: #17517e;
+  border: 2px solid #90b8d0;
+  border-radius: 10px;
+}
+.nav-icon-li.active > .icon-text {
+  font-weight: 700;
+}
 ul li {
   list-style: none;
 }
@@ -151,37 +264,42 @@ button:hover {
   outline: none;
   box-shadow: none;
 }
-#sideNav h6 {
-  width: 80%;
-  line-height: 15px;
-}
-#sideNav small {
-  color: #bfb8b8;
-}
-#sideNav > div > div:last-child {
+
+#sideNav > #rightNav > div:last-child {
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  line-height: 19px;
   position: absolute;
-  bottom: 0;
+  bottom: 3px;
 }
 .nav-link-btn {
   width: 100%;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   background: transparent;
+  border: none;
 }
 a.nav-link-item {
-  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  padding: 16px 2px 16px 16px;
   background: transparent;
   transition: all;
   color: #ffffff;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
   text-overflow: ellipsis;
   cursor: pointer;
 }
 
-.nav-link-btn:hover,
+/* .nav-link-btn:hover, */
 a.nav-link-item:visited,
-a.nav-link-item:hover,
-a.nav-link-item:active {
-  background: #093f68 !important;
+/* a.nav-link-item:hover, */
+a.nav-link-item.active {
+  outline: none;
+  background: #17517e !important;
+  font-weight: 700;
 }
 .relative {
   position: relative;
@@ -189,7 +307,7 @@ a.nav-link-item:active {
 /*Large devices (desktops, 1025px and up)*/
 @media (min-width: 1025px) {
   #sideNav {
-    width: 300px;
+    width: 243px;
   }
 }
 </style>

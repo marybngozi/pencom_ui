@@ -14,9 +14,9 @@
                   <h1 class="mt-4">Create a company account</h1>
                   <p class="mb-5 text-faint">
                     Or click to
-                    <router-link to="/staff-signup"
-                      >Create a Staff account</router-link
-                    >
+                    <router-link to="/auth/staff-signup">
+                      Create a Staff account
+                    </router-link>
                   </p>
                 </div>
                 <div>
@@ -206,7 +206,7 @@
 
                 <p class="mt-4 text-center">
                   <span class="text-faint">Already have an account? </span>
-                  <router-link to="/">Sign in</router-link>
+                  <router-link to="/auth/login">Sign in</router-link>
                 </p>
               </div>
             </div>
@@ -316,7 +316,7 @@ export default {
           this.form[key] = null;
         });
 
-        this.$router.push({ path: "/" });
+        this.$router.push({ path: "/auth/login" });
 
         this.$swal({
           icon: "success",

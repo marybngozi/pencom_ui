@@ -60,8 +60,8 @@ export default {
 
     menuBtn.addEventListener("click", () => {
       if (!sideNavStatus) {
-        sideNav.style.width = "384px";
-        // let w = screen.width - 384;
+        sideNav.style.width = "284px";
+        // let w = screen.width - 284;
         // mainSide.style.width = `${w}px`;
         sideNavStatus = !sideNavStatus;
       } else {
@@ -146,7 +146,7 @@ main > div {
     justify-content: flex-end;
   }
   main > div {
-    width: calc(100% - 300px);
+    width: calc(100% - 243px);
   }
 }
 </style>

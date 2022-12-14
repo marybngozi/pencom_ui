@@ -1,13 +1,21 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store";
+import PassThrough from "../components/PassThrough.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "SignIn",
+    redirect: { name: "auth-login" },
+    meta: {
+      guest: true,
+    },
+  },
+  {
+    path: "/auth/login",
+    name: "auth-login",
     meta: {
       guest: true,
     },
@@ -15,8 +23,8 @@ const routes = [
       import(/* webpackChunkName: "auth" */ "../views/SignIn.vue"),
   },
   {
-    path: "/company-signup",
-    name: "SignUp",
+    path: "/auth/company-signup",
+    name: "auth-company-signup",
     meta: {
       guest: true,
     },
@@ -24,8 +32,8 @@ const routes = [
       import(/* webpackChunkName: "auth" */ "../views/CompanySignUp.vue"),
   },
   {
-    path: "/staff-signup",
-    name: "StaffSignUp",
+    path: "/auth/staff-signup",
+    name: "auth-staff-signUp",
     meta: {
       guest: true,
     },
@@ -33,8 +41,8 @@ const routes = [
       import(/* webpackChunkName: "auth" */ "../views/StaffSignUp.vue"),
   },
   {
-    path: "/verify/:token",
-    name: "Verify",
+    path: "/auth/verify/:token",
+    name: "auth-verify-token",
     meta: {
       guest: true,
     },
@@ -42,8 +50,8 @@ const routes = [
       import(/* webpackChunkName: "auth" */ "../views/Verify.vue"),
   },
   {
-    path: "/forgot-password",
-    name: "ForgotPassword",
+    path: "/auth/forgot-password",
+    name: "/auth-forgot-password",
     meta: {
       guest: true,
     },
@@ -51,8 +59,8 @@ const routes = [
       import(/* webpackChunkName: "auth" */ "../views/ForgotPassword.vue"),
   },
   {
-    path: "/reset-password/:token",
-    name: "ResetPassword",
+    path: "/auth/reset-password/:token",
+    name: "auth-reset-password",
     props: (route) => ({
       email: route.query.email,
       token: route.params.token,
@@ -72,6 +80,7 @@ const routes = [
     children: [
       {
         path: "",
+        name: "dashboard",
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ "../views/dashboard/Dashboard.vue"
@@ -93,38 +102,104 @@ const routes = [
         },
       },
       {
-        path: "/upload-schedule",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/Upload.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
+        path: "/schedule/",
+        component: PassThrough,
+        redirect: { name: "schedule-upload" },
+        children: [
+          {
+            path: "upload",
+            name: "schedule-upload",
+            component: () =>
+              import(
+                /* webpackChunkName: "dashboard" */ "../views/schedule/Upload.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "upload-status",
+            name: "schedule-upload-status",
+            component: () =>
+              import(
+                /* webpackChunkName: "dashboard" */ "../views/schedule/UploadStatus.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "view-processed",
+            name: "schedule-view-processed",
+            component: () =>
+              import(
+                /* webpackChunkName: "dashboard" */ "../views/schedule/ViewProcessed.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+        ],
       },
+      /* Schedule children end */
+
+      /* Account children end */
       {
-        path: "/upload-status",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/UploadStatus.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
+        path: "/account/",
+        component: PassThrough,
+        redirect: { name: "schedule-upload" },
+        children: [
+          {
+            path: "list-staff",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/account/ListAdminStaff.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "/create-staff",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/account/CreateAdminStaff.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+
+          {
+            path: "/assign-menu/:rsaPin",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/account/AssignMenu.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: true,
+            },
+          },
+          {
+            path: "/list-transaction",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/staff/ListTransaction.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+        ],
       },
-      {
-        path: "/view-processed",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/ViewProcessed.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
+
       {
         path: "/schedule-mandate/:invoiceNo",
         component: () =>
@@ -146,61 +221,7 @@ const routes = [
           free: true,
         },
       },
-      {
-        path: "/validate-company",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/account/ValidateCompany.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
-        path: "/create-staff",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/account/CreateAdminStaff.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
-        path: "/list-staff",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/account/ListAdminStaff.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
-        path: "/assign-menu/:rsaPin",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/account/AssignMenu.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: true,
-        },
-      },
-      {
-        path: "/list-transaction",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/staff/ListTransaction.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
+
       {
         path: "/view-contribution",
         component: () =>
@@ -255,8 +276,8 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // allow free routes
-  if (to.meta.free) {
+  // TODO: allow free routes
+  if (to.meta.free || !to.meta.free) {
     next();
     return;
   }

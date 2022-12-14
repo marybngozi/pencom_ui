@@ -72,9 +72,9 @@
 
                   <p class="mt-4 text-center">
                     <span class="text-faint">Create a &nbsp;</span>
-                    <router-link to="/company-signup">Company</router-link>
+                    <router-link to="/auth/company-signup">Company</router-link>
                     &nbsp;or&nbsp;
-                    <router-link to="/staff-signup">Staff</router-link>
+                    <router-link to="/auth/staff-signup">Staff</router-link>
                     <span class="text-faint">&nbsp;account</span>
                   </p>
                 </div>

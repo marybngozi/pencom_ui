@@ -14,7 +14,7 @@
                   <h1 class="mt-4">Create a staff account</h1>
                   <p class="mb-5 text-faint">
                     Or click to
-                    <router-link to="/company-signup"
+                    <router-link to="/auth/company-signup"
                       >Create a Company account</router-link
                     >
                   </p>
@@ -235,7 +235,7 @@
 
                 <p class="mt-4 text-center">
                   <span class="text-faint">Already have an account? </span>
-                  <router-link to="/">Sign in</router-link>
+                  <router-link to="/auth/login">Sign in</router-link>
                 </p>
               </div>
             </div>
@@ -328,7 +328,7 @@ export default {
         this.creating = true;
         const body = {
           ...this.form,
-          verifyUrl: window.location.origin + "/verify",
+          verifyUrl: window.location.origin + "/auth/verify",
         };
 
         const api = "auth/staff-register";
@@ -346,7 +346,7 @@ export default {
           this.form[key] = null;
         });
 
-        this.$router.push({ path: "/" });
+        this.$router.push({ path: "/auth/login" });
 
         this.$swal({
           icon: "success",

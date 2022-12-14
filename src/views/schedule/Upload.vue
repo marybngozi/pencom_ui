@@ -125,17 +125,29 @@
           <h6>Use Guide</h6>
 
           <button
-            @click="downloadFile(item.excelSamplePath)"
+            :disabled="gettingTemplate"
+            @click="downloadFile(item.excelSamplePath, 'gettingTemplate')"
             class="button-outline"
           >
-            Download schedule template
+            <span>Download schedule template</span>
+            <span
+              v-if="gettingTemplate"
+              class="spinner-border spinner-border-sm ml-3"
+              role="status"
+            ></span>
           </button>
 
           <button
-            @click="downloadFile(item.excelPfaCodes)"
+            :disabled="gettingPfacodes"
+            @click="downloadFile(item.excelPfaCodes, 'gettingPfacodes')"
             class="button-outline mt-3"
           >
-            Download PFA Codes
+            <span>Download PFA Codes</span>
+            <span
+              v-if="gettingPfacodes"
+              class="spinner-border spinner-border-sm ml-3"
+              role="status"
+            ></span>
           </button>
         </div>
       </div>
@@ -150,12 +162,14 @@ import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
 import FileSelect from "@/components/schedule/FileSelect";
 
 export default {
-  name: "ListSchdeule",
+  name: "UploadSchedule",
   components: { CustomSelectInput, FileSelect },
 
   data() {
     return {
       sending: false,
+      gettingTemplate: false,
+      gettingPfacodes: false,
       form: {
         itemCode: "7000",
         year: null,
@@ -255,8 +269,10 @@ export default {
       this.form.fileUpload = e.target.files[0];
     },
 
-    async downloadFile(filePath) {
+    async downloadFile(filePath, btn) {
+      this[btn] = true;
       await downloader(filePath);
+      this[btn] = false;
     },
   },
 };

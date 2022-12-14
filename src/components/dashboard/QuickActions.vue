@@ -13,8 +13,8 @@
 
     <QuickAction
       iconName="process"
-      main-text="Process pending pension schedule"
-      subText="You have no pending schedule"
+      main-text="Process pension schedule"
+      subText="Process uploaded schedule"
       :filled="false"
       color="#263238"
       path="/upload-status"

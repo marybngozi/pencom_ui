@@ -23,7 +23,7 @@
             </p>
             <p class="mt-5">
               Click
-              <router-link to="/forgot-password"> Here</router-link>
+              <router-link to="/auth/forgot-password"> Here</router-link>
               to reset password again
             </p>
           </div>
@@ -89,7 +89,9 @@
             You can now use your new password to log in to your account!
           </p>
 
-          <router-link to="/" class="btn a-btn mt-4 w-100"> Login </router-link>
+          <router-link to="/auth/login" class="btn a-btn mt-4 w-100">
+            Login
+          </router-link>
         </div>
       </div>
     </section>

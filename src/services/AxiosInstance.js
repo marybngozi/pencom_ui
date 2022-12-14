@@ -42,6 +42,12 @@ secureAxios.interceptors.response.use(
       return false;
     }
 
+    // if token is expired, return to the home page
+    if (err.response.status == 401 && err.response.data.errorCode == "N403") {
+      window.location.href = "/";
+      return false;
+    }
+
     const error_message = err.response.data.message
       ? err.response.data.message
       : err.response.data.errors.message;

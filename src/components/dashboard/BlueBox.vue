@@ -68,7 +68,7 @@ export default {
 <style scoped>
 .boxx {
   padding: 20px;
-  min-width: 300px;
+  /* min-width: 300px; */
   /* width: 56%; */
   height: 250px;
   background: #17517e;
