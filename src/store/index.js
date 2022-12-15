@@ -7,6 +7,18 @@ import { fetchItems, fetchStates, fetchMenus } from "../services/sourceData";
 
 Vue.use(Vuex);
 
+const intialState = {
+  user: null,
+  items: null,
+  allStates: null,
+  newMenus: [],
+  menus: {
+    mainMenus: [],
+    subMenus: [],
+  },
+  showMainOverlay: false,
+};
+
 export default new Vuex.Store({
   plugins: [
     // persists the data on page reload
@@ -21,11 +33,7 @@ export default new Vuex.Store({
   ],
 
   state: {
-    user: null,
-    items: null,
-    allStates: null,
-    menus: null,
-    showMainOverlay: false,
+    ...intialState,
   },
 
   getters: {
@@ -80,7 +88,7 @@ export default new Vuex.Store({
     },
     clearState(state) {
       Object.keys(state).forEach((key) => {
-        state[key] = null;
+        state[key] = intialState[key];
       });
     },
     toggleMainOverlay(state, value) {
@@ -117,10 +125,8 @@ export default new Vuex.Store({
         commit("saveStates", await fetchStates());
       }
     },
-    async getMenus({ commit, state }) {
-      if (!state.menus) {
-        commit("saveMenus", await fetchMenus());
-      }
+    async getMenus({ commit }) {
+      commit("saveMenus", await fetchMenus());
     },
     async updateMenus({ commit }) {
       commit("saveMenus", await fetchMenus());

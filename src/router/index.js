@@ -101,6 +101,7 @@ const routes = [
           free: true,
         },
       },
+      /* Schedule & children start */
       {
         path: "/schedule/",
         component: PassThrough,
@@ -144,16 +145,17 @@ const routes = [
           },
         ],
       },
-      /* Schedule children end */
+      /* Schedule & children end */
 
-      /* Account children end */
+      /* Account & children start */
       {
         path: "/account/",
         component: PassThrough,
-        redirect: { name: "schedule-upload" },
+        redirect: { name: "list-staff" },
         children: [
           {
             path: "list-staff",
+            name: "list-staff",
             component: () =>
               import(
                 /* webpackChunkName: "account" */ "../views/account/ListAdminStaff.vue"
@@ -164,7 +166,8 @@ const routes = [
             },
           },
           {
-            path: "/create-staff",
+            path: "create-staff",
+            create: "create-staff",
             component: () =>
               import(
                 /* webpackChunkName: "account" */ "../views/account/CreateAdminStaff.vue"
@@ -276,29 +279,22 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // TODO: allow free routes
-  if (to.meta.free || !to.meta.free) {
+  // allow free routes
+  if (to.meta.free) {
     next();
     return;
   }
 
-  // check if the path is assigned to the admin's menu
+  // check if the path is assigned to the user menu
   const userMenus = store.getters.userMenus;
   let menuExists = false;
 
-  for (let i = 0; i < userMenus.length; i++) {
-    const menu = userMenus[i];
-    if (menuExists) {
+  // check the submenus
+  for (let j = 0; j < userMenus.subMenus.length; j++) {
+    const submenu = userMenus.subMenus[j];
+    if (to.path.includes(submenu.path)) {
+      menuExists = true;
       break;
-    }
-
-    // check the submenus
-    for (let j = 0; j < menu.subMenus.length; j++) {
-      const submenu = menu.subMenus[j];
-      if (to.path.includes(submenu.path)) {
-        menuExists = true;
-        break;
-      }
     }
   }
 

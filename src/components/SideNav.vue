@@ -15,11 +15,12 @@
 
       <!-- menu icons -->
       <ul class="">
+        <!-- dashboard main menu icon -->
         <li class="">
-          <!-- dashboard menu icon -->
           <router-link
             class="nav-icon-li"
             :class="pagePath.includes('app') ? 'active' : ''"
+            @click.native="setSlug('app')"
             to="/app"
           >
             <div class="icon-div">
@@ -29,31 +30,22 @@
           </router-link>
         </li>
 
-        <!-- account menu icon -->
-        <li class="">
+        <!-- Populate the rest of the menu from DB -->
+        <!-- main menu icon -->
+        <li class="" v-for="(menu, i) in userMenus.mainMenus" :key="i">
           <router-link
             class="nav-icon-li"
-            :class="pagePath.includes('account') ? 'active' : ''"
-            to="/account/list-staff"
+            :class="pagePath.includes(menu.slug) ? 'active' : ''"
+            @click.native="setSlug(menu.slug)"
+            :to="'/' + menu.slug"
           >
             <div class="icon-div">
-              <img src="@/assets/images/account.svg" alt="account icon" />
+              <img
+                :src="require('@/assets/images/' + menu.slug + '.svg')"
+                :alt="`${menu.slug} icon`"
+              />
             </div>
-            <span class="icon-text">Account</span>
-          </router-link>
-        </li>
-
-        <!-- schedule menu icon -->
-        <li class="">
-          <router-link
-            class="nav-icon-li"
-            :class="pagePath.includes('schedule') ? 'active' : ''"
-            to="/schedule"
-          >
-            <div class="icon-div">
-              <img src="@/assets/images/schedule.svg" alt="schedule icon" />
-            </div>
-            <span class="icon-text">Schedule</span>
+            <span class="icon-text">{{ menu.name }}</span>
           </router-link>
         </li>
       </ul>
@@ -74,7 +66,7 @@
 
       <!-- sub-menu links -->
       <ul class="">
-        <!-- sub menu app -->
+        <!-- sub menu dashboard -->
         <li class="" v-if="pagePath.includes('app')">
           <router-link
             class="nav-link-item"
@@ -85,51 +77,17 @@
           </router-link>
         </li>
 
-        <!-- sub menu account -->
-        <div v-if="pagePath.includes('account')">
-          <li class="">
-            <router-link
-              class="nav-link-item"
-              :class="pagePath == '/account/list-staff' ? 'active' : ''"
-              to="/account/list-staff"
-            >
-              Sub-admin staff
-            </router-link>
-          </li>
-        </div>
-
-        <!-- sub menu schedule -->
-        <div v-if="pagePath.includes('schedule')">
-          <li class="">
-            <router-link
-              class="nav-link-item"
-              :class="pagePath == '/schedule/upload' ? 'active' : ''"
-              to="/schedule/upload"
-            >
-              Upload schedule
-            </router-link>
-          </li>
-
-          <li class="">
-            <router-link
-              class="nav-link-item"
-              :class="pagePath == '/schedule/upload-status' ? 'active' : ''"
-              to="/schedule/upload-status"
-            >
-              Uploaded Schedule Status
-            </router-link>
-          </li>
-
-          <li class="">
-            <router-link
-              class="nav-link-item"
-              :class="pagePath == '/schedule/view-processed' ? 'active' : ''"
-              to="/schedule/view-processed"
-            >
-              Processed Schedules
-            </router-link>
-          </li>
-        </div>
+        <!-- Populate the rest of the menu from DB -->
+        <!-- sub menus -->
+        <li class="" v-for="(menu, i) in subMenuList" :key="i">
+          <router-link
+            class="nav-link-item"
+            :class="pagePath == menu.path ? 'active' : ''"
+            :to="menu.path"
+          >
+            {{ menu.name }}
+          </router-link>
+        </li>
       </ul>
       <!-- sub-menu links /-->
 
@@ -160,14 +118,19 @@ export default {
     ...mapGetters(["username", "userEmail", "userMenus"]),
 
     pagePath() {
-      console.log(this.$route);
       return this.$route.path;
+    },
+
+    subMenuList() {
+      return this.userMenus.subMenus.filter((menu) =>
+        menu.path.includes(this.pageSlug)
+      );
     },
   },
 
   data() {
     return {
-      // pagePath: "/app",
+      pageSlug: this.$route.path.split("/")[1],
     };
   },
 
@@ -177,6 +140,10 @@ export default {
       this.$router.push({ path: "/" });
 
       this.logout();
+    },
+    setSlug(slug) {
+      console.log(slug);
+      this.pageSlug = slug;
     },
   },
 };
