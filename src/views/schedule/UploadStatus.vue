@@ -4,8 +4,40 @@
     <div class="left-tab col-lg-9 border-right pt-5 px-5">
       <h4>Uploaded Pension Schedule Status</h4>
 
+      <!-- paagination and filter details -->
       <div class="my-4">
-        <!-- outlined -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="show-count w-70">
+            Showing {{ items.length }} of {{ rows }} Uploaded schedules
+          </div>
+
+          <div class="d-flex justify-content-between gap-3">
+            <CustomSelect
+              :options="statutes"
+              class="select"
+              borderColor="#DDDDDD"
+              color="#252A2F"
+              width="112px"
+              height="32px"
+              lineHeight="30px"
+              v-model="statusOption"
+            />
+
+            <CustomSelectInput
+              :options="years"
+              :default="years[0]"
+              class="select"
+              borderColor="#DDDDDD"
+              color="#252A2F"
+              width="100px"
+              height="32px"
+              lineHeight="30px"
+              v-model="yearOption"
+            />
+          </div>
+        </div>
+
+        <!-- table section -->
         <b-table
           class="my-table"
           id="my-table"
@@ -76,6 +108,7 @@
           </template>
         </b-table>
 
+        <!-- table pagination -->
         <b-pagination
           class="mt-4"
           v-model="currentPage"
@@ -84,11 +117,11 @@
           aria-controls="my-table"
           size="sm"
           limit="10"
-          page-class="text-blue"
-          next-class="text-blue"
           align="center"
           pills
         >
+          <!-- page-class="text-blue"
+          next-class="text-blue" -->
         </b-pagination>
       </div>
     </div>
@@ -194,11 +227,12 @@ import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
 import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
+import CustomSelect from "@/components/dashboard/CustomSelect";
 
 export default {
   name: "UploadStatus",
 
-  components: { CustomSelectInput },
+  components: { CustomSelectInput, CustomSelect },
 
   data() {
     return {
@@ -236,6 +270,14 @@ export default {
         },
       ],
       items: [],
+      yearOption: null,
+      statusOption: null,
+      statutes: [
+        { label: "All Statutes", value: "all" },
+        { label: "Pending", value: "processing" },
+        { label: "Failed", value: "failure" },
+        { label: "Successful", value: "success" },
+      ],
     };
   },
 

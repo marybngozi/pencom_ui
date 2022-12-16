@@ -142,7 +142,6 @@ export default {
       this.logout();
     },
     setSlug(slug) {
-      console.log(slug);
       this.pageSlug = slug;
     },
   },

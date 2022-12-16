@@ -6,7 +6,9 @@
     @blur="open = false"
   >
     <div
-      :style="`border: 1px solid ${borderColor}; color:${borderColor}; --borderColor: ${borderColor};`"
+      :style="`border: 1px solid ${borderColor}; color:${
+        color ? color : borderColor
+      }; --borderColor: ${color ? color : borderColor};`"
       class="selected"
       :class="{ open: open }"
       @click="open = !open"
@@ -61,6 +63,10 @@ export default {
     borderColor: {
       type: String,
       default: "#ffffff",
+    },
+    color: {
+      type: String,
+      default: null,
     },
     tabindex: {
       type: Number,

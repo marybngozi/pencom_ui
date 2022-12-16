@@ -258,7 +258,7 @@ export default {
         });
 
         // go to the status page
-        this.$router.push({ path: "/upload-status" });
+        this.$router.push({ name: "schedule-upload-status" });
       } catch (err) {
         console.log(err);
         this.sending = false;

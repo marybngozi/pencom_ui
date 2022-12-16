@@ -168,17 +168,45 @@ input::placeholder {
 }
 .my-table thead tr th {
   background: #f9fbff;
+  padding: 16px 12px 16px 12px;
+  border: none;
+}
+.my-table tbody tr td {
+  padding: 10px 12px 10px 12px;
+  border: none;
+  vertical-align: middle;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: inherit;
+}
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: #f9f9f9;
+}
+.show-count {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #999999;
 }
 .btn-xsm {
   padding: 6px 20px;
-  /* width: 86px; */
+  font-size: 12px;
   height: 28px;
   border: none;
   border-radius: 30px;
   font-weight: 700;
 }
+a.btn-xsm {
+  text-decoration: none;
+  display: inline-block;
+}
 .btn-xsm.bg-blue-light {
   background: #0090ff;
+  color: #ffffff;
+}
+.btn-xsm.bg-blue-dark {
+  background: #17517e;
   color: #ffffff;
 }
 .btn-xsm.bg-red {
@@ -232,4 +260,9 @@ input::placeholder {
 }
 .w-60 {
   width: 59%;
+}
+
+/* ------------------ Gaps ------------------------ */
+.gap-3 {
+  gap: 12px;
 }

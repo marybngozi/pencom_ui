@@ -101,6 +101,7 @@ const routes = [
           free: true,
         },
       },
+
       /* Schedule & children start */
       {
         path: "/schedule/",
@@ -202,6 +203,7 @@ const routes = [
           },
         ],
       },
+      /* Account & children start */
 
       {
         path: "/schedule-mandate/:invoiceNo",
@@ -224,7 +226,6 @@ const routes = [
           free: true,
         },
       },
-
       {
         path: "/view-contribution",
         component: () =>
