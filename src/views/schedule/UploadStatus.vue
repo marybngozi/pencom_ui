@@ -362,7 +362,8 @@ export default {
       // warn
       const result = await this.$swal({
         icon: "question",
-        title: "Are you sure you want to upload this schedule?",
+        title: "Are you sure you want to process this schedule?",
+        text: "You should proceed to make payment after processing",
         showDenyButton: true,
         confirmButtonText: "Yes",
         denyButtonText: "No",
@@ -377,7 +378,10 @@ export default {
 
         const api = "schedule/upload-schedule";
 
-        const res = await secureAxios.post(api, { id });
+        const res = await secureAxios.post(api, {
+          id,
+          scheduleUrl: window.location.origin + "/schedule/make-payment",
+        });
 
         this.uploading = false;
         if (!res) {
