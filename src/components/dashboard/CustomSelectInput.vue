@@ -6,7 +6,7 @@
     @blur="open = false"
   >
     <div
-      :style="`border: 1px solid ${borderColor}; color:${color}; --borderColor: ${borderColor};`"
+      :style="`border: 1px solid ${borderColor}; color:${color}; --borderColor: ${color};`"
       class="selected"
       :class="{ open: open }"
       @click="open = !open"

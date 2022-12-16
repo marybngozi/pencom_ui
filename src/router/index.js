@@ -206,7 +206,8 @@ const routes = [
       /* Account & children start */
 
       {
-        path: "/schedule-mandate/:invoiceNo",
+        path: "/schedule/mandate/:invoiceNo",
+        name: "schedule-mandate",
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ "../views/schedule/Mandate.vue"
@@ -216,7 +217,8 @@ const routes = [
         },
       },
       {
-        path: "/make-payment/:invoiceNo",
+        path: "/schedule/make-payment/:invoiceNo",
+        name: "schedule-make-payment",
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ "../views/schedule/Payment.vue"

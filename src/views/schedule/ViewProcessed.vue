@@ -80,14 +80,20 @@
           <router-link
             v-if="data.item.paymentStatus == 0"
             class="btn-xsm bg-blue-light m-1"
-            :to="`make-payment/${data.item.invoiceNo}`"
+            :to="{
+              name: 'schedule-make-payment',
+              params: { invoiceNo: data.item.invoiceNo },
+            }"
           >
             Make Payment
           </router-link>
 
           <router-link
             class="btn-xsm bg-blue-dark m-1"
-            :to="`schedule-mandate/${data.item.invoiceNo}`"
+            :to="{
+              name: 'schedule-mandate',
+              params: { invoiceNo: data.item.invoiceNo },
+            }"
           >
             Mandate
           </router-link>

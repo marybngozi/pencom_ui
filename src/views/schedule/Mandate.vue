@@ -1,17 +1,13 @@
 <template>
   <section class="dash rounded px-3 pb-5 pt-2">
     <div class="coln mb-5">
-      <h4 class="mb-4">Schedule Mandate</h4>
-
-      <!-- <div class="card"> -->
-      <div class="d-flex justify-content-end card-header py-2">
-        <button class="btn btn-primary px-2 btn-sm" v-print="printObj">
-          Print
-        </button>
+      <!-- print button -->
+      <div class="d-flex justify-content-end py-2">
+        <button class="btn-print" v-print="printObj">Print</button>
       </div>
 
-      <!-- Start Content-->
-      <div v-if="showMandate" class="container-fluid">
+      <!-- start Print Content-->
+      <div v-if="showMandate" class="container-fluid" id="printArea">
         <div class="row" id="scheduleReciept">
           <div class="card-body p-0">
             <div class="row d-flex justify-content-between p-3 px-1">
@@ -136,8 +132,9 @@
           </div>
         </div>
       </div>
-      <!-- end container-fluid -->
+      <!-- end Print content -->
 
+      <!-- loader -->
       <div
         v-else-if="!showMandate && getting"
         class="text-center mt-5 text-secondary"
@@ -146,6 +143,7 @@
         <span>Getting Mandate...</span>
       </div>
 
+      <!-- broken link -->
       <div v-else class="text-center mt-5 text-secondary">
         <i class="fas fa-unlink text-secondary fa-3x mt-2"></i>
         <span>Link is broken or invalid</span>
@@ -233,4 +231,24 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
+.btn-print {
+  padding: 6px 30px;
+  font-size: 16px;
+  background: #17517e;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  color: #ffffff;
+}
+#printArea {
+  overflow-y: scroll;
+  height: calc(100vh - 150px);
+}
+#printArea::-webkit-scrollbar {
+  display: none;
+}
+#printArea {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 </style>

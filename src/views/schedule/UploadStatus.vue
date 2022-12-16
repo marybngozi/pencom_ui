@@ -391,8 +391,8 @@ export default {
           text: data.message,
         });
 
-        // refresh the status data
-        this.getStatus();
+        // go to view processed page
+        this.$router.push({ name: "schedule-view-processed" });
       } catch (err) {
         console.log(err);
         this.uploading = false;
