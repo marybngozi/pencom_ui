@@ -8,7 +8,7 @@
       subText="Upload new schedule"
       :filled="true"
       color="#ffffff"
-      path="/upload-schedule"
+      path="/schedule/upload"
     />
 
     <QuickAction
@@ -17,7 +17,7 @@
       subText="Process uploaded schedule"
       :filled="false"
       color="#263238"
-      path="/upload-status"
+      path="/schedule/upload-status"
       class="mt-3"
     />
   </div>

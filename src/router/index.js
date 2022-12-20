@@ -91,7 +91,7 @@ const routes = [
         },
       },
       {
-        path: "/change-password",
+        path: "change-password",
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ "../views/dashboard/ChangePassword.vue"
@@ -152,8 +152,20 @@ const routes = [
       {
         path: "/account/",
         component: PassThrough,
-        redirect: { name: "list-staff" },
+        redirect: { name: "account-profile" },
         children: [
+          {
+            path: "profile",
+            name: "account-profile",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/account/Profile.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
           {
             path: "list-staff",
             name: "list-staff",
@@ -167,20 +179,8 @@ const routes = [
             },
           },
           {
-            path: "create-staff",
-            create: "create-staff",
-            component: () =>
-              import(
-                /* webpackChunkName: "account" */ "../views/account/CreateAdminStaff.vue"
-              ),
-            meta: {
-              requiresAuth: true,
-              free: false,
-            },
-          },
-
-          {
-            path: "/assign-menu/:rsaPin",
+            path: "assign-menu/:rsaPin",
+            name: "account-assign-menu",
             component: () =>
               import(
                 /* webpackChunkName: "account" */ "../views/account/AssignMenu.vue"
@@ -191,10 +191,35 @@ const routes = [
             },
           },
           {
-            path: "/list-transaction",
+            path: "list-contribution",
+            name: "staff-list-transaction",
             component: () =>
               import(
-                /* webpackChunkName: "account" */ "../views/staff/ListTransaction.vue"
+                /* webpackChunkName: "account" */ "../views/staff/ListContribution.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "list-pfc-transaction",
+            name: "list-pfc-transaction",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/pfc/ListTransaction.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "list-pfa-transaction",
+            name: "list-pfa-transaction",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/pfa/ListTransaction.vue"
               ),
             meta: {
               requiresAuth: true,
@@ -203,19 +228,8 @@ const routes = [
           },
         ],
       },
-      /* Account & children start */
+      /* Account & children end */
 
-      {
-        path: "/schedule/mandate/:invoiceNo",
-        name: "schedule-mandate",
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ "../views/schedule/Mandate.vue"
-          ),
-        meta: {
-          guest: true,
-        },
-      },
       {
         path: "/schedule/make-payment/:invoiceNo",
         name: "schedule-make-payment",
@@ -228,29 +242,19 @@ const routes = [
           free: true,
         },
       },
-      {
-        path: "/view-contribution",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/pfa/ListContribution.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
-      {
-        path: "/create-subadmin",
-        component: () =>
-          import(
-            /* webpackChunkName: "account" */ "../views/pfa/CreateSubadmin.vue"
-          ),
-        meta: {
-          requiresAuth: true,
-          free: false,
-        },
-      },
     ],
+  },
+  /* Mandate shows without sidenav */
+  {
+    path: "/mandate/:invoiceNo",
+    name: "schedule-mandate",
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard" */ "../views/schedule/Mandate.vue"
+      ),
+    meta: {
+      guest: true,
+    },
   },
   {
     path: "/:pathMatch(.*)*",

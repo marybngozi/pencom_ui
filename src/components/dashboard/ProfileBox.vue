@@ -23,7 +23,7 @@
 
             <h6>info@appmartgroup.com</h6>
 
-            <router-link to="/profile">Edit</router-link>
+            <router-link to="/account/profile">View Profile</router-link>
           </div>
 
           <div class="ddate">

@@ -71,12 +71,26 @@
 .right .inner-boxe .blue-box ul li:not(:first-child) {
   margin-top: 8px;
 }
-label > span:first-child {
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
-  text-align: center;
-  color: #808080;
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  .left,
+  .left-tab,
+  .right,
+  .right-tab {
+    /* width: 70%; */
+    overflow-y: visible;
+    height: auto;
+  }
+  #dash {
+    overflow-y: scroll;
+  }
+  #dash::-webkit-scrollbar {
+    display: none;
+  }
+  #dash {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 label > span:last-child {
   font-style: italic;
@@ -86,6 +100,15 @@ label > span:last-child {
   text-align: right;
   color: #808080;
 }
+label > span:first-child {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+  color: #808080;
+}
+
 .button {
   width: 100%;
   display: flex;
@@ -137,34 +160,49 @@ label > span:last-child {
   opacity: 0.6;
   cursor: not-allowed;
 }
-input::placeholder {
-  color: #6c7a87 !important;
+.custom-input-group label {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+  color: #808080;
 }
-/* Medium devices (tablets, 768px and up) */
-@media (max-width: 768px) {
-  .left,
-  .left-tab,
-  .right,
-  .right-tab {
-    /* width: 70%; */
-    overflow-y: visible;
-    height: auto;
-  }
-  #dash {
-    overflow-y: scroll;
-  }
-  #dash::-webkit-scrollbar {
-    display: none;
-  }
-  #dash {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
+.custom-input {
+  padding: 10px 20px;
+  width: 100%;
+  height: 48px;
+  border-radius: 30px;
+  background: transparent;
+}
+.custom-input.border-blue {
+  border: 1px solid #0090ff;
+}
+.custom-input.border-gray {
+  border: 1px solid #d2d2d2;
+}
+.custom-input::placeholder {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #808080;
+}
+.table-div {
+  overflow: hidden;
+  width: 100%;
 }
 .my-table {
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.my-table thead,
+.my-table tbody {
+  display: table;
+  width: 100%;
 }
 .my-table thead tr th {
   background: #f9fbff;
@@ -190,7 +228,7 @@ input::placeholder {
   color: #999999;
 }
 .btn-xsm {
-  padding: 6px 20px;
+  padding: 6px 10px;
   font-size: 12px;
   height: 28px;
   border: none;

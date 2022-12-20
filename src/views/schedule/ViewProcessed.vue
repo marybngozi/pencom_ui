@@ -39,93 +39,97 @@
       </div>
 
       <!-- table section -->
-      <b-table
-        class="my-table"
-        id="my-table"
-        :fields="fields"
-        small
-        striped
-        :busy="getting"
-        hover
-        :items="items"
-        :per-page="perPage"
-        :current-page="currentPage"
-        show-empty
-      >
-        <template #cell(invoiceNo)="data">
-          <span class="invoice-no">{{ data.value }}</span>
-        </template>
+      <div class="table-div">
+        <b-table
+          class="my-table"
+          id="my-table"
+          :fields="fields"
+          small
+          striped
+          :busy="getting"
+          hover
+          :items="items"
+          :per-page="perPage"
+          :current-page="currentPage"
+          show-empty
+        >
+          <template #cell(invoiceNo)="data">
+            <span class="invoice-no">{{ data.value }}</span>
+          </template>
 
-        <template #cell(createdAt)="data">
-          {{ data.value | moment("DD-MM-YYYY") }}
-        </template>
+          <template #cell(createdAt)="data">
+            {{ data.value | moment("DD-MM-YYYY") }}
+          </template>
 
-        <template #cell(period)="data">
-          {{ $months[data.item.month].slice(0, 3).toUpperCase() }},
-          {{ data.item.year }}
-        </template>
+          <template #cell(period)="data">
+            {{ $months[data.item.month].slice(0, 3).toUpperCase() }},
+            {{ data.item.year }}
+          </template>
 
-        <template #cell(paymentStatus)="data">
-          <div class="text-center not-paid" v-if="data.value == 0">
-            Not Paid
-          </div>
-          <div class="text-center paid" v-if="data.value == 1">Paid</div>
-        </template>
+          <template #cell(paymentStatus)="data">
+            <div class="text-center not-paid" v-if="data.value == 0">
+              Not Paid
+            </div>
+            <div class="text-center paid" v-if="data.value == 1">Paid</div>
+          </template>
 
-        <template #cell(amount)="data">
-          {{ data.value | toCurrency }}
-        </template>
+          <template #cell(amount)="data">
+            {{ data.value | toCurrency }}
+          </template>
 
-        <template #cell(action)="data">
-          <router-link
-            v-if="data.item.paymentStatus == 0"
-            class="btn-xsm bg-blue-light m-1"
-            :to="{
-              name: 'schedule-make-payment',
-              params: { invoiceNo: data.item.invoiceNo },
-            }"
-          >
-            Make Payment
-          </router-link>
+          <template #cell(action)="data">
+            <div class="d-flex justify-content-end gap-4">
+              <router-link
+                v-show="data.item.paymentStatus == 0"
+                class="btn-xsm bg-blue-light"
+                :to="{
+                  name: 'schedule-make-payment',
+                  params: { invoiceNo: data.item.invoiceNo },
+                }"
+              >
+                Make Payment
+              </router-link>
 
-          <router-link
-            class="btn-xsm bg-blue-dark m-1"
-            :to="{
-              name: 'schedule-mandate',
-              params: { invoiceNo: data.item.invoiceNo },
-            }"
-          >
-            Mandate
-          </router-link>
+              <router-link
+                class="btn-xsm bg-blue-dark"
+                :to="{
+                  name: 'schedule-mandate',
+                  params: { invoiceNo: data.item.invoiceNo },
+                }"
+              >
+                Mandate
+              </router-link>
 
-          <button
-            class="btn-xsm bg-blue-dark m-1"
-            @click="getItems(data.item.invoiceNo)"
-          >
-            Show Items
-          </button>
+              <button
+                class="btn-xsm bg-blue-dark"
+                @click="getItems(data.item.invoiceNo)"
+              >
+                Show Items
+              </button>
 
-          <button
-            class="btn-xsm bg-outline-blue m-1"
-            @click="downloadItems(data.item.invoiceNo)"
-          >
-            Download
-          </button>
-        </template>
-      </b-table>
+              <button
+                class="btn-xsm bg-outline-blue"
+                @click="downloadItems(data.item.invoiceNo)"
+              >
+                Download
+              </button>
+            </div>
+          </template>
+        </b-table>
 
-      <!-- table pagination -->
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="my-table"
-        size="sm"
-        limit="10"
-        align="center"
-        pills
-      >
-      </b-pagination>
+        <!-- table pagination -->
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="my-table"
+          size="sm"
+          limit="10"
+          align="center"
+          pills
+        >
+        </b-pagination>
+      </div>
     </div>
 
     <!-- right side -->
@@ -363,6 +367,9 @@ export default {
         {
           key: "action",
           label: "Action",
+          thStyle: {
+            width: "377px",
+          },
         },
       ],
       fieldsItem: [
@@ -579,5 +586,8 @@ export default {
   border: none;
   border-radius: 30px;
   font-weight: 700;
+}
+.gap-4 {
+  gap: 4px;
 }
 </style>

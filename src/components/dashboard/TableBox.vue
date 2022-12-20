@@ -1,7 +1,7 @@
 <template>
   <div class="boxx">
     <div class="d-flex justify-content-between align-items-center py-2 px-4">
-      <h6>Transactions history</h6>
+      <h6>Transactions history <small class="paid ml-3">paid</small></h6>
 
       <CustomSelect
         :options="years"
@@ -68,6 +68,13 @@ export default {
 <style scoped>
 h6 {
   margin-bottom: 0px;
+}
+.paid {
+  background: #252a2f;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+  color: #ffffff;
 }
 #table {
   overflow-x: scroll;

@@ -17,7 +17,10 @@
     <!-- Name section -->
     <div class="mt-3">
       <h5>Total Contributions</h5>
-      <h6>Balance</h6>
+      <h6>
+        Balance
+        <small class="ml-4 paid">paid</small>
+      </h6>
     </div>
 
     <!-- Money Section -->
@@ -96,5 +99,12 @@ h3 {
   font-size: 28px;
   line-height: 37px;
   margin-bottom: 14px;
+}
+.paid {
+  background: #be9e1b;
+  color: #ffffff;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
 }
 </style>

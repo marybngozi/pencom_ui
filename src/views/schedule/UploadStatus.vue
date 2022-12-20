@@ -38,91 +38,95 @@
         </div>
 
         <!-- table section -->
-        <b-table
-          class="my-table"
-          id="my-table"
-          :fields="fields"
-          small
-          striped
-          hover
-          :items="items"
-          :per-page="perPage"
-          :current-page="currentPage"
-          show-empty
-        >
-          <template #cell(index)="data">
-            {{ data.index + 1 }}
-          </template>
+        <div class="table-div">
+          <b-table
+            class="my-table"
+            id="my-table"
+            :fields="fields"
+            small
+            striped
+            hover
+            :items="items"
+            :per-page="perPage"
+            :current-page="currentPage"
+            show-empty
+          >
+            <template #cell(index)="data">
+              {{ data.index + 1 }}
+            </template>
 
-          <template #cell(period)="data">
-            {{ $months[data.item.month].toUpperCase() }}, {{ data.item.year }}
-          </template>
+            <template #cell(period)="data">
+              {{ $months[data.item.month].toUpperCase() }}, {{ data.item.year }}
+            </template>
 
-          <template #cell(createdAt)="data">
-            {{ data.value | moment("DD-MM-YYYY") }}
-          </template>
+            <template #cell(createdAt)="data">
+              {{ data.value | moment("DD-MM-YYYY") }}
+            </template>
 
-          <template #cell(filePath)="data">
-            {{ data.value.split("-").pop() }}
-          </template>
+            <template #cell(filePath)="data">
+              {{ data.value.split("-").pop() }}
+            </template>
 
-          <template #cell(status)="data">
-            <span v-if="data.value == 'success'" class="text-success fw-7">
-              Successful
-            </span>
-            <span v-else-if="data.value == 'failure'" class="text-danger">
-              Failed
-            </span>
-            <span v-else class="text-secondary"> Pending </span>
-          </template>
+            <template #cell(status)="data">
+              <span v-if="data.value == 'success'" class="text-success fw-7">
+                Successful
+              </span>
+              <span v-else-if="data.value == 'failure'" class="text-danger">
+                Failed
+              </span>
+              <span v-else class="text-secondary"> Pending </span>
+            </template>
 
-          <template #cell(action)="data">
-            <button
-              v-if="data.item.status == 'success'"
-              class="btn-xsm bg-blue-light"
-              @click="uploadSchedule(data.item.id)"
-            >
-              Process
-            </button>
+            <template #cell(action)="data">
+              <div class="d-flex justify-content-start gap-4">
+                <button
+                  v-if="data.item.status == 'success'"
+                  class="btn-xsm bg-blue-light"
+                  @click="uploadSchedule(data.item.id)"
+                >
+                  Process
+                </button>
 
-            <!-- v-else-if="data.item.status != 'failure'" -->
-            <button
-              v-if="data.item.status == 'failure'"
-              class="btn-xsm bg-outline-blue"
-              @click="downloadFile(data.item.filePath)"
-            >
-              Download
-            </button>
+                <button
+                  v-if="data.item.status == 'failure'"
+                  class="btn-xsm bg-outline-blue"
+                  @click="downloadFile(data.item.filePath)"
+                >
+                  Download
+                </button>
 
-            <button
-              v-b-tooltip.hover
-              title="This schedule has not been uploaded"
-              v-if="
-                data.item.status == 'success' || data.item.status == 'failure'
-              "
-              class="btn-xsm bg-red ml-3"
-              @click="deleteTask(data.item.id)"
-            >
-              Delete
-            </button>
-          </template>
-        </b-table>
+                <button
+                  v-b-tooltip.hover
+                  title="This schedule has not been uploaded"
+                  v-if="
+                    data.item.status == 'success' ||
+                    data.item.status == 'failure'
+                  "
+                  class="btn-xsm bg-red"
+                  @click="deleteTask(data.item.id)"
+                >
+                  Delete
+                </button>
+              </div>
+            </template>
+          </b-table>
 
-        <!-- table pagination -->
-        <b-pagination
-          class="mt-4"
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-          size="sm"
-          limit="10"
-          align="center"
-          pills
-        >
-          <!-- page-class="text-blue"
+          <!-- table pagination -->
+          <b-pagination
+            class="mt-4"
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="my-table"
+            size="sm"
+            limit="10"
+            align="center"
+            pills
+          >
+            <!-- page-class="text-blue"
           next-class="text-blue" -->
-        </b-pagination>
+          </b-pagination>
+        </div>
       </div>
     </div>
 
@@ -267,6 +271,9 @@ export default {
         {
           key: "action",
           label: "Action",
+          thStyle: {
+            width: "277px",
+          },
         },
       ],
       items: [],
@@ -452,5 +459,8 @@ export default {
 .bg-blue {
   background: #ecf7ff;
   border-bottom: 1px solid #f2f2f2;
+}
+.gap-4 {
+  gap: 4px;
 }
 </style>

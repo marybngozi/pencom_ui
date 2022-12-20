@@ -186,6 +186,12 @@ section#sec4 {
   color: #187a33;
   margin: 0;
 }
+.paid {
+  background: #be9e1b;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+}
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 768px) {
   .right-dash,

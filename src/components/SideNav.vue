@@ -67,15 +67,27 @@
       <!-- sub-menu links -->
       <ul class="">
         <!-- sub menu dashboard -->
-        <li class="" v-if="pagePath.includes('app')">
-          <router-link
-            class="nav-link-item"
-            :class="pagePath == '/app' ? 'active' : ''"
-            to="/app"
-          >
-            Dashboard
-          </router-link>
-        </li>
+        <div v-if="pagePath.includes('app')">
+          <li class="">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == '/app' ? 'active' : ''"
+              to="/app"
+            >
+              Dashboard
+            </router-link>
+          </li>
+
+          <li class="">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == '/app/change-password' ? 'active' : ''"
+              to="/app/change-password"
+            >
+              Change Password
+            </router-link>
+          </li>
+        </div>
 
         <!-- Populate the rest of the menu from DB -->
         <!-- sub menus -->
@@ -92,15 +104,6 @@
       <!-- sub-menu links /-->
 
       <div class="w-100">
-        <router-link
-          to="/auth/change-password"
-          class="nav-link-item"
-          :class="pagePath == '/schedule/upload' ? 'active' : ''"
-        >
-          <i class="fa fa-cog mr-2"></i>
-          <span class="fw-bold text-white">Change Password</span>
-        </router-link>
-
         <button @click="logoutUser" class="d-flex nav-link-btn">
           <i class="fas fa-sign-out-alt text-white mt-1"></i>
           <p class="fw-bold text-white ml-2">Logout</p>
@@ -125,6 +128,12 @@ export default {
       return this.userMenus.subMenus.filter((menu) =>
         menu.path.includes(this.pageSlug)
       );
+    },
+  },
+
+  watch: {
+    pagePath(val) {
+      this.pageSlug = val.split("/")[1];
     },
   },
 

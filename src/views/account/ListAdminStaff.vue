@@ -1,14 +1,15 @@
 <template>
-  <section class="dash rounded px-3 pb-5 pt-2">
-    <div class="coln">
-      <h4 class="mb-4">List Company Admin Staff</h4>
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <!-- left side -->
+    <div class="left-tab col-lg-9 border-right pt-5 px-5">
+      <h4 class="mb-4">All Sub-Admin Staff</h4>
 
       <!-- List of staff -->
-      <div class="mt-5 pb-4">
+      <div class="table-div">
         <b-table
+          class="my-table"
           id="my-table"
           :fields="fields"
-          outlined
           small
           striped
           :busy="getting"
@@ -35,19 +36,21 @@
           </template>
 
           <template #cell(action)="data">
-            <router-link
-              class="btn btn-sm btn-primary"
-              :to="`assign-menu/${data.item.agentId.rsaPin}`"
-            >
-              Assign Menu
-            </router-link>
+            <div class="d-flex gap-4">
+              <router-link
+                class="btn-xsm bg-blue-light"
+                :to="`assign-menu/${data.item.agentId.rsaPin}`"
+              >
+                Assign Menu
+              </router-link>
 
-            <button
-              class="btn btn-sm btn-danger mx-3"
-              @click="deleteStaff(data.item.agentId.rsaPin)"
-            >
-              Delete
-            </button>
+              <button
+                class="btn-xsm bg-red"
+                @click="deleteStaff(data.item.agentId.rsaPin)"
+              >
+                Delete
+              </button>
+            </div>
           </template>
         </b-table>
 
@@ -57,14 +60,80 @@
           :per-page="perPage"
           aria-controls="my-table"
           size="sm"
-          limit="10"
-          page-class="text-blue"
-          next-class="text-blue"
+          limit="8"
+          pills
+          align="center"
         >
         </b-pagination>
       </div>
     </div>
-  </section>
+
+    <!-- right side -->
+    <div class="right-tab col-lg-3 p-0">
+      <!-- Create staff Form -->
+      <div class="bg-blue">
+        <div class="inner-boxe">
+          <h5>Create Sub-Admin Staff</h5>
+
+          <!-- search form -->
+          <form @submit.prevent="checkrsaPin" class="">
+            <!-- RSA Pin inout -->
+            <div class="mt-3">
+              <label class="d-flex justify-content-between" for="rsaPin">
+                <span>
+                  <span class="text-danger">*</span>
+                  Staff RSA PIN
+                </span>
+              </label>
+
+              <!-- RSA input -->
+              <input
+                class="custom-input border-blue"
+                type="text"
+                placeholder="- enter staff RSA pin -"
+                v-model="form.rsaPin"
+              />
+            </div>
+
+            <!-- Submit button -->
+            <button
+              :disabled="getting"
+              @click="checkrsaPin"
+              class="button mt-4"
+            >
+              <span>Make Sub-admin Staff</span>
+              <span
+                v-if="getting"
+                class="spinner-border spinner-border-sm text-light ml-3"
+                role="status"
+              ></span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- User guide -->
+      <div class="border-bottom">
+        <div class="inner-boxe">
+          <h6>Notice</h6>
+
+          <div class="blue-box">
+            <ul>
+              <li>
+                Please note that any staff to be added as a sub-admin staff must
+                create account on the platform using his RSA pin first.
+              </li>
+              <li>
+                The staff has to accept via an email link sent to his registered
+                email on the system before any function can be assigned to the
+                staff by the institution.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
@@ -73,6 +142,12 @@ export default {
   name: "ListAdminStaff",
   data() {
     return {
+      checking: false,
+      verifying: false,
+      form: {
+        rsaPin: null,
+      },
+      staff: null,
       getting: false,
       deleting: false,
       perPage: 10,
@@ -125,6 +200,10 @@ export default {
     rows() {
       return this.items.length;
     },
+
+    rsaReady() {
+      return !!this.form.rsaPin;
+    },
   },
 
   methods: {
@@ -145,6 +224,88 @@ export default {
       } catch (err) {
         console.log(err);
         this.getting = false;
+      }
+    },
+
+    async checkrsaPin() {
+      if (!this.rsaReady) {
+        this.$swal({
+          icon: "error",
+          text: "Fill all fields",
+        });
+        return;
+      }
+
+      try {
+        this.checking = true;
+
+        const api = `auth/staffs/${this.form.rsaPin}`;
+        const res = await secureAxios.get(api);
+
+        this.checking = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.staff = data.data;
+
+        // warn
+        const result = await this.$swal({
+          icon: "question",
+          title: `Are you sure you want to make ${this.staff.firstName} ${this.staff.lastName} an Admin staff?`,
+          text: "This staff will be able to perform authorized actions for this company",
+          showDenyButton: true,
+          confirmButtonText: "Yes",
+          denyButtonText: "No",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        await this.makeStaff();
+      } catch (err) {
+        console.log(err);
+        this.checking = false;
+      }
+    },
+
+    async makeStaff() {
+      if (!this.staff) {
+        this.$swal({
+          icon: "error",
+          text: "Fill all fields",
+        });
+        return;
+      }
+
+      try {
+        this.checking = true;
+
+        const api = "auth/admin-staff";
+        const res = await secureAxios.post(api, this.form);
+
+        this.checking = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        // clear the form
+        Object.keys(this.form).forEach((key) => {
+          this.form[key] = null;
+        });
+
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
+      } catch (err) {
+        console.log(err);
+        this.checking = false;
       }
     },
 
@@ -193,4 +354,11 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
+.bg-blue {
+  background: #ecf7ff;
+  border-bottom: 1px solid #f2f2f2;
+}
+.gap-4 {
+  gap: 4px;
+}
 </style>

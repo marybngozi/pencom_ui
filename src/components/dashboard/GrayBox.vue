@@ -3,7 +3,10 @@
     <!-- top section -->
     <div class="mt-3">
       <h5>Employer</h5>
-      <h6>Pension contribution</h6>
+      <h6>
+        Pension contribution
+        <small class="paid ml-3">paid</small>
+      </h6>
     </div>
 
     <!-- mid data -->
@@ -85,5 +88,12 @@ h6 {
   line-height: 21px;
   text-align: right;
   color: #252a2f;
+}
+.paid {
+  background: #252a2f;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+  color: #ffffff;
 }
 </style>

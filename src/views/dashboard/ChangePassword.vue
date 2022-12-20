@@ -1,9 +1,11 @@
 <template>
-  <section class="dash d-flex justify-content-center rounded px-3 pb-5 pt-4">
-    <div class="form">
-      <h4 class="mb-4 mt-3">Change Password</h4>
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <!-- left side -->
+    <div class="left-tab col-12 col-lg-8 pt-5 px-5">
+      <h4>Change Password</h4>
 
-      <div class="mt-4">
+      <form action=""></form>
+      <div class="mt-4 custom-input-group">
         <label for="oldPassword">
           <span class="text-danger">*</span>
           Old Password
@@ -12,13 +14,13 @@
           autocomplete="off"
           id="oldPassword"
           v-model="form.oldPassword"
-          class="form-control input"
+          class="custom-input border-gray"
           type="password"
-          placeholder="old password"
+          placeholder="- write old password -"
         />
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 custom-input-group">
         <label for="newPassword">
           <span class="text-danger">*</span>
           New Password
@@ -27,9 +29,9 @@
           autocomplete="off"
           id="newPassword"
           v-model="form.newPassword"
-          class="form-control input"
+          class="custom-input border-gray"
           type="password"
-          placeholder="new password"
+          placeholder="- write new password -"
         />
         <small v-if="form.newPassword && !passwordValid" class="text-danger">
           At least 8 characters, one digit, one uppercase, one lowercase and one
@@ -37,18 +39,18 @@
         </small>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 custom-input-group">
         <label for="cpassword">
           <span class="text-danger">*</span>
-          Re-enter New Password
+          Confirm new password
         </label>
         <input
           autocomplete="off"
           id="cpassword"
           v-model="form.cpassword"
-          class="form-control input"
+          class="custom-input border-gray"
           type="password"
-          placeholder="repeat new password"
+          placeholder="- confirm new password -"
         />
         <small v-if="passwordNotMatch" class="text-danger">
           New Passwords does not match
@@ -58,7 +60,7 @@
       <button
         :disabled="!changeReady || changing"
         @click="changePassword"
-        class="btn mt-5 w-100 button"
+        class="mt-5 w-100 button"
       >
         <span>Change Password</span>
         <span
@@ -68,7 +70,7 @@
         ></span>
       </button>
     </div>
-  </section>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";

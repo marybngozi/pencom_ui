@@ -6,7 +6,10 @@
 
     <div class="mt-3">
       <h5>Staff Count</h5>
-      <h6>for the month</h6>
+      <h6>
+        for the month
+        <small class="paid ml-3">paid</small>
+      </h6>
     </div>
 
     <div>
@@ -74,5 +77,12 @@ h3 {
   font-size: 28px;
   line-height: 37px;
   margin-bottom: 14px;
+}
+.paid {
+  background: #252a2f;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+  color: #ffffff;
 }
 </style>

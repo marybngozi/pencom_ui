@@ -3,7 +3,7 @@
     <div
       class="d-flex justify-content-between align-items-center border-bottom py-2 px-4"
     >
-      <h6>Total contributions - YTD</h6>
+      <h6>Total contributions - YTD <small class="paid ml-3">paid</small></h6>
 
       <CustomSelect
         :options="years"
@@ -171,6 +171,13 @@ export default {
 }
 h6 {
   margin-bottom: 0px;
+}
+.paid {
+  background: #252a2f;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+  color: #ffffff;
 }
 #chart {
   overflow-x: scroll;

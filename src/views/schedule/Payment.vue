@@ -122,7 +122,10 @@
           <div class="col-md-4" style="height: 200px">
             <router-link
               target="_blank"
-              :to="'/schedule-mandate/' + paymentDetails.invoiceNo"
+              :to="{
+                name: 'schedule-mandate',
+                params: { invoiceNo: paymentDetails.invoiceNo },
+              }"
               class="btn w-100 h-100 bg-light text-info font-weight-bold pt-5"
               :disabled="!enableWallet"
             >
