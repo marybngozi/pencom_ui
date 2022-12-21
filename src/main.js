@@ -27,7 +27,7 @@ Vue.use(Loading);
 
 Vue.component("apexchart", VueApexCharts);
 Vue.filter("toCurrency", (value) => {
-  if (typeof value !== "number") {
+  if (isNaN(Number(value))) {
     return value;
   }
   var formatter = new Intl.NumberFormat("en-US", {
@@ -35,7 +35,7 @@ Vue.filter("toCurrency", (value) => {
     currency: "Ngn",
     minimumFractionDigits: 0,
   });
-  return formatter.format(value);
+  return formatter.format(Number(value));
 });
 
 Vue.prototype.$months = {

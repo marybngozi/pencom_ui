@@ -55,6 +55,9 @@ export default new Vuex.Store({
     userEmail: (state) => {
       return state.user ? state.user.email : null;
     },
+    userDateOfCreation: (state) => {
+      return state.user ? state.user.createdAt : null;
+    },
     allStates: (state) => {
       return state.allStates;
     },

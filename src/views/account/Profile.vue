@@ -7,28 +7,49 @@
     </div>
 
     <!-- Profile body  -->
-    <div class="profile-body">
-      <!-- Logo rounded box -->
-      <div class="logo-round-box">
-        <p>Company Logo</p>
-        <div class="logo-div">
-          <img src="@/assets/images/null_female.png" alt="user image" />
+    <div class="col-12 col-lg-9">
+      <div class="profile-body">
+        <!-- Logo rounded box -->
+        <div class="logo-round-box">
+          <p>Company Logo</p>
+          <div class="logo-div">
+            <img src="@/assets/images/null_female.png" alt="user image" />
+          </div>
+        </div>
+
+        <!-- profile details -->
+        <div class="mt-5">
+          <div class="profile-info">
+            <p>Company Name</p>
+            <p>{{ username }}</p>
+          </div>
+          <div class="profile-info">
+            <p>Company Email</p>
+            <p>{{ userEmail }}</p>
+          </div>
+          <div class="profile-info">
+            <p>Employer Code</p>
+            <p>{{ companyCode }}</p>
+          </div>
+          <div class="profile-info">
+            <p>Date of Registration</p>
+            <p>{{ userDateOfCreation | moment("MMMM DD, YYYY") }}</p>
+          </div>
         </div>
       </div>
 
-      <!-- profile details -->
-      <div class="mt-5">
-        <div class="profile-info">
-          <p>Company Name</p>
-          <p>{{ username }}</p>
+      <div class="small-boxes">
+        <div class="small-box box-1">
+          <p class="m-0">Number of uploaded schedules</p>
+          <div>20</div>
         </div>
-        <div class="profile-info">
-          <p>Company Name</p>
-          <p>{{ username }}</p>
+        <div class="small-box box-1">
+          <p class="m-0">Number of processed schedules</p>
+          <div>18</div>
         </div>
-        <div class="profile-info">
-          <p>Company Name</p>
-          <p>{{ username }}</p>
+        <div class="small-box box-2">
+          <p class="m-0">Total pension processed</p>
+          <div>{{ "200095400" | toCurrency }}</div>
         </div>
       </div>
     </div>
@@ -52,7 +73,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["companyCode", "username"]),
+    ...mapGetters([
+      "companyCode",
+      "username",
+      "userEmail",
+      "userDateOfCreation",
+    ]),
   },
 
   methods: {
@@ -235,7 +261,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   height: 48px;
   border: 1px solid #dddddd;
   border-radius: 50px;
@@ -256,5 +282,60 @@ export default {
   font-size: 16px;
   line-height: 21px;
   color: #252a2f;
+}
+.small-boxes {
+  display: flex;
+  justify-content: space-between;
+  margin: 39px auto 0 auto;
+  width: 97%;
+  max-width: 750px;
+}
+.small-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 12px;
+  width: 230px;
+  height: 156px;
+  border-radius: 20px;
+}
+.small-box p {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+  padding: 0 30px;
+}
+.small-box div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  margin-top: 12px;
+  width: 99%;
+  height: 41px;
+  border-radius: 20px;
+}
+.small-box.box-1 {
+  background: #f9f9f9;
+}
+.small-box.box-1 p {
+  color: #5e6974;
+}
+.small-box.box-1 div {
+  color: #5e6974;
+  border: 1px solid #808080;
+}
+.small-box.box-2 {
+  background: #252a2f;
+}
+.small-box.box-2 p {
+  color: #ffffff;
+}
+.small-box.box-2 div {
+  color: #ffffff;
+  border: 1px solid #ffffff;
 }
 </style>
