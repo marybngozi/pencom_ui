@@ -191,11 +191,11 @@ const routes = [
             },
           },
           {
-            path: "list-contribution",
+            path: "staff-transaction",
             name: "staff-list-transaction",
             component: () =>
               import(
-                /* webpackChunkName: "account" */ "../views/staff/ListContribution.vue"
+                /* webpackChunkName: "account" */ "../views/staff/ListTransaction.vue"
               ),
             meta: {
               requiresAuth: true,

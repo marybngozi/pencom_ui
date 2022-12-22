@@ -46,6 +46,7 @@ export default {
   },
 
   props: {
+    value: [String, Number],
     items: {
       type: Array,
       required: true,

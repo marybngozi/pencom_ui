@@ -10,7 +10,7 @@
         width="126px"
         height="32px"
         borderColor="#ffffff"
-        @input="(d) => (yearOption = d)"
+        v-model="yearOption"
       />
     </div>
 

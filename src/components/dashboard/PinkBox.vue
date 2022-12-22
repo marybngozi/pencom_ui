@@ -4,12 +4,17 @@
       <img src="@/assets/images/people_group.svg" alt="peoples icon" />
     </div>
 
-    <div class="mt-3">
+    <div v-company class="mt-3">
       <h5>Staff Count</h5>
       <h6>
         for the month
         <small class="paid ml-3">paid</small>
       </h6>
+    </div>
+
+    <div v-staff class="mt-3">
+      <h5>Contributing</h5>
+      <h6>Employers</h6>
     </div>
 
     <div>
@@ -18,13 +23,16 @@
 
     <div>
       <HorizontalSelect
+        v-company
         :items="Object.values($months)"
         :default="new Date().getMonth() - 1"
         width="100%"
         height="44px"
         borderColor="#252a2f"
-        @input="(d) => (monthOption = d)"
+        v-model="monthOption"
       />
+
+      <button v-staff class="see-all">See all</button>
     </div>
   </div>
 </template>
@@ -84,5 +92,22 @@ h3 {
   border-radius: 17px;
   font-size: 0.715em;
   color: #ffffff;
+}
+.see-all {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: #252a2f;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  /* padding: 10px 20px; */
+  width: 100%;
+  height: 44px;
+  border: 1px solid #252a2f;
+  border-radius: 30px;
 }
 </style>

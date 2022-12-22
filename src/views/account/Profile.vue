@@ -27,9 +27,13 @@
             <p>Company Email</p>
             <p>{{ userEmail }}</p>
           </div>
-          <div class="profile-info">
+          <div v-company class="profile-info">
             <p>Employer Code</p>
             <p>{{ companyCode }}</p>
+          </div>
+          <div v-staff class="profile-info">
+            <p>RSA Code</p>
+            <p>{{ rsaPin }}</p>
           </div>
           <div class="profile-info">
             <p>Date of Registration</p>
@@ -78,6 +82,7 @@ export default {
       "username",
       "userEmail",
       "userDateOfCreation",
+      "rsaPin",
     ]),
   },
 

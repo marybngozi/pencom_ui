@@ -10,8 +10,8 @@
 
       <!-- gray section -->
       <section id="sec2" class="d-flex justify-content-between flex-wrap">
-        <GrayBox class="col-12 col-md-6" />
-        <GrayBox class="col-12 col-md-6" />
+        <GrayBox boldTitle="Employer" class="col-12 col-md-6" />
+        <GrayBox boldTitle="Employee" class="col-12 col-md-6" />
       </section>
 
       <!-- graph section -->

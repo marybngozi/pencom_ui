@@ -61,7 +61,9 @@
         >
           {{ username }}
         </h6>
-        <p class="small">{{ userEmail }}</p>
+        <p class="small text-truncate pr-2" :title="userEmail">
+          {{ userEmail }}
+        </p>
       </div>
 
       <!-- sub-menu links -->
@@ -75,16 +77,6 @@
               to="/app"
             >
               Dashboard
-            </router-link>
-          </li>
-
-          <li class="">
-            <router-link
-              class="nav-link-item"
-              :class="pagePath == '/app/change-password' ? 'active' : ''"
-              to="/app/change-password"
-            >
-              Change Password
             </router-link>
           </li>
         </div>
@@ -104,6 +96,15 @@
       <!-- sub-menu links /-->
 
       <div class="w-100">
+        <router-link
+          class="nav-link-item"
+          :class="pagePath == '/app/change-password' ? 'active' : ''"
+          to="/app/change-password"
+        >
+          <i class="fa fa-cog mx-2"></i>
+          <span class="fw-bold text-white">Change Password</span>
+        </router-link>
+
         <button @click="logoutUser" class="d-flex nav-link-btn">
           <i class="fas fa-sign-out-alt text-white mt-1"></i>
           <p class="fw-bold text-white ml-2">Logout</p>
@@ -177,7 +178,7 @@ export default {
   font-weight: 500;
   font-size: 12px;
   line-height: 12px;
-  margin-bottom: 0;
+  margin-top: 4px;
   color: rgba(255, 255, 255, 0.5);
 }
 #sideNav #leftNav {

@@ -10,25 +10,35 @@
         />
 
         <div class="profile-right">
-          <h5>Appmart Integrated LTD</h5>
+          <h5>{{ username }}</h5>
 
-          <div class="blue-box">
+          <div v-company class="blue-box">
             <img src="@/assets/images/dart.svg" alt="dart icon" />
 
             <h6>Company code verified</h6>
           </div>
 
           <div class="info">
-            <h5>Email address</h5>
+            <small>Email address</small>
 
-            <h6>info@appmartgroup.com</h6>
+            <h6>{{ userEmail }}</h6>
 
             <router-link to="/account/profile">View Profile</router-link>
           </div>
 
+          <div v-staff class="ddate">
+            <small>RSA Code</small>
+            <p>{{ rsaPin }}</p>
+          </div>
+
+          <div v-staff class="ddate">
+            <small>PFA</small>
+            <p>AXE Pensions</p>
+          </div>
+
           <div class="ddate">
             <small>Account created on</small>
-            <p>23.04.2022</p>
+            <p>{{ userDateOfCreation | moment("DD.MM.YYYY") }}</p>
           </div>
         </div>
       </div>
@@ -37,8 +47,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "ProfileBox",
+  computed: {
+    ...mapGetters(["username", "userEmail", "userDateOfCreation", "rsaPin"]),
+  },
 };
 </script>
 
@@ -117,6 +131,7 @@ h6 {
 .profile-right .ddate {
   margin-top: 24px;
 }
+.profile-right .info small,
 .profile-right .ddate small {
   font-weight: 500;
   font-size: 10px;

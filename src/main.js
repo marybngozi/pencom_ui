@@ -53,6 +53,19 @@ Vue.prototype.$months = {
   12: "December",
 };
 
+// vue-directives
+Vue.directive("company", {
+  bind: (el) => {
+    if (store.getters.userType != 100) el.style.display = "none";
+  },
+});
+Vue.directive("staff", {
+  bind: (el) => {
+    if (store.getters.userType != 200 && store.getters.userType != 300)
+      el.style.display = "none";
+  },
+});
+
 new Vue({
   router,
   store,

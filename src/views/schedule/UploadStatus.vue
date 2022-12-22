@@ -4,7 +4,7 @@
     <div class="left-tab col-lg-9 border-right pt-5 px-5">
       <h4>Uploaded Pension Schedule Status</h4>
 
-      <!-- paagination and filter details -->
+      <!-- pagination and filter details -->
       <div class="my-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="show-count w-70">

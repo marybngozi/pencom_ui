@@ -2,7 +2,7 @@
   <div class="boxx">
     <!-- top section -->
     <div class="mt-3">
-      <h5>Employer</h5>
+      <h5>{{ boldTitle }}</h5>
       <h6>
         Pension contribution
         <small class="paid ml-3">paid</small>
@@ -30,7 +30,7 @@
         width="100%"
         height="44px"
         borderColor="#252a2f"
-        @input="(d) => (monthOption = d)"
+        v-model="monthOption"
       />
     </div>
   </div>
@@ -43,6 +43,13 @@ export default {
 
   components: {
     HorizontalSelect,
+  },
+
+  props: {
+    boldTitle: {
+      type: String,
+      default: "Employer",
+    },
   },
 
   data() {

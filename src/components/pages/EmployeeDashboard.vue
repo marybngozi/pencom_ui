@@ -10,8 +10,8 @@
 
       <!-- gray section -->
       <section id="sec2" class="d-flex justify-content-between flex-wrap">
-        <GrayBox class="col-12 col-md-6" />
-        <GrayBox class="col-12 col-md-6" />
+        <GrayBox boldTitle="Employer" class="col-12 col-md-6" />
+        <GrayBox boldTitle="Employee" class="col-12 col-md-6" />
       </section>
 
       <!-- graph section -->
@@ -28,35 +28,7 @@
     <!-- right side -->
     <div class="right-dash col-lg-4 p-0">
       <div class="border-bottom">
-        <QuickActions />
-      </div>
-
-      <div class="border-bottom">
-        <UserGuide :instructions="instructions" />
-      </div>
-
-      <div class="border-bottom">
         <ProfileBox />
-      </div>
-
-      <!-- Notification gray box -->
-      <div class="border-bottom">
-        <div class="out-boxx">
-          <div
-            class="notification-boxx d-flex justify-content-between align-items-center"
-          >
-            <div>
-              <i class="fa fa-thumbs-up icon"></i>
-            </div>
-
-            <div>
-              <h6>Employer code verification</h6>
-              <small>You have completed your verification process</small>
-            </div>
-
-            <p>Done</p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -68,8 +40,6 @@ import PinkBox from "@/components/dashboard/PinkBox";
 import GrayBox from "@/components/dashboard/GrayBox";
 import GraphBox from "@/components/dashboard/GraphBox";
 import TableBox from "@/components/dashboard/TableBox";
-import QuickActions from "@/components/dashboard/QuickActions";
-import UserGuide from "@/components/dashboard/UserGuide";
 import ProfileBox from "@/components/dashboard/ProfileBox";
 export default {
   name: "EmployeeDashboard",
@@ -80,8 +50,6 @@ export default {
     GrayBox,
     GraphBox,
     TableBox,
-    QuickActions,
-    UserGuide,
     ProfileBox,
   },
 
