@@ -70,21 +70,16 @@ Vue.directive("pfc", {
     if (store.getters.userType != 400) el.style.display = "none";
   },
 });
+// for pfc and pfa
 Vue.directive("pfca", {
   bind: (el) => {
-    if (store.getters.userType != 400 && store.getters.userType != 500)
-      el.style.display = "none";
+    if (store.getters.userType < 400) el.style.display = "none";
   },
 });
+// for staff, adminstaff, pfc, pfa
 Vue.directive("spfca", {
   bind: (el) => {
-    if (
-      store.getters.userType != 200 &&
-      store.getters.userType != 300 &&
-      store.getters.userType != 400 &&
-      store.getters.userType != 500
-    )
-      el.style.display = "none";
+    if (store.getters.userType < 200) el.style.display = "none";
   },
 });
 

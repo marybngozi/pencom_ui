@@ -10,8 +10,12 @@
 
       <!-- gray section -->
       <section id="sec2" class="d-flex justify-content-between flex-wrap">
-        <GrayBox boldTitle="Employer" class="col-12 col-md-6" />
-        <GrayBox boldTitle="Employee" class="col-12 col-md-6" />
+        <GrayBox
+          boldTitle="Companies"
+          :options="companies"
+          class="col-12 col-md-6"
+        />
+        <GrayBox boldTitle="PFA's" :options="pfas" class="col-12 col-md-6" />
       </section>
 
       <!-- graph section -->
@@ -21,7 +25,7 @@
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox />
+        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
       </section>
     </div>
 
@@ -61,10 +65,64 @@ export default {
 
   data() {
     return {
+      companyOption: null,
+      companies: [
+        { label: "All Companies", value: "all" },
+        { label: "Appmart Limited", value: "EC0D43224" },
+        { label: "Basmic Limited", value: "EC993D4322" },
+        { label: "Swizel Tech", value: "EC0D431110" },
+      ],
+      pfas: [
+        { label: "All PFAs", value: "all" },
+        { label: "STANBIC IBTC PENSION MANAGERS LIMITED", value: "EC0D43224" },
+        { label: "PREMIUM PENSION LIMITED", value: "EC993D4322" },
+        { label: "SIGMA PENSIONS LIMITED", value: "EC0D431110" },
+      ],
       instructions: {
         1: "Use the PFA Remit menu to transmit contribution schedule to the respective PFA's. please note that only the companies that have paid will appear on this listings under the PFA's",
         2: "Transaction menu gives you view of the status of different companies that have remitted their contributions.",
       },
+      tableHeaders: [
+        {
+          label: "PFA",
+          key: "pfaName",
+        },
+        {
+          label: "Amount",
+          key: "amount",
+        },
+        {
+          label: "Transaction date",
+          key: "createdAt",
+        },
+      ],
+      tableRows: [
+        {
+          pfaName: "UBA pensions",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          pfaName: "UBA pensions",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          pfaName: "UBA pensions",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          pfaName: "UBA pensions",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          pfaName: "UBA pensions",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+      ],
     };
   },
 

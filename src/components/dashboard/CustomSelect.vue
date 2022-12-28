@@ -13,7 +13,7 @@
       :class="{ open: open }"
       @click="open = !open"
     >
-      {{ selectedLabel }}
+      <span>{{ selectedLabel }}</span>
     </div>
 
     <div class="items" :class="{ selectHide: !open }">
@@ -112,10 +112,19 @@ export default {
   background-color: transparent;
   border-radius: 30px;
   padding-left: 1em;
+  padding-right: 0.5em;
   cursor: pointer;
   user-select: none;
 }
-
+.customed-select .selected span {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 0;
+  width: 78%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .customed-select .selected.open {
   border: 1px solid #ffffff;
   border-radius: 30px 30px 0px 0px;
@@ -133,6 +142,8 @@ export default {
 }
 
 .customed-select .items {
+  width: 100%;
+  min-width: max-content;
   color: #fff;
   border-radius: 0px 0px 6px 6px;
   overflow: hidden;
@@ -141,7 +152,7 @@ export default {
   border-bottom: 1px solid #03435f;
   position: absolute;
   background-color: #ffffff;
-  left: 0;
+  /* left: 0; */
   right: 0;
   z-index: 1;
   max-height: 350px;
@@ -157,6 +168,7 @@ export default {
 .customed-select .items div {
   color: #252a2f;
   padding-left: 1em;
+  padding-right: 0.5em;
   cursor: pointer;
   user-select: none;
 }

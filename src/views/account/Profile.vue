@@ -2,7 +2,7 @@
   <div>
     <!-- Gray plane -->
     <div class="gray-plane">
-      <h5>Appmart Integrated Profile</h5>
+      <h5>{{ username }} Profile</h5>
       <button>Edit</button>
     </div>
 

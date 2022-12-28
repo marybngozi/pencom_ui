@@ -21,7 +21,7 @@
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox />
+        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
       </section>
     </div>
 
@@ -54,7 +54,70 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      tableHeaders: [
+        {
+          label: "Month",
+          key: "month",
+        },
+        {
+          label: "Amount",
+          key: "amount",
+        },
+        {
+          label: "Employer",
+          key: "companyName",
+        },
+        {
+          label: "Transaction date",
+          key: "createdAt",
+        },
+      ],
+      tableRows: [
+        {
+          month: "January",
+          companyName: "Appmart Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "Febuary",
+          companyName: "Swizel Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "March",
+          companyName: "Basmic Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "April",
+          companyName: "SAAT Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "May",
+          companyName: "Appmart Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "June",
+          companyName: "Appmart Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "July",
+          companyName: "Appmart Integrated",
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+      ],
+    };
   },
 
   methods: {

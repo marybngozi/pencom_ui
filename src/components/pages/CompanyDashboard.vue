@@ -21,7 +21,7 @@
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox />
+        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
       </section>
     </div>
 
@@ -93,6 +93,68 @@ export default {
         3: "Each menu has a “Use guide” to work you through on what you need to do to complete your remittances.",
         4: "You can use the support link located at the right-hand corner of this page if you need further assistance on the platform.",
       },
+      tableHeaders: [
+        {
+          label: "Month",
+          key: "month",
+        },
+        {
+          label: "Amount",
+          key: "amount",
+        },
+        {
+          label: "Staff Count",
+          key: "staffCount",
+        },
+        {
+          label: "Transaction date",
+          key: "createdAt",
+        },
+      ],
+      tableRows: [
+        {
+          month: "January",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "Febuary",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "March",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "April",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "May",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "June",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+        {
+          month: "July",
+          staffCount: 22,
+          amount: "N 220,005.95",
+          createdAt: "Sept 10. 2022",
+        },
+      ],
     };
   },
 

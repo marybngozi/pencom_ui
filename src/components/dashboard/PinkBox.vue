@@ -8,7 +8,7 @@
       <h5>Staff Count</h5>
       <h6>
         for the month
-        <small class="paid ml-3">paid</small>
+        <small v-company class="paid ml-3">paid</small>
       </h6>
     </div>
 

@@ -5,15 +5,30 @@
     >
       <h6>Total contributions - YTD <small class="paid ml-3">paid</small></h6>
 
-      <CustomSelect
-        :options="years"
-        class="select"
-        borderColor="#252A2F"
-        width="100px"
-        height="32px"
-        lineHeight="30px"
-        v-model="yearOption"
-      />
+      <div class="d-flex justify-content-between gap-9">
+        <CustomSelect
+          v-spfca
+          :options="pfas"
+          class="select"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="200px"
+          height="32px"
+          lineHeight="30px"
+          v-model="pfaOption"
+        />
+
+        <CustomSelect
+          :options="years"
+          class="select"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="100px"
+          height="32px"
+          lineHeight="30px"
+          v-model="yearOption"
+        />
+      </div>
     </div>
 
     <div id="chart" class="">
@@ -29,6 +44,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import CustomSelect from "./CustomSelect.vue";
 export default {
   name: "GraphBox",
@@ -37,9 +53,35 @@ export default {
     CustomSelect,
   },
 
+  created() {
+    this.chartOptions.plotOptions.bar.columnWidth =
+      this.userType >= 400 ? "40%" : "90%";
+
+    this.series.length = this.userType >= 400 ? 1 : this.series.length;
+  },
+
+  computed: {
+    ...mapGetters(["userType"]),
+
+    years() {
+      const years = [];
+      for (let i = new Date().getFullYear(); i >= 2020; i--) {
+        years.push(i);
+      }
+      return years;
+    },
+  },
+
   data() {
     return {
       yearOption: null,
+      pfaOption: null,
+      pfas: [
+        { label: "All PFAs", value: "all" },
+        { label: "STANBIC IBTC PENSION MANAGERS LIMITED", value: "EC0D43224" },
+        { label: "PREMIUM PENSION LIMITED", value: "EC993D4322" },
+        { label: "SIGMA PENSIONS LIMITED", value: "EC0D431110" },
+      ],
 
       series: [
         {
@@ -123,16 +165,6 @@ export default {
     };
   },
 
-  computed: {
-    years() {
-      const years = [];
-      for (let i = new Date().getFullYear(); i >= 2020; i--) {
-        years.push(i);
-      }
-      return years;
-    },
-  },
-
   methods: {
     nFormatter(num) {
       const lookup = [
@@ -168,6 +200,9 @@ export default {
   border: 1.29px solid #e0e0e0;
   border-radius: 20px;
   padding: 3px 0 0px;
+}
+.gap-9 {
+  gap: 9px;
 }
 h6 {
   margin-bottom: 0px;

@@ -120,9 +120,9 @@ export default {
       fetching: false,
       perPage: 10,
       currentPage: 1,
-      companyOption: null,
       yearOption: null,
       monthOption: null,
+      companyOption: null,
       companies: [
         { label: "All Companies", value: "all" },
         { label: "Appmart Limited", value: "EC0D43224" },

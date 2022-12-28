@@ -3,34 +3,46 @@
     <div class="d-flex justify-content-between align-items-center py-2 px-4">
       <h6>Transactions history <small class="paid ml-3">paid</small></h6>
 
-      <CustomSelect
-        :options="years"
-        class="select"
-        borderColor="#252A2F"
-        width="100px"
-        height="32px"
-        lineHeight="30px"
-        v-model="yearOption"
-      />
+      <div class="d-flex justify-content-between gap-9">
+        <CustomSelect
+          :options="years"
+          class="select"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="100px"
+          height="32px"
+          lineHeight="30px"
+          v-model="yearOption"
+        />
+
+        <HorizontalSelect
+          v-spfca
+          :items="Object.values($months)"
+          :default="new Date().getMonth() - 1"
+          width="126px"
+          height="32px"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          v-model="monthOption"
+        />
+      </div>
     </div>
 
     <div id="table">
       <table>
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Amount</th>
-            <th>Staff Count</th>
-            <th>Transaction date</th>
+            <th v-for="(header, i) in tableHeaders" :key="i">
+              {{ header.label }}
+            </th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="month in $months" :key="month">
-            <td>{{ month }}</td>
-            <td>N 220,005.95</td>
-            <td>22</td>
-            <td>Sept 10. 2022</td>
+          <tr v-for="(row, k) in rows" :key="k">
+            <td v-for="(header, i) in tableHeaders" :key="i">
+              {{ row[header.key] }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -40,15 +52,31 @@
 
 <script>
 import CustomSelect from "./CustomSelect.vue";
+import HorizontalSelect from "./HorizontalSelect.vue";
 export default {
   name: "TableBox",
 
   components: {
     CustomSelect,
+    HorizontalSelect,
+  },
+
+  props: {
+    tableHeaders: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    rows: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
   },
 
   data() {
     return {
+      monthOption: null,
       yearOption: null,
     };
   },
@@ -68,6 +96,9 @@ export default {
 <style scoped>
 h6 {
   margin-bottom: 0px;
+}
+.gap-9 {
+  gap: 9px;
 }
 .paid {
   background: #252a2f;

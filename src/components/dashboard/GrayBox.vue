@@ -1,12 +1,25 @@
 <template>
   <div class="boxx">
     <!-- top section -->
-    <div class="mt-3">
-      <h5>{{ boldTitle }}</h5>
-      <h6>
-        Pension contribution
-        <small class="paid ml-3">paid</small>
-      </h6>
+    <div class="d-flex justify-content-between">
+      <div>
+        <h5>{{ boldTitle }}</h5>
+        <h6>
+          Pension contribution
+          <small v-company class="paid ml-3">paid</small>
+        </h6>
+      </div>
+
+      <div v-spfca>
+        <HorizontalSelect
+          :items="Object.values($months)"
+          :default="new Date().getMonth() - 1"
+          width="126px"
+          height="32px"
+          borderColor="#252a2f"
+          v-model="monthOption"
+        />
+      </div>
     </div>
 
     <!-- mid data -->
@@ -25,6 +38,7 @@
     <!-- Last section -->
     <div class="mt-3">
       <HorizontalSelect
+        v-company
         :items="Object.values($months)"
         :default="new Date().getMonth() - 1"
         width="100%"
@@ -32,17 +46,31 @@
         borderColor="#252a2f"
         v-model="monthOption"
       />
+
+      <CustomSelect
+        v-spfca
+        :options="options"
+        class="select"
+        borderColor="#DDDDDD"
+        color="#252A2F"
+        width="100%"
+        height="44px"
+        lineHeight="40px"
+        v-model="pfaOption"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import HorizontalSelect from "./HorizontalSelect.vue";
+import CustomSelect from "./CustomSelect.vue";
 export default {
   name: "GrayBox",
 
   components: {
     HorizontalSelect,
+    CustomSelect,
   },
 
   props: {
@@ -50,11 +78,24 @@ export default {
       type: String,
       default: "Employer",
     },
+    options: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
   },
 
   data() {
     return {
       monthOption: 1,
+      companyOption: null,
+      pfaOption: null,
+      companies: [
+        { label: "All Companies", value: "all" },
+        { label: "Appmart Limited", value: "EC0D43224" },
+        { label: "Basmic Limited", value: "EC993D4322" },
+        { label: "Swizel Tech", value: "EC0D431110" },
+      ],
     };
   },
 };
