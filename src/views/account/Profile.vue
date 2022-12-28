@@ -7,7 +7,7 @@
     </div>
 
     <!-- Profile body  -->
-    <div class="col-12 col-lg-9">
+    <div class="col-12 d-flex justify-content-center profile">
       <div class="profile-body">
         <!-- Logo rounded box -->
         <div class="logo-round-box">
@@ -20,11 +20,11 @@
         <!-- profile details -->
         <div class="mt-5">
           <div class="profile-info">
-            <p>Company Name</p>
+            <p><span v-company>Company</span> Name</p>
             <p>{{ username }}</p>
           </div>
           <div class="profile-info">
-            <p>Company Email</p>
+            <p><span v-company>Company</span> Email</p>
             <p>{{ userEmail }}</p>
           </div>
           <div v-company class="profile-info">
@@ -32,32 +32,46 @@
             <p>{{ companyCode }}</p>
           </div>
           <div v-staff class="profile-info">
-            <p>RSA Code</p>
+            <p>PFA</p>
+            <p>Sigma Pensions</p>
+          </div>
+          <div v-staff class="profile-info">
+            <p>RSA PIN</p>
             <p>{{ rsaPin }}</p>
+          </div>
+          <div v-staff class="profile-info">
+            <p>Phone Number</p>
+            <p>08101194108</p>
           </div>
           <div class="profile-info">
             <p>Date of Registration</p>
             <p>{{ userDateOfCreation | moment("MMMM DD, YYYY") }}</p>
           </div>
         </div>
-      </div>
 
-      <div class="small-boxes">
-        <div class="small-box box-1">
-          <p class="m-0">Number of uploaded schedules</p>
-          <div>20</div>
-        </div>
-        <div class="small-box box-1">
-          <p class="m-0">Number of processed schedules</p>
-          <div>18</div>
-        </div>
-        <div class="small-box box-2">
-          <p class="m-0">Total pension processed</p>
-          <div>{{ "200095400" | toCurrency }}</div>
+        <!-- small boxes -->
+        <div class="small-boxes mt-5 pb-5">
+          <div class="small-box box-1">
+            <p v-company class="m-0 px-4">Number of uploaded schedules</p>
+            <p v-spfca class="m-0 px-3">
+              Number of Companies contributing pension
+            </p>
+            <div>20</div>
+          </div>
+          <div class="small-box box-1">
+            <p v-company class="m-0 px-4">Number of processed schedules</p>
+            <p v-spfca class="m-0 px-4">Last <br />processed pension month</p>
+            <div>18</div>
+          </div>
+          <div class="small-box box-2">
+            <p v-company class="m-0 px-4">Total pension processed</p>
+            <p v-spfca class="m-0 px-4">Total pension Received</p>
+            <div>{{ "200095400" | toCurrency }}</div>
+          </div>
         </div>
       </div>
+      <!-- Profile body  /-->
     </div>
-    <!-- Profile body  /-->
   </div>
 </template>
 <script>
@@ -198,7 +212,17 @@ export default {
 };
 </script>
 <style scoped>
-/* @import "../../assets/css/dashboard.css"; */
+.profile {
+  overflow-y: scroll;
+  height: calc(100vh - 160px);
+}
+.profile::-webkit-scrollbar {
+  display: none;
+}
+.profile {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 .gray-plane {
   display: flex;
   flex-direction: row;
@@ -230,8 +254,6 @@ export default {
 }
 .profile-body {
   margin: 39px auto 0 auto;
-  /* margin-left: 5%;
-  margin-top: 39px; */
   width: 97%;
   max-width: 750px;
 }
@@ -291,9 +313,6 @@ export default {
 .small-boxes {
   display: flex;
   justify-content: space-between;
-  margin: 39px auto 0 auto;
-  width: 97%;
-  max-width: 750px;
 }
 .small-box {
   display: flex;
@@ -310,7 +329,7 @@ export default {
   font-size: 16px;
   line-height: 21px;
   text-align: center;
-  padding: 0 30px;
+  /* padding: 0 30px; */
 }
 .small-box div {
   display: flex;

@@ -1,21 +1,25 @@
 <template>
   <div
-    :style="`width:${width}; height:${height}; border: 1px solid ${borderColor};`"
+    :style="`width:${width}; height:${height}; border: 1px solid ${borderColor}; color:${
+      color ? color : borderColor
+    };`"
     class="pill"
   >
     <button @click="setIndex(prevIndex)">
       <i
-        :style="`color:${borderColor}`"
+        :style="`color:${color ? color : borderColor};`"
         class="fa fa-caret-left"
         aria-hidden="true"
       ></i>
     </button>
 
-    <div :style="`color:${borderColor}`" class="text">{{ item }}</div>
+    <div :style="`color:${color ? color : borderColor};`" class="text">
+      {{ item }}
+    </div>
 
     <button @click="setIndex(nextIndex)">
       <i
-        :style="`color:${borderColor}`"
+        :style="`color:${color ? color : borderColor};`"
         class="fa fa-caret-right"
         aria-hidden="true"
       ></i>
@@ -67,6 +71,10 @@ export default {
     borderColor: {
       type: String,
       default: "#252A2F",
+    },
+    color: {
+      type: String,
+      default: null,
     },
   },
 

@@ -17,6 +17,11 @@
       <h6>Employers</h6>
     </div>
 
+    <div v-pfca class="mt-3">
+      <h5>Contributing</h5>
+      <h6>Companies</h6>
+    </div>
+
     <div>
       <h3>22</h3>
     </div>
@@ -32,7 +37,7 @@
         v-model="monthOption"
       />
 
-      <button v-staff class="see-all">See all</button>
+      <button v-spfca class="see-all">See all</button>
     </div>
   </div>
 </template>

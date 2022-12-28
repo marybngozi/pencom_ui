@@ -65,6 +65,28 @@ Vue.directive("staff", {
       el.style.display = "none";
   },
 });
+Vue.directive("pfc", {
+  bind: (el) => {
+    if (store.getters.userType != 400) el.style.display = "none";
+  },
+});
+Vue.directive("pfca", {
+  bind: (el) => {
+    if (store.getters.userType != 400 && store.getters.userType != 500)
+      el.style.display = "none";
+  },
+});
+Vue.directive("spfca", {
+  bind: (el) => {
+    if (
+      store.getters.userType != 200 &&
+      store.getters.userType != 300 &&
+      store.getters.userType != 400 &&
+      store.getters.userType != 500
+    )
+      el.style.display = "none";
+  },
+});
 
 new Vue({
   router,

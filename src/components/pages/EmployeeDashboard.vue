@@ -54,14 +54,7 @@ export default {
   },
 
   data() {
-    return {
-      instructions: {
-        1: "Perform multiple functions from upload pension schedules to making monthly payments for your staff set.",
-        2: "You can create a “Sub-Admin” staff to perform different functions like uploading a pension schedule file, processing a pension schedule  for the organization.",
-        3: "Each menu has a “Use guide” to work you through on what you need to do to complete your remittances.",
-        4: "You can use the support link located at the right-hand corner of this page if you need further assistance on the platform.",
-      },
-    };
+    return {};
   },
 
   methods: {

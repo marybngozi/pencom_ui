@@ -1,8 +1,5 @@
 .left,
-.left-tab {
-  overflow-y: scroll;
-  height: calc(100vh - 70px);
-}
+.left-tab,
 .right,
 .right-tab {
   overflow-y: scroll;

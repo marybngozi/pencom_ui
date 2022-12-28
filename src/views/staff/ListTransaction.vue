@@ -1,7 +1,7 @@
 <template>
   <div id="dash" class="d-flex justify-content-between flex-wrap">
     <!-- left side -->
-    <div class="left-tab col-12 col-lg-8 pt-5 px-5">
+    <div class="left-tab col-12 col-lg-10 pt-5 px-5">
       <h4>Pension Contribution Transactions</h4>
 
       <!-- pagination and filter details -->
@@ -17,7 +17,7 @@
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
-              width="112px"
+              width="200px"
               height="32px"
               lineHeight="30px"
               v-model="companyOption"
@@ -38,9 +38,10 @@
             <HorizontalSelect
               :items="Object.values($months)"
               :default="new Date().getMonth() - 1"
-              width="100%"
-              height="44px"
-              borderColor="#252a2f"
+              width="126px"
+              height="32px"
+              borderColor="#DDDDDD"
+              color="#252A2F"
               v-model="monthOption"
             />
           </div>
