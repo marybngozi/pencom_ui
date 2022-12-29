@@ -51,7 +51,9 @@ export default {
     HorizontalSelect,
   },
 
-  inject: ["showModal"],
+  inject: {
+    showModal: { default: () => console.log("Modal not needed") },
+  },
 
   data() {
     return {

@@ -16,12 +16,13 @@
       <!-- menu icons -->
       <ul class="">
         <!-- dashboard main menu icon -->
-        <li class="">
+        <li class="" @click="getPos">
           <router-link
             class="nav-icon-li"
             :class="pagePath.includes('app') ? 'active' : ''"
             @click.native="setSlug('app')"
             to="/app"
+            id="app"
           >
             <div class="icon-div">
               <img src="@/assets/images/dashboard.svg" alt="dashboard icon" />
@@ -32,12 +33,18 @@
 
         <!-- Populate the rest of the menu from DB -->
         <!-- main menu icon -->
-        <li class="" v-for="(menu, i) in userMenus.mainMenus" :key="i">
+        <li
+          @click="getPos"
+          class=""
+          v-for="(menu, i) in userMenus.mainMenus"
+          :key="i"
+        >
           <router-link
             class="nav-icon-li"
             :class="pagePath.includes(menu.slug) ? 'active' : ''"
             @click.native="setSlug(menu.slug)"
             :to="'/' + menu.slug"
+            :id="menu.slug"
           >
             <div class="icon-div">
               <img
@@ -69,7 +76,11 @@
       <!-- sub-menu links -->
       <ul class="">
         <!-- sub menu dashboard -->
-        <div v-if="pagePath.includes('app')">
+        <div
+          class="sub-menu-div"
+          v-if="pagePath.includes('app')"
+          :style="`position: relative; top:${subMenuOffset}px`"
+        >
           <li class="">
             <router-link
               class="nav-link-item"
@@ -83,15 +94,20 @@
 
         <!-- Populate the rest of the menu from DB -->
         <!-- sub menus -->
-        <li class="" v-for="(menu, i) in subMenuList" :key="i">
-          <router-link
-            class="nav-link-item"
-            :class="pagePath == menu.path ? 'active' : ''"
-            :to="menu.path"
-          >
-            {{ menu.name }}
-          </router-link>
-        </li>
+        <div
+          class="sub-menu-div"
+          :style="`position: relative; top:${subMenuOffset}px`"
+        >
+          <li class="" v-for="(menu, i) in subMenuList" :key="i">
+            <router-link
+              class="nav-link-item"
+              :class="pagePath == menu.path ? 'active' : ''"
+              :to="menu.path"
+            >
+              {{ menu.name }}
+            </router-link>
+          </li>
+        </div>
       </ul>
       <!-- sub-menu links /-->
 
@@ -138,8 +154,14 @@ export default {
     },
   },
 
+  mounted() {
+    const pageSlug = this.$route.path.split("/")[1];
+    document.querySelector("#" + pageSlug).parentElement.click();
+  },
+
   data() {
     return {
+      subMenuOffset: 0,
       pageSlug: this.$route.path.split("/")[1],
     };
   },
@@ -153,6 +175,10 @@ export default {
     },
     setSlug(slug) {
       this.pageSlug = slug;
+    },
+    getPos(e) {
+      const liPos = e.currentTarget.getBoundingClientRect().top;
+      this.subMenuOffset = Math.round(liPos - 179);
     },
   },
 };
@@ -279,6 +305,9 @@ a.nav-link-item.active {
 }
 .relative {
   position: relative;
+}
+.sub-menu-div {
+  transition: all 0.5s ease-in-out;
 }
 /*Large devices (desktops, 1025px and up)*/
 @media (min-width: 1025px) {
