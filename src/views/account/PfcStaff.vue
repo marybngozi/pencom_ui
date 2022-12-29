@@ -4,67 +4,80 @@
     <div class="left-tab col-lg-9 border-right pt-5 px-5">
       <h4 class="mb-4">All Sub-Admin Staff</h4>
 
-      <!-- List of staff -->
-      <div class="table-div">
-        <b-table
-          class="my-table"
-          id="my-table"
-          :fields="fields"
-          small
-          striped
-          :busy="getting"
-          hover
-          :items="items"
-          :per-page="perPage"
-          :current-page="currentPage"
-          show-empty
-        >
-          <template #cell(rsaPin)="data">
-            {{ data.item.agentId.rsaPin }}
-          </template>
+      <div class="my-4">
+        <!-- pagination info -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="show-count w-70">
+            Showing {{ items.length }} of {{ rows }} Sub-Admin staff
+          </div>
 
-          <template #cell(email)="data">
-            {{ data.item.agentId.email }}
-          </template>
+          <div>
+            <SearchInput v-model="searchVal" />
+          </div>
+        </div>
 
-          <template #cell(staffName)="data">
-            {{ data.item.agentId.firstName }} {{ data.item.agentId.lastName }}
-          </template>
+        <!-- List of staff -->
+        <div class="table-div">
+          <b-table
+            class="my-table"
+            id="my-table"
+            :fields="fields"
+            small
+            striped
+            :busy="getting"
+            hover
+            :items="items"
+            :per-page="perPage"
+            :current-page="currentPage"
+            show-empty
+          >
+            <template #cell(rsaPin)="data">
+              {{ data.item.agentId.rsaPin }}
+            </template>
 
-          <template #cell(id)="data">
-            {{ data.index + 1 }}
-          </template>
+            <template #cell(email)="data">
+              {{ data.item.agentId.email }}
+            </template>
 
-          <template #cell(action)="data">
-            <div class="d-flex gap-4">
-              <router-link
-                class="btn-xsm bg-blue-light"
-                :to="`assign-menu/${data.item.agentId.rsaPin}`"
-              >
-                Assign Menu
-              </router-link>
+            <template #cell(staffName)="data">
+              {{ data.item.agentId.firstName }} {{ data.item.agentId.lastName }}
+            </template>
 
-              <button
-                class="btn-xsm bg-red"
-                @click="deleteStaff(data.item.agentId.rsaPin)"
-              >
-                Delete
-              </button>
-            </div>
-          </template>
-        </b-table>
+            <template #cell(id)="data">
+              {{ data.index + 1 }}
+            </template>
 
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-          size="sm"
-          limit="8"
-          pills
-          align="center"
-        >
-        </b-pagination>
+            <template #cell(action)="data">
+              <div class="d-flex gap-4">
+                <router-link
+                  class="btn-xsm bg-blue-light"
+                  :to="`assign-menu/${data.item.agentId.rsaPin}`"
+                >
+                  Assign Menu
+                </router-link>
+
+                <button
+                  class="btn-xsm bg-red"
+                  @click="deleteStaff(data.item.agentId.rsaPin)"
+                >
+                  Delete
+                </button>
+              </div>
+            </template>
+          </b-table>
+
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="my-table"
+            size="sm"
+            limit="8"
+            pills
+            align="center"
+          >
+          </b-pagination>
+        </div>
       </div>
     </div>
 
@@ -137,9 +150,15 @@
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
+import SearchInput from "@/components/form/SearchInput";
 
 export default {
-  name: "ListAdminStaff",
+  name: "PfcStaff",
+
+  components: {
+    SearchInput,
+  },
+
   data() {
     return {
       checking: false,
@@ -148,6 +167,7 @@ export default {
         rsaPin: null,
       },
       staff: null,
+      searchVal: null,
       getting: false,
       deleting: false,
       perPage: 10,
@@ -156,7 +176,7 @@ export default {
       fields: [
         {
           key: "id",
-          label: "ID",
+          label: "Staff ID",
         },
         {
           key: "staffName",
@@ -172,11 +192,12 @@ export default {
         },
         {
           key: "action",
-          label: "Actions",
+          label: "Action",
         },
       ],
     };
   },
+
   async beforeCreate() {
     try {
       this.getting = true;

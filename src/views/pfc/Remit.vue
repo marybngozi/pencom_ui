@@ -10,32 +10,6 @@
           <div class="show-count w-70">
             Showing {{ items.length }} of {{ rows }} Uploaded schedules
           </div>
-
-          <div class="d-flex justify-content-between gap-3">
-            <SearchInput v-model="searchVal" />
-
-            <CustomSelectInput
-              :options="years"
-              :default="years[0]"
-              class="select"
-              borderColor="#DDDDDD"
-              color="#252A2F"
-              width="100px"
-              height="32px"
-              lineHeight="30px"
-              v-model="yearOption"
-            />
-
-            <HorizontalSelect
-              :items="Object.values($months)"
-              :default="new Date().getMonth() - 1"
-              width="126px"
-              height="32px"
-              borderColor="#DDDDDD"
-              color="#252A2F"
-              v-model="monthOption"
-            />
-          </div>
         </div>
 
         <!-- table section -->
@@ -75,33 +49,14 @@
 
             <template #cell(action)="data">
               <button
-                @click="getPfas(data, data.item._id)"
-                class="btn btn-sm btn-info m-1"
+                v-if="!data.item.transmitted"
+                v-b-tooltip.hover
+                title="Transmit transaction to the PFA"
+                class="btn btn-sm btn-primary m-1"
+                @click="transmit(data.item._id)"
               >
-                {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
+                Transmit
               </button>
-
-              <button
-                class="btn btn-sm btn-secondary m-1"
-                @click="downloadItems(data.item._id)"
-              >
-                Download
-              </button>
-            </template>
-
-            <template #row-details>
-              <b-card bg-variant="light">
-                <!-- START PFA INNER TABLE -->
-                <ListPfaTable
-                  :batchId="batchId"
-                  :companyCode="companyCode"
-                  @showItems="getItems"
-                  @getDownloads="downloadItems"
-                  @transmit="transmit"
-                />
-
-                <!-- END PFA INNER TABLE -->
-              </b-card>
             </template>
           </b-table>
 
@@ -201,104 +156,25 @@
         </div>
       </div>
     </div>
-
-    <!-- Items modal -->
-    <b-modal
-      id="show-items"
-      size="xl"
-      scrollable
-      :cancel-disabled="true"
-      title="Schedule Items"
-    >
-      <b-table
-        class="my-table"
-        id="item-table"
-        :fields="fieldsItem"
-        small
-        responsive
-        striped
-        :busy="fetching"
-        hover
-        :items="fetchItems"
-        :per-page="perPage"
-        :current-page="currentPageItem"
-        show-empty
-      >
-        <template #cell(amount)="data">
-          {{ data.value | toCurrency }}
-        </template>
-
-        <template #cell(employeeNormalContribution)="data">
-          {{ data.value | toCurrency }}
-        </template>
-
-        <template #cell(employerNormalContribution)="data">
-          {{ data.value | toCurrency }}
-        </template>
-
-        <template #cell(employeeVoluntaryContribution)="data">
-          {{ data.value | toCurrency }}
-        </template>
-
-        <template #cell(employerVoluntaryContribution)="data">
-          {{ data.value | toCurrency }}
-        </template>
-      </b-table>
-
-      <b-pagination
-        v-model="currentPageItem"
-        :total-rows="rowsItem"
-        :per-page="perPage"
-        aria-controls="item-table"
-        size="sm"
-        limit="10"
-        pills
-        align="center"
-      >
-      </b-pagination>
-
-      <template #modal-footer="{ ok }">
-        <!-- Emulate built in modal footer ok and cancel button actions -->
-        <b-button variant="primary" class="rounded" @click="ok()">
-          Okay
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import SearchInput from "@/components/form/SearchInput";
 import CustomSelect from "@/components/dashboard/CustomSelect";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
-import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
 
 export default {
   name: "PfcListTransaction",
 
   components: {
-    SearchInput,
     CustomSelect,
-    CustomSelectInput,
-    HorizontalSelect,
-    ListPfaTable,
   },
 
   data() {
     return {
       getting: false,
       fetching: false,
-      currentPageItem: 1,
       perPage: 10,
       currentPage: 1,
-      batchId: null,
-      companyCode: null,
-      pfaCode: null,
-      rowsItem: 0,
-      searchVal: null,
-      yearOption: null,
-      monthOption: null,
       items: [],
       form: {
         company: null,
@@ -317,8 +193,8 @@ export default {
           label: "S/N",
         },
         {
-          key: "period",
-          label: "Period",
+          key: "pfaName",
+          label: "PFA",
         },
         {
           key: "companyName",
@@ -326,53 +202,15 @@ export default {
         },
         {
           key: "itemCount",
-          label: "Staff count",
+          label: "Company count",
         },
         {
           key: "amount",
-          label: "Total Amount",
-        },
-        {
-          key: "createdAt",
-          label: "Payment Date",
-        },
-        {
-          key: "transmitted",
-          label: "Remit Status",
+          label: "Total Contributed Amount",
         },
         {
           key: "action",
           label: "Action",
-        },
-      ],
-      fieldsItem: [
-        {
-          key: "staffName",
-          label: "Staff Name",
-        },
-        {
-          key: "rsaPin",
-          label: "RSA PIN",
-        },
-        {
-          key: "employeeNormalContribution",
-          label: "Employee Normal Contribution",
-        },
-        {
-          key: "employerNormalContribution",
-          label: "Employer Normal Contribution",
-        },
-        {
-          key: "employeeVoluntaryContribution",
-          label: "Employee Voluntary Contribution",
-        },
-        {
-          key: "employerVoluntaryContribution",
-          label: "Employer Voluntary Contribution",
-        },
-        {
-          key: "amount",
-          label: "Total Amount",
         },
       ],
     };
@@ -447,47 +285,20 @@ export default {
       }
     },
 
-    async getPfas(data, { batchId, companyCode }) {
-      this.batchId = batchId;
-      this.companyCode = companyCode;
-
-      data.toggleDetails();
-    },
-
-    async getItems({ batchId, companyCode, pfaCode }) {
-      this.batchId = batchId;
-      this.companyCode = companyCode;
-      this.pfaCode = pfaCode;
-
-      this.$bvModal.show("show-items");
-    },
-
-    async fetchItems({ currentPage, perPage }) {
+    async transmit({ batchId, companyCode, pfaCode }) {
       try {
-        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
-
-        const res = await secureAxios.post(api, {
-          pfaCode: this.pfaCode,
-          batchId: this.batchId,
-          companyCode: this.companyCode,
+        const result = await this.$swal({
+          icon: "info",
+          text: "This batch of contribution will be sent to the individual PFA",
+          showDenyButton: true,
+          confirmButtonText: "Proceed",
+          denyButtonText: "No",
         });
 
-        if (!res) {
-          return [];
+        if (!result.isConfirmed) {
+          return;
         }
 
-        const { data } = res;
-
-        this.rowsItem = data.meta.total;
-        return data.data;
-      } catch (err) {
-        console.log(err);
-        return [];
-      }
-    },
-
-    async downloadItems({ batchId, companyCode, pfaCode }) {
-      try {
         const loader = this.$loading.show({
           // Optional parameters
           loader: "bars",
@@ -497,29 +308,26 @@ export default {
           width: 100,
         });
 
-        const api = "payment/download-contributions";
+        const api = "payment/transmit-contributions";
 
-        const res = await secureAxios.post(
-          api,
-          { batchId, companyCode, pfaCode },
-          { responseType: "blob" }
-        );
+        const res = await secureAxios.post(api, {
+          batchId,
+          companyCode,
+          pfaCode,
+        });
 
         loader.hide();
         if (!res) {
           return;
         }
 
-        const fileURL = window.URL.createObjectURL(
-          new Blob([res.data], { type: "application/vnd.ms-excel" })
-        );
-        const fileLink = document.createElement("a");
+        const { data } = res;
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
 
-        fileLink.href = fileURL;
-        fileLink.setAttribute("download", "Contributions.xlsx");
-        document.body.appendChild(fileLink);
-
-        fileLink.click();
+        await this.getProcessedSchedule();
       } catch (err) {
         console.log(err);
         this.fetching = false;

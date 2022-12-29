@@ -1,334 +1,146 @@
 <template>
-  <section class="dash d-flex justify-content-center rounded px-3 pb-5 pt-3">
-    <div class="coln w-100">
-      <!-- Top boxes -->
-      <section class="d-flex justify-content-around mb-3">
-        <div class="card bg-primary">
-          <div class="card-body py-3 px-4 text-white">
-            <p class="m-0 text-uppercase">Employer Contribution</p>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.month.employerNormalContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">MTD</small>
-            </div>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.year.employerNormalContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">YTD</small>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-purple">
-          <div class="card-body py-3 px-4 text-white">
-            <p class="m-0 text-uppercase">Employee Contribution</p>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.month.employeeNormalContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">MTD</small>
-            </div>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.year.employeeNormalContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">YTD</small>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-success">
-          <div class="card-body py-3 px-4 text-white">
-            <p class="m-0 text-uppercase">Employer Voluntary</p>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.month.employerVoluntaryContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">MTD</small>
-            </div>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.year.employerVoluntaryContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">YTD</small>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-info">
-          <div class="card-body py-3 px-4 text-white">
-            <p class="m-0 text-uppercase">Employee Voluntary</p>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.month.employeeVoluntaryContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">MTD</small>
-            </div>
-            <div class="d-flex justify-content-between">
-              <h6 class="">
-                {{ chartData.year.employeeVoluntaryContribution | toCurrency }}
-              </h6>
-              <small class="fs-8">YTD</small>
-            </div>
-          </div>
-        </div>
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <!-- left side -->
+    <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
+      <!-- top section -->
+      <section id="sec1" class="d-flex justify-content-between flex-wrap">
+        <BlueBox class="col-md-7 col-12" />
+        <PinkBox class="col-md-5 col-12" />
       </section>
 
-      <!-- Middle pie and bar -->
-      <section class="d-flex justify-content-between rounded border">
-        <div id="pieChart" class="border-right p-4">
-          <span class="header-title mb-3">
-            Pie Chart - Pecentage of collections by categories MTD
-          </span>
-          <apexchart
-            v-if="plotPie"
-            type="pie"
-            width="380"
-            :options="pieOptions"
-            :series="pieSeries"
-          ></apexchart>
-          <div v-else class="d-flex flex-column align-items-center mt-3">
-            <i class="fa fa-pie-chart text-secondary chart-icon"></i>
-            <span>No Data</span>
-          </div>
-        </div>
-
-        <div id="barChart" class="w-75 p-4">
-          <span class="header-title mb-3">
-            Bar Chart - Total Contributions YTD
-          </span>
-          <apexchart
-            v-if="plotBar"
-            type="bar"
-            height="200"
-            :options="barOptions"
-            :series="barSeries"
-          ></apexchart>
-          <div v-else class="d-flex flex-column align-items-center mt-3">
-            <i class="fa fa-bar-chart text-secondary chart-icon"></i>
-            <span>No Data</span>
-          </div>
-        </div>
+      <!-- gray section -->
+      <section id="sec2" class="d-flex justify-content-between flex-wrap">
+        <GrayBox
+          boldTitle="Companies"
+          :options="companies"
+          class="col-12 col-md-6"
+        />
+        <GrayBox
+          boldTitle="Companies"
+          :options="companies"
+          class="col-12 col-md-6"
+        />
       </section>
 
-      <!-- Bottom line -->
-      <section class="rounded border mt-3 pt-4 px-4 pb-1">
-        <div id="lineChart">
-          <span class="header-title mb-3">
-            Line chart - Total Contributions - YTD
-          </span>
-          <apexchart
-            v-if="plotLine"
-            type="line"
-            height="300"
-            :options="lineOptions"
-            :series="lineSeries"
-          ></apexchart>
-          <div
-            v-else
-            class="d-flex flex-column align-items-center justify-content-end mt-3"
-          >
-            <i class="fa fa-line-chart text-secondary chart-icon_plus"></i>
-            <span>No Data</span>
-          </div>
-        </div>
+      <!-- graph section -->
+      <section id="sec3" class="pb-5">
+        <GraphBox />
       </section>
     </div>
-  </section>
+
+    <!-- right side -->
+    <div class="right-dash col-lg-4 p-0">
+      <div class="border-bottom">
+        <ProfileBox />
+      </div>
+    </div>
+
+    <!-- Companies modal -->
+    <b-modal
+      id="show-items"
+      size="lg"
+      scrollable
+      :cancel-disabled="true"
+      :hide-footer="true"
+      :hide-header="true"
+    >
+      <!-- title="Schedule Items" -->
+      <SearchInput v-model="searchVal" width="100%" />
+
+      <b-table
+        class="my-table mt-3"
+        id="item-table"
+        :fields="modalFields"
+        small
+        responsive
+        striped
+        :busy="fetching"
+        hover
+        :items="fetchItems"
+        :per-page="perPage"
+        :current-page="currentPage"
+        show-empty
+      >
+        <template #cell(amount)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(index)="data">
+          {{ data.index + 1 }}
+        </template>
+      </b-table>
+
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rowsItem"
+        :per-page="perPage"
+        aria-controls="item-table"
+        size="sm"
+        limit="10"
+        pills
+        align="center"
+      >
+      </b-pagination>
+    </b-modal>
+  </div>
 </template>
 
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
+import BlueBox from "@/components/dashboard/BlueBox";
+import PinkBox from "@/components/dashboard/PinkBox";
+import GrayBox from "@/components/dashboard/GrayBox";
+import GraphBox from "@/components/dashboard/GraphBox";
+import ProfileBox from "@/components/dashboard/ProfileBox";
+import SearchInput from "@/components/form/SearchInput";
 export default {
-  name: "PfcDashboard",
-  async beforeCreate() {
-    // this.$store.dispatch("getItems");
-    // this.$store.dispatch("getMenus");
+  name: "PfaDashboard",
 
-    try {
-      this.getting = true;
-
-      const api1 = "stat/items-month";
-      const res1 = await secureAxios.get(api1);
-
-      const api2 = "stat/items-year";
-      const res2 = await secureAxios.get(api2);
-
-      const api3 = "stat/year-months";
-      const res3 = await secureAxios.get(api3);
-
-      this.getting = false;
-      if (res1) {
-        this.chartData.month = res1.data.data;
-      }
-      if (res2) {
-        this.chartData.year = res2.data.data;
-      }
-      if (res3) {
-        this.chartData.yearMonth = res3.data.data;
-      }
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
-  },
-
-  computed: {
-    plotPie() {
-      return this.chartData.month.employerNormalContribution != 0;
-    },
-    plotBar() {
-      return this.chartData.year.employerNormalContribution != 0;
-    },
-    plotLine() {
-      return this.chartData.yearMonth.length != 0;
-    },
-    pieSeries() {
-      return [
-        this.chartData.month.employerNormalContribution,
-        this.chartData.month.employeeNormalContribution,
-        this.chartData.month.employerVoluntaryContribution,
-        this.chartData.month.employeeVoluntaryContribution,
-      ];
-    },
-    barSeries() {
-      return [
-        {
-          name: "Contributions",
-          data: [
-            this.chartData.year.employerNormalContribution,
-            this.chartData.year.employeeNormalContribution,
-            this.chartData.year.employerVoluntaryContribution,
-            this.chartData.year.employeeVoluntaryContribution,
-          ],
-        },
-      ];
-    },
-    lineSeries() {
-      let month = new Date().getMonth();
-      const monthsData = new Array(month + 1).fill(0);
-      this.chartData.yearMonth.forEach((data) => {
-        monthsData[data._id - 1] = data.amount.toFixed(2);
-      });
-      return [
-        {
-          name: "Contributions",
-          data: monthsData,
-        },
-      ];
-    },
+  components: {
+    BlueBox,
+    PinkBox,
+    GrayBox,
+    GraphBox,
+    ProfileBox,
+    SearchInput,
   },
 
   data() {
-    const emptyData = {
-      count: 0,
-      amount: 0,
-      employeeNormalContribution: 0,
-      employerNormalContribution: 0,
-      employeeVoluntaryContribution: 0,
-      employerVoluntaryContribution: 0,
-    };
-
-    const preMonths = this.lineMonths();
     return {
-      chartData: {
-        month: emptyData,
-        year: emptyData,
-        yearMonth: [],
+      fetching: false,
+      companyOption: null,
+      searchVal: null,
+      perPage: 10,
+      currentPage: 1,
+      rowsItem: 0,
+      companies: [
+        { label: "All Companies", value: "all" },
+        { label: "Appmart Limited", value: "EC0D43224" },
+        { label: "Basmic Limited", value: "EC993D4322" },
+        { label: "Swizel Tech", value: "EC0D431110" },
+      ],
+      instructions: {
+        1: "Use the PFA Remit menu to transmit contribution schedule to the respective PFA's. please note that only the companies that have paid will appear on this listings under the PFA's",
+        2: "Transaction menu gives you view of the status of different companies that have remitted their contributions.",
       },
-      // pieSeries: [44, 55, 13, 43],
-      pieOptions: {
-        chart: {
-          width: 380,
-          type: "pie",
+      modalFields: [
+        {
+          key: "index",
+          label: "S/N",
         },
-        labels: [
-          "Employer Normal",
-          "Employee Normal",
-          "Employer Voluntary",
-          "Employee Voluntary",
-        ],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: "bottom",
-              },
-            },
-          },
-        ],
-      },
-      /*  barSeries: [], */
-      barOptions: {
-        chart: {
-          type: "bar",
+        {
+          key: "companyName",
+          label: "Company",
         },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          },
+        {
+          key: "amount",
+          label: "Total amount contributed",
         },
-        dataLabels: {
-          enabled: false,
+        {
+          key: "lastMonthContributed",
+          label: "Last contributing month",
         },
-        tooltip: {
-          enabled: true,
-          y: {
-            formatter: (val) => {
-              return this.formatMoney(val);
-            },
-          },
-        },
-        xaxis: {
-          categories: [
-            "Employer Normal",
-            "Employee Normal",
-            "Employer Voluntary",
-            "Employee Voluntary",
-          ],
-          labels: {
-            formatter: (val) => {
-              return this.formatMoney(val);
-            },
-          },
-        },
-      },
-      // lineSeries: [],
-      lineOptions: {
-        chart: {
-          type: "line",
-          zoom: {
-            enabled: false,
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          curve: "smooth",
-        },
-        tooltip: {
-          enabled: true,
-          y: {
-            formatter: (val) => {
-              return this.formatMoney(val);
-            },
-          },
-        },
-        grid: {
-          row: {
-            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-            opacity: 0.5,
-          },
-        },
-        xaxis: {
-          categories: preMonths,
-        },
-      },
+      ],
     };
   },
 
@@ -345,22 +157,152 @@ export default {
       }
       return preMonths;
     },
+
+    async fetchItems({ currentPage, perPage }) {
+      try {
+        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
+
+        const res = await secureAxios.post(api, {});
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.rowsItem = data.meta.total;
+        return data.data;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
+    showModal() {
+      this.$bvModal.show("show-items");
+    },
+  },
+
+  provide: function () {
+    return {
+      showModal: this.showModal,
+    };
   },
 };
 </script>
 
 <style scoped>
-@import "../../assets/css/dashboard.css";
-.bg-purple {
-  background: purple;
+@import "../../assets/css/table.css";
+#dash {
+  overflow-y: hidden;
+  height: calc(100vh - 68px);
 }
-.chart-icon {
-  font-size: 130px;
+section#sec1 {
+  width: 100%;
+  gap: 18px;
+  /* margin: auto; */
 }
-.chart-icon_plus {
-  font-size: 240px;
+section#sec2 {
+  width: 100%;
+  margin-top: 28px;
+  gap: 18px;
 }
-.card-body p {
-  color: #ffffff;
+section#sec3,
+section#sec4 {
+  width: 100%;
+  overflow-x: hidden;
+  margin-top: 28px;
+}
+.left-dash {
+  /* width: 70%; */
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
+}
+.right-dash {
+  /* width: 30%; */
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
+}
+.left-dash::-webkit-scrollbar,
+.right-dash::-webkit-scrollbar {
+  display: none;
+}
+.left-dash,
+.right-dash {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.right-dash .out-boxx {
+  padding: 28px;
+}
+.right-dash .notification-boxx {
+  height: 57px;
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 10px;
+}
+.notification-boxx .icon {
+  font-size: 16px;
+  color: #0090ff;
+  margin-left: 7px;
+}
+.notification-boxx h6 {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 15px;
+  color: #263238;
+  margin-bottom: 0px;
+}
+.notification-boxx small {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #808080;
+}
+.notification-boxx p {
+  font-size: 10px;
+  line-height: 13px;
+  color: #187a33;
+  margin: 0;
+}
+.paid {
+  background: #be9e1b;
+  padding: 1px 7px;
+  border-radius: 17px;
+  font-size: 0.715em;
+}
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  .right-dash,
+  .left {
+    /* width: 70%; */
+    overflow-y: visible;
+    height: auto;
+  }
+  #dash {
+    overflow-y: scroll;
+  }
+  #dash::-webkit-scrollbar {
+    display: none;
+  }
+  #dash {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .col-md-7 {
+    flex: 0 0 56.333333%;
+    max-width: 56.333333%;
+  }
+  .col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+  .col-md-5 {
+    flex: 0 0 39.666667%;
+    max-width: 39.666667%;
+  }
 }
 </style>

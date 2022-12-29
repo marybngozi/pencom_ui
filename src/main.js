@@ -70,6 +70,11 @@ Vue.directive("pfc", {
     if (store.getters.userType != 400) el.style.display = "none";
   },
 });
+Vue.directive("pfa", {
+  bind: (el) => {
+    if (store.getters.userType != 500) el.style.display = "none";
+  },
+});
 // for pfc and pfa
 Vue.directive("pfca", {
   bind: (el) => {

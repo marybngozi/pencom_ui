@@ -31,6 +31,11 @@
             <p>{{ rsaPin }}</p>
           </div>
 
+          <div v-pfa class="ddate">
+            <small>PFA Code</small>
+            <p>27</p>
+          </div>
+
           <div v-staff class="ddate">
             <small>PFA</small>
             <p>AXE Pensions</p>

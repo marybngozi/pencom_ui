@@ -62,8 +62,8 @@
             :current-page="currentPage"
             show-empty
           >
-            <template #cell(itemCode)="data">
-              {{ data.item.item[0].itemName }}
+            <template #cell(index)="data">
+              {{ data.index + 1 }}
             </template>
 
             <template #cell(createdAt)="data">
@@ -74,9 +74,8 @@
               {{ $months[data.item.month] }}, {{ data.item.year }}
             </template>
 
-            <template #cell(paid)="data">
-              <span v-if="data.value == 0">Not Paid</span>
-              <span v-if="data.value == 1">Paid</span>
+            <template #cell(company)="data">
+              {{ data.value[0].companyName }}
             </template>
 
             <template #cell(amount)="data">
@@ -108,7 +107,7 @@ import CustomSelect from "@/components/dashboard/CustomSelect";
 import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
 
 export default {
-  name: "ListTransaction",
+  name: "StaffListTransaction",
   components: {
     CustomSelectInput,
     CustomSelect,
@@ -132,24 +131,24 @@ export default {
       items: [],
       fields: [
         {
-          key: "itemCode",
-          label: "Item",
+          key: "index",
+          label: "S/N",
         },
         {
           key: "period",
           label: "Period",
         },
         {
-          key: "paid",
-          label: "Payment Status",
+          key: "company",
+          label: "Company",
+        },
+        {
+          key: "createdAt",
+          label: "Upload Date",
         },
         {
           key: "amount",
           label: "Total Amount",
-        },
-        {
-          key: "createdAt",
-          label: "Uploaded",
         },
       ],
     };

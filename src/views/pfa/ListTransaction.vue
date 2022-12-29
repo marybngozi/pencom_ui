@@ -1,258 +1,217 @@
 <template>
-  <section class="dash rounded px-3 pb-5 pt-2">
-    <div class="coln">
-      <div class="form">
-        <h4 class="mb-4">List Processed Schedule</h4>
+  <div id="dash" class="d-flex justify-content-between flex-wrap">
+    <!-- left side -->
+    <div class="left-tab col-lg-9 pt-5 px-5">
+      <h4>Pension Contribution Transactions</h4>
 
-        <div class="mt-4">
-          <label for="itemCode"> Item </label>
-          <select
-            name="itemCode"
-            v-model="form.itemCode"
-            id="itemCode"
-            class="form-control"
+      <!-- pagination and filter details -->
+      <div class="my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="show-count w-70">
+            Showing {{ items.length }} of {{ rows }} Uploaded schedules
+          </div>
+
+          <div class="d-flex justify-content-between gap-3">
+            <SearchInput v-model="searchVal" />
+
+            <CustomSelectInput
+              :options="years"
+              :default="years[0]"
+              class="select"
+              borderColor="#DDDDDD"
+              color="#252A2F"
+              width="100px"
+              height="32px"
+              lineHeight="30px"
+              v-model="yearOption"
+            />
+
+            <HorizontalSelect
+              :items="Object.values($months)"
+              :default="new Date().getMonth() - 1"
+              width="126px"
+              height="32px"
+              borderColor="#DDDDDD"
+              color="#252A2F"
+              v-model="monthOption"
+            />
+          </div>
+        </div>
+
+        <!-- table section -->
+        <div class="table-div">
+          <b-table
+            id="my-table"
+            class="my-table"
+            :fields="fields"
+            small
+            :busy="getting"
+            hover
+            :items="items"
+            :per-page="perPage"
+            :current-page="currentPage"
+            show-empty
           >
-            <option :value="null">- select an Item -</option>
-            <option
-              v-for="item in allItems"
-              :value="item.itemCode"
-              :key="item.itemCode"
-            >
-              {{ item.itemName }}
-            </option>
-          </select>
-        </div>
+            <template #cell(index)="data">
+              {{ data.index + 1 }}
+            </template>
 
-        <div class="mt-3">
-          <label class="d-flex justify-content-between" for="dateStart">
-            <span> Date range (From) </span>
-            <span class="fs-8 text-info">Based on the date of payment</span>
-          </label>
-          <input
-            id="dateStart"
-            v-model="form.dateStart"
-            class="form-control input"
-            type="date"
-            placeholder="dd/mm/yyyy"
-          />
-        </div>
+            <template #cell(createdAt)="data">
+              {{ data.value | moment("DD-MM-YYYY") }}
+            </template>
 
-        <div class="mt-2">
-          <label for="dateEnd"> Date range (To) </label>
-          <input
-            id="dateEnd"
-            v-model="form.dateEnd"
-            class="form-control input"
-            type="date"
-            placeholder="dd/mm/yyyy"
-          />
-          <small v-if="dateNotReady" class="text-danger">
-            Both dates should be provided or none
-          </small>
-        </div>
+            <template #cell(period)="data">
+              {{ $months[data.item.month] }}, {{ data.item.year }}
+            </template>
 
-        <button
-          :disabled="getting"
-          @click="getProcessedSchedule"
-          class="btn mt-4 w-100 button"
-        >
-          <span>Get Processed Schedule</span>
-          <span
-            v-if="getting"
-            class="spinner-border spinner-border-sm text-light ml-3"
-            role="status"
-          ></span>
-        </button>
+            <template #cell(amount)="data">
+              {{ data.value | toCurrency }}
+            </template>
+
+            <template #cell(action)="data">
+              <button
+                @click="getItems(data.item._id)"
+                class="btn btn-sm btn-info m-1"
+              >
+                Show Items
+              </button>
+
+              <button
+                class="btn btn-sm btn-secondary m-1"
+                @click="downloadItems(data.item._id)"
+              >
+                Download
+              </button>
+            </template>
+          </b-table>
+
+          <!-- table pagination -->
+          <b-pagination
+            class="mt-4"
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="my-table"
+            size="sm"
+            limit="10"
+            align="center"
+            pills
+          >
+          </b-pagination>
+        </div>
       </div>
-
-      <!-- Processed schedules -->
-      <div class="mt-5 pb-4 mb-5">
-        <b-table
-          id="my-table"
-          :fields="fields"
-          small
-          outlined
-          :busy="getting"
-          hover
-          :items="items"
-          :per-page="perPage"
-          :current-page="currentPage"
-          show-empty
-        >
-          <template #cell(transmitted)="data">
-            <span v-if="data.value" class="text-primary">Sent</span>
-            <span v-else class="text-secondary">Not sent</span>
-          </template>
-
-          <template #cell(createdAt)="data">
-            {{ data.value | moment("DD-MM-YYYY") }}
-          </template>
-
-          <template #cell(period)="data">
-            {{ $months[data.item.month] }}, {{ data.item.year }}
-          </template>
-
-          <template #cell(amount)="data">
-            {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(action)="data">
-            <button
-              @click="getPfas(data, data.item._id)"
-              class="btn btn-sm btn-info m-1"
-            >
-              {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
-            </button>
-
-            <button
-              class="btn btn-sm btn-secondary m-1"
-              @click="downloadItems(data.item._id)"
-            >
-              Download
-            </button>
-
-            <button
-              v-if="!data.item.transmitted"
-              v-b-tooltip.hover
-              title="Transmit transaction to the PFA"
-              class="btn btn-sm btn-primary m-1"
-              @click="transmit(data.item._id)"
-            >
-              Transmit
-            </button>
-          </template>
-
-          <template #row-details>
-            <b-card bg-variant="light">
-              <!-- START PFA INNER TABLE -->
-              <ListPfaTable
-                :batchId="batchId"
-                :companyCode="companyCode"
-                @showItems="getItems"
-                @getDownloads="downloadItems"
-                @transmit="transmit"
-              />
-
-              <!-- END PFA INNER TABLE -->
-            </b-card>
-          </template>
-        </b-table>
-
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-          size="sm"
-          limit="10"
-        >
-        </b-pagination>
-      </div>
-
-      <!-- Items modal -->
-      <b-modal
-        id="show-items"
-        size="xl"
-        scrollable
-        :cancel-disabled="true"
-        title="Schedule Items"
-      >
-        <b-table
-          id="item-table"
-          :fields="fieldsItem"
-          outlined
-          small
-          responsive
-          striped
-          :busy="fetching"
-          hover
-          :items="fetchItems"
-          :per-page="perPage"
-          :current-page="currentPageItem"
-          show-empty
-        >
-          <template #cell(amount)="data">
-            {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(employeeNormalContribution)="data">
-            {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(employerNormalContribution)="data">
-            {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(employeeVoluntaryContribution)="data">
-            {{ data.value | toCurrency }}
-          </template>
-
-          <template #cell(employerVoluntaryContribution)="data">
-            {{ data.value | toCurrency }}
-          </template>
-        </b-table>
-
-        <b-pagination
-          v-model="currentPageItem"
-          :total-rows="rowsItem"
-          :per-page="perPage"
-          aria-controls="item-table"
-          size="sm"
-          limit="10"
-        >
-        </b-pagination>
-
-        <template #modal-footer="{ ok }">
-          <!-- Emulate built in modal footer ok and cancel button actions -->
-          <b-button variant="info" @click="ok()"> OK </b-button>
-        </template>
-      </b-modal>
     </div>
-  </section>
+
+    <!-- Items modal -->
+    <b-modal
+      id="show-items"
+      size="xl"
+      scrollable
+      :cancel-disabled="true"
+      title="Schedule Items"
+    >
+      <b-table
+        class="my-table"
+        id="item-table"
+        :fields="fieldsItem"
+        small
+        responsive
+        striped
+        :busy="fetching"
+        hover
+        :items="fetchItems"
+        :per-page="perPage"
+        :current-page="currentPageItem"
+        show-empty
+      >
+        <template #cell(amount)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(employeeNormalContribution)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(employerNormalContribution)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(employeeVoluntaryContribution)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(employerVoluntaryContribution)="data">
+          {{ data.value | toCurrency }}
+        </template>
+      </b-table>
+
+      <b-pagination
+        v-model="currentPageItem"
+        :total-rows="rowsItem"
+        :per-page="perPage"
+        aria-controls="item-table"
+        size="sm"
+        limit="10"
+        pills
+        align="center"
+      >
+      </b-pagination>
+
+      <template #modal-footer="{ ok }">
+        <!-- Emulate built in modal footer ok and cancel button actions -->
+        <b-button variant="primary" class="rounded" @click="ok()">
+          Okay
+        </b-button>
+      </template>
+    </b-modal>
+  </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
-import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
+import SearchInput from "@/components/form/SearchInput";
+import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
+import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
 
 export default {
-  name: "ListContribution",
+  name: "PfaListTransaction",
+
   components: {
-    ListPfaTable,
+    SearchInput,
+    CustomSelectInput,
+    HorizontalSelect,
   },
+
   data() {
     return {
       getting: false,
       fetching: false,
+      currentPageItem: 1,
       perPage: 10,
       currentPage: 1,
-      currentPageItem: 1,
       batchId: null,
       companyCode: null,
       pfaCode: null,
       rowsItem: 0,
-      form: {
-        itemCode: null,
-        dateStart: null,
-        dateEnd: null,
-      },
+      searchVal: null,
+      yearOption: null,
+      monthOption: null,
       items: [],
       fields: [
         {
-          key: "companyName",
-          label: "Company",
+          key: "index",
+          label: "S/N",
         },
         {
           key: "period",
           label: "Period",
         },
         {
-          key: "itemCount",
-          label: "Contributions count",
+          key: "companyName",
+          label: "Company",
         },
         {
-          key: "transmitted",
-          label: "Status",
+          key: "itemCount",
+          label: "Staff count",
         },
         {
           key: "amount",
@@ -260,11 +219,11 @@ export default {
         },
         {
           key: "createdAt",
-          label: "Date",
+          label: "Payment Date",
         },
         {
           key: "action",
-          label: "Actions",
+          label: "Action",
         },
       ],
       fieldsItem: [
@@ -299,6 +258,7 @@ export default {
       ],
     };
   },
+
   async beforeCreate() {
     try {
       this.getting = true;
@@ -319,17 +279,23 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["allItems"]),
-
     dateNotReady() {
       return (
-        (this.form.dateStart && !this.form.dateEnd) ||
-        (!this.form.dateStart && this.form.dateEnd)
+        (this.form.dateFrom && !this.form.dateTo) ||
+        (!this.form.dateFrom && this.form.dateTo)
       );
     },
 
     rows() {
       return this.items.length;
+    },
+
+    years() {
+      const yearArr = [];
+      for (let i = new Date().getFullYear(); i >= 2000; i--) {
+        yearArr.push(i);
+      }
+      return yearArr;
     },
   },
 
@@ -440,61 +406,16 @@ export default {
         this.fetching = false;
       }
     },
-
-    async transmit({ batchId, companyCode, pfaCode }) {
-      try {
-        const result = await this.$swal({
-          icon: "info",
-          text: "This batch of contribution will be sent to the individual PFA",
-          showDenyButton: true,
-          confirmButtonText: "Proceed",
-          denyButtonText: "No",
-        });
-
-        if (!result.isConfirmed) {
-          return;
-        }
-
-        const loader = this.$loading.show({
-          // Optional parameters
-          loader: "bars",
-          color: "#0b2238",
-          backgroundColor: "#343232",
-          height: 100,
-          width: 100,
-        });
-
-        const api = "payment/transmit-contributions";
-
-        const res = await secureAxios.post(api, {
-          batchId,
-          companyCode,
-          pfaCode,
-        });
-
-        loader.hide();
-        if (!res) {
-          return;
-        }
-
-        const { data } = res;
-        this.$swal({
-          icon: "success",
-          text: data.message,
-        });
-
-        await this.getProcessedSchedule();
-      } catch (err) {
-        console.log(err);
-        this.fetching = false;
-      }
-    },
   },
 };
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
-.card-body {
-  padding: 0.25rem;
+.bg-blue {
+  background: #ecf7ff;
+  border-bottom: 1px solid #f2f2f2;
+}
+.gap-4 {
+  gap: 4px;
 }
 </style>

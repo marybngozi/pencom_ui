@@ -108,6 +108,16 @@ export default {
   user-select: none;
 }
 
+.customed-select .selected span {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 0;
+  width: 78%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .customed-select .selected.open {
   border: 1px solid #ffffff;
   border-radius: 30px 30px 0px 0px;

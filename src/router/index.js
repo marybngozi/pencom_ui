@@ -167,11 +167,11 @@ const routes = [
             },
           },
           {
-            path: "list-staff",
-            name: "list-staff",
+            path: "company-staff",
+            name: "company-staff",
             component: () =>
               import(
-                /* webpackChunkName: "account" */ "../views/account/ListAdminStaff.vue"
+                /* webpackChunkName: "account" */ "../views/account/CompanyStaff.vue"
               ),
             meta: {
               requiresAuth: true,
@@ -203,8 +203,8 @@ const routes = [
             },
           },
           {
-            path: "list-pfc-transaction",
-            name: "list-pfc-transaction",
+            path: "pfc-transaction",
+            name: "pfc-list-transaction",
             component: () =>
               import(
                 /* webpackChunkName: "account" */ "../views/pfc/ListTransaction.vue"
@@ -215,8 +215,32 @@ const routes = [
             },
           },
           {
-            path: "list-pfa-transaction",
-            name: "list-pfa-transaction",
+            path: "pfa-remit",
+            name: "pfc-pfa-remit",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/pfc/Remit.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "pfc-staff",
+            name: "pfc-staff",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */ "../views/account/PfcStaff.vue"
+              ),
+            meta: {
+              requiresAuth: true,
+              free: false,
+            },
+          },
+          {
+            path: "pfa-transaction",
+            name: "pfa-list-transaction",
             component: () =>
               import(
                 /* webpackChunkName: "account" */ "../views/pfa/ListTransaction.vue"

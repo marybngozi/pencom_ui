@@ -218,10 +218,21 @@ h6 {
   overflow-x: scroll;
 }
 #chart::-webkit-scrollbar {
-  display: none;
+  height: 7px;
 }
-#chart {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+/* Track */
+#chart::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #109cf1;
+  border-radius: 10px;
+  margin: 0 7px;
+}
+/* Handle */
+#chart::-webkit-scrollbar-thumb {
+  background: #17517e;
+  border-radius: 2px;
+}
+/* Handle on hover */
+#chart::-webkit-scrollbar-thumb:hover {
+  background: #104771;
 }
 </style>

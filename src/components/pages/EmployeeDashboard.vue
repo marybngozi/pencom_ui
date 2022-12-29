@@ -10,8 +10,16 @@
 
       <!-- gray section -->
       <section id="sec2" class="d-flex justify-content-between flex-wrap">
-        <GrayBox boldTitle="Employer" class="col-12 col-md-6" />
-        <GrayBox boldTitle="Employee" class="col-12 col-md-6" />
+        <GrayBox
+          boldTitle="Employer"
+          :options="companies"
+          class="col-12 col-md-6"
+        />
+        <GrayBox
+          boldTitle="Employee"
+          :options="companies"
+          class="col-12 col-md-6"
+        />
       </section>
 
       <!-- graph section -->
@@ -31,16 +39,70 @@
         <ProfileBox />
       </div>
     </div>
+
+    <!-- Employers modal -->
+    <b-modal
+      id="show-items"
+      size="lg"
+      scrollable
+      :cancel-disabled="true"
+      :hide-footer="true"
+      :hide-header="true"
+    >
+      <!-- title="Schedule Items" -->
+      <SearchInput v-model="searchVal" width="100%" />
+
+      <b-table
+        class="my-table mt-3"
+        id="item-table"
+        :fields="modalFields"
+        small
+        responsive
+        striped
+        :busy="fetching"
+        hover
+        :items="fetchItems"
+        :per-page="perPage"
+        :current-page="currentPage"
+        show-empty
+      >
+        <template #cell(amount)="data">
+          {{ data.value | toCurrency }}
+        </template>
+
+        <template #cell(company)="data">
+          {{ data.value[0].companyName }}
+        </template>
+
+        <template #cell(index)="data">
+          {{ data.index + 1 }}
+        </template>
+      </b-table>
+
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rowsItem"
+        :per-page="perPage"
+        aria-controls="item-table"
+        size="sm"
+        limit="10"
+        pills
+        align="center"
+      >
+      </b-pagination>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 import BlueBox from "@/components/dashboard/BlueBox";
 import PinkBox from "@/components/dashboard/PinkBox";
 import GrayBox from "@/components/dashboard/GrayBox";
 import GraphBox from "@/components/dashboard/GraphBox";
 import TableBox from "@/components/dashboard/TableBox";
 import ProfileBox from "@/components/dashboard/ProfileBox";
+import SearchInput from "@/components/form/SearchInput";
 export default {
   name: "EmployeeDashboard",
 
@@ -51,10 +113,22 @@ export default {
     GraphBox,
     TableBox,
     ProfileBox,
+    SearchInput,
   },
 
   data() {
     return {
+      fetching: false,
+      searchVal: null,
+      perPage: 10,
+      currentPage: 1,
+      rowsItem: 0,
+      companies: [
+        { label: "All Companies", value: "all" },
+        { label: "Appmart Limited", value: "EC0D43224" },
+        { label: "Basmic Limited", value: "EC993D4322" },
+        { label: "Swizel Tech", value: "EC0D431110" },
+      ],
       tableHeaders: [
         {
           label: "Month",
@@ -66,7 +140,7 @@ export default {
         },
         {
           label: "Employer",
-          key: "companyName",
+          key: "company",
         },
         {
           label: "Transaction date",
@@ -117,6 +191,24 @@ export default {
           createdAt: "Sept 10. 2022",
         },
       ],
+      modalFields: [
+        {
+          key: "index",
+          label: "S/N",
+        },
+        {
+          key: "companyName",
+          label: "Employer",
+        },
+        {
+          key: "amount",
+          label: "Amount contributed to you",
+        },
+        {
+          key: "lastMonthContributed",
+          label: "Last contributing month",
+        },
+      ],
     };
   },
 
@@ -133,6 +225,36 @@ export default {
       }
       return preMonths;
     },
+
+    async fetchItems({ currentPage, perPage }) {
+      try {
+        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
+
+        const res = await secureAxios.post(api, {});
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.rowsItem = data.meta.total;
+        return data.data;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
+    showModal() {
+      this.$bvModal.show("show-items");
+    },
+  },
+
+  provide: function () {
+    return {
+      showModal: this.showModal,
+    };
   },
 };
 </script>

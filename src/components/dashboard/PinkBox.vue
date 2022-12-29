@@ -37,7 +37,7 @@
         v-model="monthOption"
       />
 
-      <button v-spfca class="see-all">See all</button>
+      <button v-spfca class="see-all" @click="seeAll">See all</button>
     </div>
   </div>
 </template>
@@ -51,10 +51,18 @@ export default {
     HorizontalSelect,
   },
 
+  inject: ["showModal"],
+
   data() {
     return {
       monthOption: 1,
     };
+  },
+
+  methods: {
+    seeAll() {
+      this.showModal();
+    },
   },
 };
 </script>

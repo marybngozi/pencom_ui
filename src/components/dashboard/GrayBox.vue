@@ -90,12 +90,6 @@ export default {
       monthOption: 1,
       companyOption: null,
       pfaOption: null,
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
-      ],
     };
   },
 };
