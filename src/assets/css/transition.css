@@ -1,0 +1,28 @@
+.slide-enter-active {
+  transform: translateX(404px);
+  transition: all 0.5s ease-in-out;
+}
+.slide-leave-active {
+  transition: all 0.8s ease-in-out;
+}
+.slide-enter-to {
+  transform: translateX(0px);
+  /* opacity: 0.4; */
+}
+.slide-enter-from {
+  transform: translateX(400px);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translateX(400px);
+  opacity: 0;
+}
+
+/* Transistion group */
+.slideaction-enter-active {
+  transition: all 1s ease-in-out;
+  transition-delay: calc(0.2s * var(--i));
+}
+.slideaction-enter {
+  transform: translateX(100em);
+}

@@ -2,24 +2,22 @@
   <div class="boxx">
     <h6>Quick Actions</h6>
 
-    <QuickAction
-      iconName="transactions"
-      main-text="Upload new pension schedule"
-      subText="Upload new schedule"
-      :filled="true"
-      color="#ffffff"
-      path="/schedule/upload"
-    />
+    <TransitionGroup name="slideaction" appear>
+      <QuickAction
+        v-for="(a, i) in actions"
+        :key="i"
+        :iconName="a.iconName"
+        :main-text="a.mainText"
+        :subText="a.subText"
+        :filled="a.filled"
+        :color="a.color"
+        :path="a.path"
+        class="mb-2"
+        :style="{ '--i': i }"
+      />
 
-    <QuickAction
-      iconName="process"
-      main-text="Process pension schedule"
-      subText="Process uploaded schedule"
-      :filled="false"
-      color="#263238"
-      path="/schedule/upload-status"
-      class="mt-3"
-    />
+      />
+    </TransitionGroup>
   </div>
 </template>
 
@@ -31,10 +29,34 @@ export default {
   components: {
     QuickAction,
   },
+
+  data() {
+    return {
+      actions: [
+        {
+          iconName: "transactions",
+          mainText: "Upload new pension schedule",
+          subText: "Upload new schedule",
+          filled: true,
+          color: "#ffffff",
+          path: "/schedule/upload",
+        },
+        {
+          iconName: "process",
+          mainText: "Process pension schedule",
+          subText: "Process uploaded schedule",
+          filled: false,
+          color: "#263238",
+          path: "/schedule/upload-status",
+        },
+      ],
+    };
+  },
 };
 </script>
 
 <style scoped>
+@import "../../assets/css/transition.css";
 .boxx {
   padding: 48px 28px 28px;
 }

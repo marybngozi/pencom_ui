@@ -151,6 +151,7 @@ export default {
   watch: {
     pagePath(val) {
       this.pageSlug = val.split("/")[1];
+      document.querySelector("#" + this.pageSlug).parentElement.click();
     },
   },
 
@@ -302,6 +303,7 @@ a.nav-link-item.active {
   outline: none;
   background: #17517e !important;
   font-weight: 700;
+  transition: all 0.3s ease-in-out;
 }
 .relative {
   position: relative;

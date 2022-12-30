@@ -26,6 +26,7 @@
     </div>
 
     <!-- right side -->
+    <!-- <Transition name="slide" appear> -->
     <div class="right-dash col-lg-4 p-0">
       <div class="border-bottom">
         <QuickActions />
@@ -59,6 +60,7 @@
         </div>
       </div>
     </div>
+    <!-- </Transition> -->
   </div>
 </template>
 
@@ -176,6 +178,7 @@ export default {
 </script>
 
 <style scoped>
+/* @import "../../assets/css/transition.css"; */
 #dash {
   overflow-y: hidden;
   height: calc(100vh - 68px);
