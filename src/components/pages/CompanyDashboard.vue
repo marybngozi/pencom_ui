@@ -10,8 +10,16 @@
 
       <!-- gray section -->
       <section id="sec2" class="d-flex justify-content-between flex-wrap">
-        <GrayBox boldTitle="Employer" class="col-12 col-md-6" />
-        <GrayBox boldTitle="Employee" class="col-12 col-md-6" />
+        <GrayBox
+          boldTitle="Employer"
+          contributionType="employerNormalContribution"
+          class="col-12 col-md-6"
+        />
+        <GrayBox
+          boldTitle="Employee"
+          contributionType="employeeNormalContribution"
+          class="col-12 col-md-6"
+        />
       </section>
 
       <!-- graph section -->
@@ -21,12 +29,11 @@
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
+        <TableBox :tableHeaders="tableHeaders" />
       </section>
     </div>
 
     <!-- right side -->
-    <!-- <Transition name="slide" appear> -->
     <div class="right-dash col-lg-4 p-0">
       <div class="border-bottom">
         <QuickActions />
@@ -60,7 +67,6 @@
         </div>
       </div>
     </div>
-    <!-- </Transition> -->
   </div>
 </template>
 
@@ -111,50 +117,6 @@ export default {
         {
           label: "Transaction date",
           key: "createdAt",
-        },
-      ],
-      tableRows: [
-        {
-          month: "January",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "Febuary",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "March",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "April",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "May",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "June",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "July",
-          staffCount: 22,
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
         },
       ],
     };

@@ -6,10 +6,7 @@
 
     <div v-company class="mt-3">
       <h5>Staff Count</h5>
-      <h6>
-        for the month
-        <small v-company class="paid ml-3">paid</small>
-      </h6>
+      <h6>for the month</h6>
     </div>
 
     <div v-staff class="mt-3">
@@ -23,16 +20,19 @@
     </div>
 
     <div>
-      <h3>22</h3>
+      <h3>
+        <loader class="text-dark" v-if="fetching" />
+        <span v-else>{{ count }}</span>
+      </h3>
     </div>
 
     <div>
       <HorizontalSelect
         v-company
-        :items="Object.values($months)"
-        :default="new Date().getMonth() - 1"
+        :items="$monthOptions"
         width="100%"
         height="44px"
+        :default="new Date().getMonth() - 1"
         borderColor="#252a2f"
         v-model="monthOption"
       />
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 import HorizontalSelect from "./HorizontalSelect.vue";
 export default {
   name: "PinkBox",
@@ -57,13 +58,50 @@ export default {
 
   data() {
     return {
-      monthOption: 1,
+      fetching: false,
+      count: 0,
+      monthOption: new Date().getMonth(),
     };
+  },
+
+  async created() {
+    await this.fetchCount();
+  },
+
+  watch: {
+    async monthOption() {
+      await this.fetchCount();
+    },
   },
 
   methods: {
     seeAll() {
       this.showModal();
+    },
+
+    async fetchCount() {
+      if (this.fetching) return;
+
+      try {
+        this.fetching = true;
+
+        const api = "stat/pink-box";
+        const res = await secureAxios.post(api, {
+          month: this.monthOption,
+        });
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.count = data.count;
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
     },
   },
 };

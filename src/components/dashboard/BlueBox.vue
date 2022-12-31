@@ -4,9 +4,9 @@
     <div class="d-flex justify-content-between">
       <img src="@/assets/images/wallet.svg" alt="wallet icon" />
 
+      <!-- :default="0" -->
       <HorizontalSelect
         :items="years"
-        :default="0"
         width="126px"
         height="32px"
         borderColor="#ffffff"
@@ -25,7 +25,10 @@
 
     <!-- Money Section -->
     <div>
-      <h3>N 12,720,004.05</h3>
+      <h3>
+        <loader class="text-light" v-if="fetching" />
+        <span v-else>{{ totalAmount | toCurrency }}</span>
+      </h3>
     </div>
 
     <!-- Options section -->
@@ -34,26 +37,49 @@
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 import HorizontalSelect from "./HorizontalSelect.vue";
 import CustomSelect from "./CustomSelect.vue";
 export default {
   name: "BlueBox",
 
+  components: {
+    HorizontalSelect,
+    CustomSelect,
+  },
+
   data() {
     return {
-      viewOption: null,
-      yearOption: null,
+      fetching: false,
+      viewOption: "amount",
+      yearOption: new Date().getFullYear(),
+      totals: {
+        employerNormalContribution: 0,
+        employeeNormalContribution: 0,
+        amount: 0,
+      },
       options: [
-        { label: "All Contributions", value: "all" },
-        { label: "Employer contributions", value: "employer" },
-        { label: "Employee contributions", value: "employee" },
+        { label: "All Contributions", value: "amount" },
+        {
+          label: "Employer contributions",
+          value: "employerNormalContribution",
+        },
+        {
+          label: "Employee contributions",
+          value: "employeeNormalContribution",
+        },
       ],
     };
   },
 
-  components: {
-    HorizontalSelect,
-    CustomSelect,
+  async created() {
+    await this.fetchData();
+  },
+
+  watch: {
+    async yearOption() {
+      await this.fetchData();
+    },
   },
 
   computed: {
@@ -63,6 +89,37 @@ export default {
         years.push(i);
       }
       return years;
+    },
+
+    totalAmount() {
+      return this.totals[this.viewOption];
+    },
+  },
+
+  methods: {
+    async fetchData() {
+      if (this.fetching) return;
+
+      try {
+        this.fetching = true;
+
+        const api = "stat/blue-box";
+        const res = await secureAxios.post(api, {
+          year: this.yearOption,
+        });
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.totals = data.totals;
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
     },
   },
 };

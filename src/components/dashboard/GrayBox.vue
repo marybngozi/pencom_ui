@@ -12,7 +12,7 @@
 
       <div v-spfca>
         <HorizontalSelect
-          :items="Object.values($months)"
+          :items="$monthOptions"
           :default="new Date().getMonth() - 1"
           width="126px"
           height="32px"
@@ -26,12 +26,18 @@
     <div class="mt-3">
       <div class="d-flex justify-content-between">
         <p class="p-left">Previous month</p>
-        <p class="p-right">N 220,000.0</p>
+        <p class="p-right">
+          <loader class="text-secondary" v-if="fetching" />
+          <span v-else>{{ data1 | toCurrency }}</span>
+        </p>
       </div>
 
       <div class="d-flex justify-content-between">
         <p class="p-left">YTD</p>
-        <p class="p-right">N 3,320,000.0</p>
+        <p class="p-right">
+          <loader class="text-secondary" v-if="fetching" />
+          <span v-else>{{ data2 | toCurrency }}</span>
+        </p>
       </div>
     </div>
 
@@ -39,7 +45,7 @@
     <div class="mt-3">
       <HorizontalSelect
         v-company
-        :items="Object.values($months)"
+        :items="$monthOptions"
         :default="new Date().getMonth() - 1"
         width="100%"
         height="44px"
@@ -63,6 +69,7 @@
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 import HorizontalSelect from "./HorizontalSelect.vue";
 import CustomSelect from "./CustomSelect.vue";
 export default {
@@ -83,14 +90,61 @@ export default {
       required: false,
       default: () => [],
     },
+    contributionType: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
 
   data() {
     return {
-      monthOption: 1,
+      fetching: false,
+      monthOption: new Date().getMonth(),
       companyOption: null,
       pfaOption: null,
+      data1: 0,
+      data2: 0,
     };
+  },
+
+  async created() {
+    await this.fetchData();
+  },
+
+  watch: {
+    async monthOption() {
+      await this.fetchData();
+    },
+  },
+
+  methods: {
+    async fetchData() {
+      if (this.fetching) return;
+
+      try {
+        this.fetching = true;
+
+        const api = "stat/gray-box";
+        const res = await secureAxios.post(api, {
+          month: this.monthOption,
+          contributionType: this.contributionType,
+        });
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.data1 = data.totals.data1;
+        this.data2 = data.totals.data2;
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
+    },
   },
 };
 </script>

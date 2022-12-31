@@ -39,7 +39,9 @@ export default {
 
   computed: {
     item() {
-      return this.items[this.index];
+      return this.items[this.index].label
+        ? this.items[this.index].label
+        : this.items[this.index];
     },
     prevIndex() {
       return this.index - 1 < 0 ? this.items.length - 1 : this.index - 1;
@@ -81,7 +83,10 @@ export default {
   methods: {
     setIndex(idx) {
       this.index = idx;
-      this.$emit("input", this.items[this.index]);
+      const item = this.items[this.index].value
+        ? this.items[this.index].value
+        : this.items[this.index];
+      this.$emit("input", item);
     },
   },
 };

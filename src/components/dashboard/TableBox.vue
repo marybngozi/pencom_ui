@@ -28,7 +28,13 @@
       </div>
     </div>
 
-    <div id="table">
+    <div v-if="fetching" class="d-flex justify-content-center pt-4">
+      <loader />
+    </div>
+    <div v-else-if="rows.length <= 0" class="d-flex justify-content-center">
+      <p>No record found</p>
+    </div>
+    <div v-else id="table">
       <table>
         <thead>
           <tr>
@@ -41,7 +47,12 @@
         <tbody>
           <tr v-for="(row, k) in rows" :key="k">
             <td v-for="(header, i) in tableHeaders" :key="i">
-              {{ row[header.key] }}
+              <template v-if="header.key == 'amount'">
+                {{ row[header.key] | toCurrency }}
+              </template>
+              <template v-else>
+                {{ row[header.key] }}
+              </template>
             </td>
           </tr>
         </tbody>
@@ -51,6 +62,7 @@
 </template>
 
 <script>
+import { secureAxios } from "../../services/AxiosInstance";
 import CustomSelect from "./CustomSelect.vue";
 import HorizontalSelect from "./HorizontalSelect.vue";
 export default {
@@ -67,18 +79,25 @@ export default {
       required: true,
       default: () => [],
     },
-    rows: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
   },
 
   data() {
     return {
+      fetching: false,
       monthOption: null,
-      yearOption: null,
+      rows: [],
+      yearOption: new Date().getFullYear(),
     };
+  },
+
+  async created() {
+    // await this.fetchData();
+  },
+
+  watch: {
+    async monthOption() {
+      await this.fetchData();
+    },
   },
 
   computed: {
@@ -88,6 +107,33 @@ export default {
         years.push(i);
       }
       return years;
+    },
+  },
+
+  methods: {
+    async fetchData() {
+      if (this.fetching) return;
+
+      try {
+        this.fetching = true;
+
+        const api = "stat/table-box";
+        const res = await secureAxios.post(api, {
+          year: this.yearOption,
+        });
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.rows = data.data;
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
     },
   },
 };

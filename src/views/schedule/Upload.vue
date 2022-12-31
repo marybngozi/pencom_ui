@@ -37,7 +37,7 @@
 
           <!-- Months Options -->
           <CustomSelectInput
-            :options="months"
+            :options="$monthOptions"
             placeHolder="- select a month -"
             class="select"
             borderColor="#D2D2D2"
@@ -122,7 +122,7 @@
       <!-- Template sections -->
       <div class="border-bottom">
         <div class="inner-boxe">
-          <h6>Use Guide</h6>
+          <h6>Donwloadable files</h6>
 
           <button
             :disabled="gettingTemplate"
@@ -195,17 +195,6 @@ export default {
         yearArr.push(i);
       }
       return yearArr;
-    },
-
-    months() {
-      const monthsArr = [];
-      for (const value in this.$months) {
-        if (Object.hasOwnProperty.call(this.$months, value)) {
-          const label = this.$months[value];
-          monthsArr.push({ label, value });
-        }
-      }
-      return monthsArr;
     },
 
     item() {

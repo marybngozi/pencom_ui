@@ -13,6 +13,7 @@ import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import Print from "vue-print-nb";
 import VueApexCharts from "vue-apexcharts";
+import Loader from "./components/Loader.vue";
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 
@@ -26,6 +27,8 @@ Vue.use(VueApexCharts);
 Vue.use(Loading);
 
 Vue.component("apexchart", VueApexCharts);
+Vue.component("loader", Loader);
+
 Vue.filter("toCurrency", (value) => {
   if (isNaN(Number(value))) {
     return value;
@@ -38,7 +41,7 @@ Vue.filter("toCurrency", (value) => {
   return formatter.format(Number(value));
 });
 
-Vue.prototype.$months = {
+const months = {
   1: "January",
   2: "February",
   3: "March",
@@ -52,6 +55,17 @@ Vue.prototype.$months = {
   11: "November",
   12: "December",
 };
+
+Vue.prototype.$months = months;
+
+const monthsArr = [];
+for (const value in months) {
+  if (Object.hasOwnProperty.call(months, value)) {
+    const label = months[value];
+    monthsArr.push({ label, value: Number(value) });
+  }
+}
+Vue.prototype.$monthOptions = monthsArr;
 
 // vue-directives
 Vue.directive("company", {

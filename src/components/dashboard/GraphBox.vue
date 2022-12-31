@@ -31,7 +31,14 @@
       </div>
     </div>
 
-    <div id="chart" class="">
+    <div v-if="fetching" class="pt-5">
+      <BarChartLoader />
+    </div>
+    <div v-else-if="noData" class="text-center pt-5 mt-4">
+      <i class="fa fa-bar-chart text-secondary chart-icon"></i>
+      <p>No record found</p>
+    </div>
+    <div id="chart" class="" v-else>
       <apexchart
         type="bar"
         :options="chartOptions"
@@ -45,23 +52,38 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { secureAxios } from "../../services/AxiosInstance";
 import CustomSelect from "./CustomSelect.vue";
+import BarChartLoader from "@/components/BarChartLoader.vue";
 export default {
   name: "GraphBox",
 
   components: {
     CustomSelect,
+    BarChartLoader,
   },
 
-  created() {
+  async created() {
     this.chartOptions.plotOptions.bar.columnWidth =
       this.userType >= 400 ? "40%" : "90%";
 
     this.series.length = this.userType >= 400 ? 1 : this.series.length;
+
+    await this.fetchData();
+  },
+
+  watch: {
+    async yearOption() {
+      await this.fetchData();
+    },
   },
 
   computed: {
     ...mapGetters(["userType"]),
+
+    noData() {
+      return this.series[2].data.every((item) => item == 0);
+    },
 
     years() {
       const years = [];
@@ -74,7 +96,8 @@ export default {
 
   data() {
     return {
-      yearOption: null,
+      fetching: false,
+      yearOption: new Date().getFullYear(),
       pfaOption: null,
       pfas: [
         { label: "All PFAs", value: "all" },
@@ -82,7 +105,6 @@ export default {
         { label: "PREMIUM PENSION LIMITED", value: "EC993D4322" },
         { label: "SIGMA PENSIONS LIMITED", value: "EC0D431110" },
       ],
-
       series: [
         {
           name: "Employer Contribution",
@@ -187,6 +209,31 @@ export default {
         ? (num / item.value).toFixed(2).replace(rx, "$1") + item.symbol
         : "0";
     },
+
+    async fetchData() {
+      if (this.fetching) return;
+
+      try {
+        this.fetching = true;
+
+        const api = "stat/graph-box";
+        const res = await secureAxios.post(api, {
+          year: this.yearOption,
+        });
+
+        this.fetching = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.series = data.series;
+      } catch (err) {
+        console.log(err);
+        this.fetching = false;
+      }
+    },
   },
 };
 </script>
@@ -234,5 +281,8 @@ h6 {
 /* Handle on hover */
 #chart::-webkit-scrollbar-thumb:hover {
   background: #104771;
+}
+.chart-icon {
+  font-size: 130px;
 }
 </style>
