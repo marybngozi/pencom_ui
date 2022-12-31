@@ -198,24 +198,8 @@ export default {
     };
   },
 
-  async beforeCreate() {
-    try {
-      this.getting = true;
-
-      const api = "auth/get-staffs";
-      const res = await secureAxios.get(api);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.getStaffs();
   },
 
   computed: {
