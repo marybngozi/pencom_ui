@@ -170,9 +170,11 @@ export default {
   methods: {
     ...mapActions(["logout"]),
     logoutUser() {
-      this.$router.push({ path: "/" });
+      setTimeout(() => {
+        this.$router.push({ path: "/" });
 
-      this.logout();
+        this.logout();
+      }, 300);
     },
     setSlug(slug) {
       this.pageSlug = slug;

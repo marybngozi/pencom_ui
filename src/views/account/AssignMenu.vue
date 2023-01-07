@@ -99,60 +99,67 @@ export default {
 
   data() {
     return {
-      assigning: false,
       settingUp: true,
+      assigning: false,
       staffMenus: [],
+      userMenus: [],
       selectedMenus: [],
       staffData: null,
       filteredMenus: [],
     };
   },
 
-  async beforeCreate() {
+  async created() {
     // get the staff's menu
     try {
       const rsaPin = this.$route.params.rsaPin;
       const companyCode = this.$store.getters.companyCode;
 
       if (!rsaPin) {
-        this.$router.push({ path: "/list-staff" });
+        this.$router.push({ name: "company-staff" });
       }
 
-      this.getting = true;
+      this.settingUp = true;
 
-      // get staff menus
-      const api = "stat/staff-menus";
-      const res = await secureAxios.post(api, {
+      /* get staff menus */
+      const apiS = "stat/staff-menus";
+      const resS = await secureAxios.post(apiS, {
         companyCode: companyCode,
         rsaPin: rsaPin,
       });
 
-      // get staff data
+      /* get company menus */
+      const apiC = "stat/company-menus";
+      const resC = await secureAxios.get(apiC);
+
+      /* get staff data */
       const apiD = `auth/staffs/${rsaPin}`;
       const resD = await secureAxios.get(apiD);
 
-      this.getting = false;
-      if (!res || !resD) {
-        this.$router.push({ path: "/list-staff" });
+      if (!resS || !resC || !resD) {
+        this.settingUp = false;
+        this.$router.push({ name: "company-staff" });
         return;
       }
 
-      const { data } = res;
+      const { data: dataS } = resS;
+      const { data: dataC } = resC;
       const { data: dataD } = resD;
 
-      this.staffMenus = data.data;
+      this.staffMenus = dataS.data;
+      this.userMenus = dataC.data;
       this.staffData = dataD.data;
       this.filterMenu();
 
       this.settingUp = false;
     } catch (err) {
       console.log(err);
-      this.getting = false;
+      this.settingUp = false;
     }
   },
 
   computed: {
-    ...mapGetters(["userMenus", "companyCode"]),
+    ...mapGetters(["companyCode"]),
 
     assignReady() {
       return this.selectedMenus.length > 0;

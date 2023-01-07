@@ -20,30 +20,40 @@
               width="200px"
               height="32px"
               lineHeight="30px"
-              v-model="companyOption"
+              v-model="form.companyOption"
             />
 
             <CustomSelectInput
               :options="years"
-              :default="years[0]"
+              default="All years"
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
               height="32px"
               lineHeight="30px"
-              v-model="yearOption"
+              v-model="form.yearOption"
             />
 
-            <HorizontalSelect
-              :items="Object.values($months)"
-              :default="new Date().getMonth() - 1"
+            <CustomSelect
+              :options="$monthOptions"
+              default="All months"
+              class="select"
+              borderColor="#DDDDDD"
+              color="#252A2F"
+              width="126px"
+              height="32px"
+              lineHeight="30px"
+              v-model="form.monthOption"
+            />
+            <!-- <HorizontalSelect
+              :items="$monthOptions"
               width="126px"
               height="32px"
               borderColor="#DDDDDD"
               color="#252A2F"
-              v-model="monthOption"
-            />
+              v-model="form.monthOption"
+            /> -->
           </div>
         </div>
 
@@ -100,34 +110,30 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
 import CustomSelect from "@/components/dashboard/CustomSelect";
-import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
+// import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
 
 export default {
   name: "StaffListTransaction",
   components: {
     CustomSelectInput,
     CustomSelect,
-    HorizontalSelect,
+    // HorizontalSelect,
   },
   data() {
     return {
-      getting: false,
+      getting: true,
       fetching: false,
       perPage: 10,
       currentPage: 1,
-      yearOption: null,
-      monthOption: null,
-      companyOption: null,
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
-      ],
+      form: {
+        yearOption: null,
+        monthOption: null,
+        companyOption: null,
+      },
+      companies: [],
       items: [],
       fields: [
         {
@@ -153,28 +159,27 @@ export default {
       ],
     };
   },
-  async beforeCreate() {
-    try {
-      this.getting = true;
-      const api = "schedule/get-contribution";
-      const res = await secureAxios.post(api, this.form);
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.fetchCompanies();
+    await this.getContributions();
   },
-  computed: {
-    ...mapGetters(["allItems"]),
 
+  watch: {
+    async "form.yearOption"() {
+      await this.getContributions();
+    },
+    async "form.monthOption"() {
+      await this.getContributions();
+    },
+    async "form.companyOption"() {
+      await this.getContributions();
+    },
+  },
+
+  computed: {
     years() {
       const yearArr = [];
-      for (let i = new Date().getFullYear(); i >= 1990; i--) {
+      for (let i = new Date().getFullYear(); i >= 2020; i--) {
         yearArr.push(i);
       }
       return yearArr;
@@ -185,11 +190,31 @@ export default {
   },
 
   methods: {
-    async getProcessedSchedule() {
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
+    async getContributions() {
       try {
         this.getting = true;
 
-        const api = "schedule/list-processed";
+        const api = "schedule/get-contribution";
         const res = await secureAxios.post(api, this.form);
 
         this.getting = false;

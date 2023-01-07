@@ -50,11 +50,16 @@
             <template #cell(action)="data">
               <div class="d-flex gap-4">
                 <router-link
+                  v-if="data.item.inviteAccepted"
                   class="btn-xsm bg-blue-light"
                   :to="`assign-menu/${data.item.agentId.rsaPin}`"
                 >
                   Assign Menu
                 </router-link>
+
+                <span v-else class="text-secondary btn-xsm bg-blue">
+                  Invite pending
+                </span>
 
                 <button
                   class="btn-xsm bg-red"
@@ -257,7 +262,7 @@ export default {
 
         this.staff = data.data;
 
-        // warn
+        /*  warn */
         const result = await this.$swal({
           icon: "question",
           title: `Are you sure you want to make ${this.staff.firstName} ${this.staff.lastName} an Admin staff?`,
@@ -290,8 +295,11 @@ export default {
       try {
         this.checking = true;
 
-        const api = "auth/admin-staff";
-        const res = await secureAxios.post(api, this.form);
+        const api = "auth/admin-staff-invite";
+        const res = await secureAxios.post(api, {
+          ...this.form,
+          acceptUrl: window.location.origin + "/staff-invite",
+        });
 
         this.checking = false;
         if (!res) {
@@ -300,7 +308,7 @@ export default {
 
         const { data } = res;
 
-        // clear the form
+        /*  clear the form */
         Object.keys(this.form).forEach((key) => {
           this.form[key] = null;
         });
@@ -309,6 +317,9 @@ export default {
           icon: "success",
           text: data.message,
         });
+
+        /*  refresh data */
+        this.getStaffs();
       } catch (err) {
         console.log(err);
         this.checking = false;
@@ -317,7 +328,7 @@ export default {
 
     async deleteStaff(rsaPin) {
       try {
-        // warn
+        /*  warn */
         const result = await this.$swal({
           icon: "question",
           title: `Are you sure you want to remove this staff from an Admin staff of this company?`,
@@ -348,7 +359,7 @@ export default {
           text: data.message,
         });
 
-        // refresh data
+        /*  refresh data */
         this.getStaffs();
       } catch (err) {
         console.log(err);

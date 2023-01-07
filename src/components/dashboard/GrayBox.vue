@@ -62,7 +62,7 @@
         width="100%"
         height="44px"
         lineHeight="40px"
-        v-model="pfaOption"
+        v-model="viewOption"
       />
     </div>
   </div>
@@ -101,8 +101,7 @@ export default {
     return {
       fetching: false,
       monthOption: new Date().getMonth(),
-      companyOption: null,
-      pfaOption: null,
+      viewOption: null,
       data1: 0,
       data2: 0,
     };
@@ -114,6 +113,9 @@ export default {
 
   watch: {
     async monthOption() {
+      await this.fetchData();
+    },
+    async viewOption() {
       await this.fetchData();
     },
   },
@@ -129,6 +131,7 @@ export default {
         const res = await secureAxios.post(api, {
           month: this.monthOption,
           contributionType: this.contributionType,
+          viewOption: this.viewOption,
         });
 
         this.fetching = false;

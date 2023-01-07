@@ -161,6 +161,9 @@ section#sec4 {
   overflow-x: hidden;
   margin-top: 28px;
 }
+section#sec4 {
+  min-height: 50%;
+}
 .left-dash {
   /* width: 70%; */
   overflow-y: scroll;

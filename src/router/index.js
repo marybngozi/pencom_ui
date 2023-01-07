@@ -273,8 +273,17 @@ const routes = [
     path: "/mandate/:invoiceNo",
     name: "schedule-mandate",
     component: () =>
+      import(/* webpackChunkName: "auth" */ "../views/schedule/Mandate.vue"),
+    meta: {
+      guest: true,
+    },
+  },
+  {
+    path: "/staff-invite/:token",
+    name: "staff-invite",
+    component: () =>
       import(
-        /* webpackChunkName: "dashboard" */ "../views/schedule/Mandate.vue"
+        /* webpackChunkName: "auth" */ "../views/account/InviteVerify.vue"
       ),
     meta: {
       guest: true,

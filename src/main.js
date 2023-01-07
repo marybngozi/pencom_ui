@@ -58,7 +58,7 @@ const months = {
 
 Vue.prototype.$months = months;
 
-const monthsArr = [];
+const monthsArr = [{ label: "All months", value: 0 }];
 for (const value in months) {
   if (Object.hasOwnProperty.call(months, value)) {
     const label = months[value];

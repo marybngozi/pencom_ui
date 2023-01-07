@@ -129,7 +129,8 @@ label > span:first-child {
   opacity: 0.6;
 }
 .button:hover {
-  background: #0982de;
+  background: #0a72c2;
+  color: #ffffff;
 }
 .button-outline {
   display: flex;

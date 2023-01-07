@@ -8,14 +8,14 @@
       <div class="d-flex justify-content-between gap-9">
         <CustomSelect
           v-spfca
-          :options="pfas"
+          :options="options"
           class="select"
           borderColor="#DDDDDD"
           color="#252A2F"
           width="200px"
           height="32px"
           lineHeight="30px"
-          v-model="pfaOption"
+          v-model="viewOption"
         />
 
         <CustomSelect
@@ -63,34 +63,11 @@ export default {
     BarChartLoader,
   },
 
-  async created() {
-    this.chartOptions.plotOptions.bar.columnWidth =
-      this.userType >= 400 ? "40%" : "90%";
-
-    this.series.length = this.userType >= 400 ? 1 : this.series.length;
-
-    await this.fetchData();
-  },
-
-  watch: {
-    async yearOption() {
-      await this.fetchData();
-    },
-  },
-
-  computed: {
-    ...mapGetters(["userType"]),
-
-    noData() {
-      return this.series[2].data.every((item) => item == 0);
-    },
-
-    years() {
-      const years = [];
-      for (let i = new Date().getFullYear(); i >= 2020; i--) {
-        years.push(i);
-      }
-      return years;
+  props: {
+    options: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
   },
 
@@ -98,13 +75,7 @@ export default {
     return {
       fetching: false,
       yearOption: new Date().getFullYear(),
-      pfaOption: null,
-      pfas: [
-        { label: "All PFAs", value: "all" },
-        { label: "STANBIC IBTC PENSION MANAGERS LIMITED", value: "EC0D43224" },
-        { label: "PREMIUM PENSION LIMITED", value: "EC993D4322" },
-        { label: "SIGMA PENSIONS LIMITED", value: "EC0D431110" },
-      ],
+      viewOption: null,
       series: [
         {
           name: "Employer Contribution",
@@ -187,6 +158,41 @@ export default {
     };
   },
 
+  async created() {
+    this.chartOptions.plotOptions.bar.columnWidth =
+      this.userType >= 400 ? "40%" : "90%";
+
+    this.series.length = this.userType >= 400 ? 1 : this.series.length;
+
+    await this.fetchData();
+  },
+
+  watch: {
+    async yearOption() {
+      await this.fetchData();
+    },
+
+    async viewOption() {
+      await this.fetchData();
+    },
+  },
+
+  computed: {
+    ...mapGetters(["userType"]),
+
+    noData() {
+      return this.series[2].data.every((item) => item == 0);
+    },
+
+    years() {
+      const years = [];
+      for (let i = new Date().getFullYear(); i >= 2020; i--) {
+        years.push(i);
+      }
+      return years;
+    },
+  },
+
   methods: {
     nFormatter(num) {
       const lookup = [
@@ -219,6 +225,7 @@ export default {
         const api = "stat/graph-box";
         const res = await secureAxios.post(api, {
           year: this.yearOption,
+          viewOption: this.viewOption,
         });
 
         this.fetching = false;

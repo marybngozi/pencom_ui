@@ -33,7 +33,13 @@ export default {
 
   data() {
     return {
-      index: this.default ? this.default : this.items.length > 0 ? 0 : null,
+      index: this.default
+        ? this.default < 0
+          ? this.items.length - 1
+          : this.default
+        : this.items.length > 0
+        ? 0
+        : null,
     };
   },
 

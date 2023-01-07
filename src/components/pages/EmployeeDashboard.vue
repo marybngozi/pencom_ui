@@ -13,23 +13,25 @@
         <GrayBox
           boldTitle="Employer"
           :options="companies"
+          contributionType="employerNormalContribution"
           class="col-12 col-md-6"
         />
         <GrayBox
           boldTitle="Employee"
           :options="companies"
+          contributionType="employeeNormalContribution"
           class="col-12 col-md-6"
         />
       </section>
 
       <!-- graph section -->
       <section id="sec3">
-        <GraphBox />
+        <GraphBox :options="companies" />
       </section>
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
+        <TableBox :tableHeaders="tableHeaders" />
       </section>
     </div>
 
@@ -123,12 +125,7 @@ export default {
       perPage: 10,
       currentPage: 1,
       rowsItem: 0,
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
-      ],
+      companies: [],
       tableHeaders: [
         {
           label: "Month",
@@ -147,50 +144,6 @@ export default {
           key: "createdAt",
         },
       ],
-      tableRows: [
-        {
-          month: "January",
-          companyName: "Appmart Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "Febuary",
-          companyName: "Swizel Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "March",
-          companyName: "Basmic Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "April",
-          companyName: "SAAT Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "May",
-          companyName: "Appmart Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "June",
-          companyName: "Appmart Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          month: "July",
-          companyName: "Appmart Integrated",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-      ],
       modalFields: [
         {
           key: "index",
@@ -202,7 +155,7 @@ export default {
         },
         {
           key: "amount",
-          label: "Amount contributed to you",
+          label: "Total Amount contributed",
         },
         {
           key: "lastMonthContributed",
@@ -212,23 +165,14 @@ export default {
     };
   },
 
+  async created() {
+    this.fetchCompanies();
+  },
+
   methods: {
-    formatMoney(value) {
-      return "₦" + Number(value).toLocaleString();
-    },
-
-    lineMonths() {
-      let month = new Date().getMonth();
-      const preMonths = [];
-      for (let i = 1; i <= month + 1; i++) {
-        preMonths.push(this.$months[i].slice(0, 3));
-      }
-      return preMonths;
-    },
-
     async fetchItems({ currentPage, perPage }) {
       try {
-        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
+        const api = `stat/pink-see-all?page=${currentPage}&size=${perPage}`;
 
         const res = await secureAxios.post(api, {});
 
@@ -240,6 +184,26 @@ export default {
 
         this.rowsItem = data.meta.total;
         return data.data;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
       } catch (err) {
         console.log(err);
         return [];
@@ -279,6 +243,9 @@ section#sec4 {
   width: 100%;
   overflow-x: hidden;
   margin-top: 28px;
+}
+section#sec4 {
+  min-height: 50%;
 }
 .left-dash {
   /* width: 70%; */

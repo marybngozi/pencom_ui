@@ -16,8 +16,8 @@
         />
 
         <HorizontalSelect
-          v-spfca
-          :items="Object.values($months)"
+          v-pfc
+          :items="$monthOptions"
           :default="new Date().getMonth() - 1"
           width="126px"
           height="32px"
@@ -91,11 +91,11 @@ export default {
   },
 
   async created() {
-    // await this.fetchData();
+    await this.fetchData();
   },
 
   watch: {
-    async monthOption() {
+    async yearOption() {
       await this.fetchData();
     },
   },

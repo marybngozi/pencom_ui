@@ -146,7 +146,7 @@ export default {
   border-bottom: 1px solid #03435f; */
   position: absolute;
   background-color: #ffffff;
-  height: 350px;
+  max-height: 350px;
   overflow-y: scroll;
   left: 0;
   right: 0;

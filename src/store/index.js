@@ -106,8 +106,6 @@ export default new Vuex.Store({
     saveUserInfo({ commit }, { user, token }) {
       localStorage.setItem(process.env.VUE_APP_tokenName, token);
 
-      console.log(user);
-
       if (user.userType == 100 && !user.companyCode) {
         commit("toggleMainOverlay", true);
       }

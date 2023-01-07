@@ -21,10 +21,13 @@
         v-for="(option, i) of options"
         :key="i"
         @click="
-          selected = option.value ? option.value : option;
+          selected = option.value || option.value == 0 ? option.value : option;
           selectedLabel = option.label ? option.label : option;
           open = false;
-          $emit('input', option.value ? option.value : option);
+          $emit(
+            'input',
+            option.value || option.value == 0 ? option.value : option
+          );
         "
       >
         {{ option.label ? option.label : option }}
@@ -76,6 +79,7 @@ export default {
   },
   data() {
     return {
+      open: false,
       selectedLabel: this.default
         ? this.default
         : this.options.length > 0
@@ -90,8 +94,25 @@ export default {
           ? this.options[0].value
           : this.options[0]
         : null,
-      open: false,
     };
+  },
+  watch: {
+    options() {
+      this.selectedLabel = this.default
+        ? this.default
+        : this.options.length > 0
+        ? this.options[0].label
+          ? this.options[0].label
+          : this.options[0]
+        : null;
+      this.selected = this.default
+        ? this.default
+        : this.options.length > 0
+        ? this.options[0].value
+          ? this.options[0].value
+          : this.options[0]
+        : null;
+    },
   },
   mounted() {
     this.$emit("input", this.selected);
