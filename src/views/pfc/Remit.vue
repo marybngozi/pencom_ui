@@ -30,17 +30,8 @@
               {{ data.index + 1 }}
             </template>
 
-            <template #cell(transmitted)="data">
-              <span v-if="data.value" class="text-primary">Sent</span>
-              <span v-else class="text-secondary">Not sent</span>
-            </template>
-
             <template #cell(createdAt)="data">
               {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
-
-            <template #cell(period)="data">
-              {{ $months[data.item.month] }}, {{ data.item.year }}
             </template>
 
             <template #cell(amount)="data">
@@ -104,7 +95,7 @@
 
             <!-- Date range from input group -->
             <div class="mt-3">
-              <label class="d-flex justify-content-between" for="dateFrom">
+              <label class="d-flex justify-content-between" for="dateStart">
                 <span> Date range </span>
                 <span>From</span>
               </label>
@@ -113,26 +104,26 @@
               <input
                 class="custom-input border-blue"
                 type="date"
-                id="dateFrom"
+                id="dateStart"
                 placeholder="- select a start date -"
-                v-model="form.dateFrom"
+                v-model="form.dateStart"
               />
             </div>
 
             <!-- Date range to input group -->
             <div class="mt-3">
-              <label class="d-flex justify-content-between" for="dateTo">
+              <label class="d-flex justify-content-between" for="dateEnd">
                 <span> Date range </span>
                 <span>To</span>
               </label>
 
               <!-- Date range to input -->
               <input
-                id="dateTo"
+                id="dateEnd"
                 class="custom-input border-blue"
                 type="date"
                 placeholder="- select a end date -"
-                v-model="form.dateTo"
+                v-model="form.dateEnd"
               />
               <small v-if="dateNotReady" class="text-danger">
                 Both dates should be provided or none
@@ -178,15 +169,10 @@ export default {
       items: [],
       form: {
         company: null,
-        dateFrom: null,
-        dateTo: null,
+        dateStart: null,
+        dateEnd: null,
       },
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
-      ],
+      companies: [],
       fields: [
         {
           key: "index",
@@ -195,10 +181,6 @@ export default {
         {
           key: "pfaName",
           label: "PFA",
-        },
-        {
-          key: "companyName",
-          label: "Company",
         },
         {
           key: "itemCount",
@@ -216,30 +198,16 @@ export default {
     };
   },
 
-  async beforeCreate() {
-    try {
-      this.getting = true;
-
-      const api = "payment/get-batch-contribution";
-      const res = await secureAxios.post(api, this.form);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.getProcessedSchedule();
+    await this.fetchCompanies();
   },
+
   computed: {
     dateNotReady() {
       return (
-        (this.form.dateFrom && !this.form.dateTo) ||
-        (!this.form.dateFrom && this.form.dateTo)
+        (this.form.dateStart && !this.form.dateEnd) ||
+        (!this.form.dateStart && this.form.dateEnd)
       );
     },
 
@@ -257,6 +225,26 @@ export default {
   },
 
   methods: {
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
     async getProcessedSchedule() {
       try {
         if (this.dateNotReady) {
