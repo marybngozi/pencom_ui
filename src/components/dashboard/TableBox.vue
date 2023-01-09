@@ -15,7 +15,19 @@
           v-model="yearOption"
         />
 
-        <HorizontalSelect
+        <CustomSelect
+          :options="$monthOptions"
+          default="All months"
+          class="select"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="126px"
+          height="32px"
+          lineHeight="30px"
+          v-model="monthOption"
+        />
+
+        <!--  <HorizontalSelect
           v-pfc
           :items="$monthOptions"
           :default="new Date().getMonth() - 1"
@@ -24,7 +36,7 @@
           borderColor="#DDDDDD"
           color="#252A2F"
           v-model="monthOption"
-        />
+        /> -->
       </div>
     </div>
 
@@ -64,13 +76,13 @@
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
 import CustomSelect from "./CustomSelect.vue";
-import HorizontalSelect from "./HorizontalSelect.vue";
+// import HorizontalSelect from "./HorizontalSelect.vue";
 export default {
   name: "TableBox",
 
   components: {
     CustomSelect,
-    HorizontalSelect,
+    // HorizontalSelect,
   },
 
   props: {
@@ -98,6 +110,10 @@ export default {
     async yearOption() {
       await this.fetchData();
     },
+
+    async monthOption() {
+      await this.fetchData();
+    },
   },
 
   computed: {
@@ -120,6 +136,7 @@ export default {
         const api = "stat/table-box";
         const res = await secureAxios.post(api, {
           year: this.yearOption,
+          month: this.monthOption,
         });
 
         this.fetching = false;

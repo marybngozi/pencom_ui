@@ -79,6 +79,11 @@ Vue.directive("staff", {
       el.style.display = "none";
   },
 });
+Vue.directive("companystaff", {
+  bind: (el) => {
+    if (store.getters.userType > 300) el.style.display = "none";
+  },
+});
 Vue.directive("pfc", {
   bind: (el) => {
     if (store.getters.userType != 400) el.style.display = "none";

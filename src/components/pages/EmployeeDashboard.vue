@@ -4,7 +4,7 @@
     <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
       <section id="sec1" class="d-flex justify-content-between flex-wrap">
-        <BlueBox class="col-md-7 col-12" />
+        <BlueBox :options="typeOptions" class="col-md-7 col-12" />
         <PinkBox class="col-md-5 col-12" />
       </section>
 
@@ -126,6 +126,17 @@ export default {
       currentPage: 1,
       rowsItem: 0,
       companies: [],
+      typeOptions: [
+        { label: "All Contributions", value: "amount" },
+        {
+          label: "Employer contributions",
+          value: "employerNormalContribution",
+        },
+        {
+          label: "Employee contributions",
+          value: "employeeNormalContribution",
+        },
+      ],
       tableHeaders: [
         {
           label: "Month",

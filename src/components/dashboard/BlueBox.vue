@@ -32,7 +32,12 @@
     </div>
 
     <!-- Options section -->
-    <CustomSelect :options="options" class="select" v-model="viewOption" />
+    <CustomSelect
+      v-companystaff
+      :options="options"
+      class="select"
+      v-model="viewOption"
+    />
   </div>
 </template>
 
@@ -48,6 +53,14 @@ export default {
     CustomSelect,
   },
 
+  props: {
+    options: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+  },
+
   data() {
     return {
       fetching: false,
@@ -58,7 +71,7 @@ export default {
         employeeNormalContribution: 0,
         amount: 0,
       },
-      options: [
+      optionsD: [
         { label: "All Contributions", value: "amount" },
         {
           label: "Employer contributions",
@@ -92,7 +105,15 @@ export default {
     },
 
     totalAmount() {
-      return this.totals[this.viewOption];
+      if (
+        typeof this.totals === "object" &&
+        !Array.isArray(this.totals) &&
+        this.totals !== null
+      ) {
+        return this.totals[this.viewOption];
+      }
+
+      return this.totals;
     },
   },
 

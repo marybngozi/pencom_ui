@@ -4,7 +4,7 @@
     <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
       <section id="sec1" class="d-flex justify-content-between flex-wrap">
-        <BlueBox class="col-md-7 col-12" />
+        <BlueBox :options="typeOptions" class="col-md-7 col-12" />
         <PinkBox class="col-md-5 col-12" />
       </section>
 
@@ -95,6 +95,17 @@ export default {
 
   data() {
     return {
+      typeOptions: [
+        { label: "All Contributions", value: "amount" },
+        {
+          label: "Employer contributions",
+          value: "employerNormalContribution",
+        },
+        {
+          label: "Employee contributions",
+          value: "employeeNormalContribution",
+        },
+      ],
       instructions: {
         1: "Perform multiple functions from upload pension schedules to making monthly payments for your staff set.",
         2: "You can create a “Sub-Admin” staff to perform different functions like uploading a pension schedule file, processing a pension schedule  for the organization.",

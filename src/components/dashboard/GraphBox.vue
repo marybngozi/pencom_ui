@@ -138,7 +138,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return "₦" + val;
+              return "₦" + Number(val).toLocaleString();
             },
           },
         },
@@ -181,7 +181,9 @@ export default {
     ...mapGetters(["userType"]),
 
     noData() {
-      return this.series[2].data.every((item) => item == 0);
+      return this.series[this.series.length - 1].data.every(
+        (item) => item == 0
+      );
     },
 
     years() {

@@ -4,7 +4,7 @@
     <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
       <section id="sec1" class="d-flex justify-content-between flex-wrap">
-        <BlueBox class="col-md-7 col-12" />
+        <BlueBox :options="typeOptions" class="col-md-7 col-12" />
         <PinkBox class="col-md-5 col-12" />
       </section>
 
@@ -13,19 +13,25 @@
         <GrayBox
           boldTitle="Companies"
           :options="companies"
+          contributionType="companyCode"
           class="col-12 col-md-6"
         />
-        <GrayBox boldTitle="PFA's" :options="pfas" class="col-12 col-md-6" />
+        <GrayBox
+          boldTitle="PFA's"
+          :options="pfas"
+          contributionType="pfaCode"
+          class="col-12 col-md-6"
+        />
       </section>
 
       <!-- graph section -->
       <section id="sec3">
-        <GraphBox />
+        <GraphBox :options="pfas" />
       </section>
 
       <!-- table section -->
       <section id="sec4" class="pb-5">
-        <TableBox :tableHeaders="tableHeaders" :rows="tableRows" />
+        <TableBox :tableHeaders="tableHeaders" />
       </section>
     </div>
 
@@ -122,18 +128,19 @@ export default {
       perPage: 10,
       currentPage: 1,
       rowsItem: 0,
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
+      typeOptions: [
+        { label: "All Contributions", value: "all" },
+        {
+          label: "Companies contributions",
+          value: "companiesContributions",
+        },
+        {
+          label: "PFA's contributions",
+          value: "pfaContributions",
+        },
       ],
-      pfas: [
-        { label: "All PFAs", value: "all" },
-        { label: "STANBIC IBTC PENSION MANAGERS LIMITED", value: "EC0D43224" },
-        { label: "PREMIUM PENSION LIMITED", value: "EC993D4322" },
-        { label: "SIGMA PENSIONS LIMITED", value: "EC0D431110" },
-      ],
+      companies: [],
+      pfas: [],
       instructions: {
         1: "Use the PFA Remit menu to transmit contribution schedule to the respective PFA's. please note that only the companies that have paid will appear on this listings under the PFA's",
         2: "Transaction menu gives you view of the status of different companies that have remitted their contributions.",
@@ -150,33 +157,6 @@ export default {
         {
           label: "Transaction date",
           key: "createdAt",
-        },
-      ],
-      tableRows: [
-        {
-          pfaName: "UBA pensions",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          pfaName: "UBA pensions",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          pfaName: "UBA pensions",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          pfaName: "UBA pensions",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
-        },
-        {
-          pfaName: "UBA pensions",
-          amount: "N 220,005.95",
-          createdAt: "Sept 10. 2022",
         },
       ],
       modalFields: [
@@ -200,23 +180,55 @@ export default {
     };
   },
 
+  async created() {
+    await this.fetchCompanies();
+    await this.fetchPfas();
+  },
+
   methods: {
-    formatMoney(value) {
-      return "₦" + Number(value).toLocaleString();
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
     },
 
-    lineMonths() {
-      let month = new Date().getMonth();
-      const preMonths = [];
-      for (let i = 1; i <= month + 1; i++) {
-        preMonths.push(this.$months[i].slice(0, 3));
+    async fetchPfas() {
+      try {
+        const api = "stat/get-pfas";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.pfas = [{ label: "All PFAs", value: "all" }];
+        this.pfas.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
       }
-      return preMonths;
     },
 
     async fetchItems({ currentPage, perPage }) {
       try {
-        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
+        const api = `stat/pink-see-all?page=${currentPage}&size=${perPage}`;
 
         const res = await secureAxios.post(api, {});
 
@@ -268,6 +280,9 @@ section#sec4 {
   width: 100%;
   overflow-x: hidden;
   margin-top: 28px;
+}
+section#sec4 {
+  min-height: 50%;
 }
 .left-dash {
   /* width: 70%; */

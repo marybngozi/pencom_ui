@@ -4,7 +4,7 @@
     <div class="left-dash col-lg-8 border-right pt-5 pl-3 pr-3">
       <!-- top section -->
       <section id="sec1" class="d-flex justify-content-between flex-wrap">
-        <BlueBox class="col-md-7 col-12" />
+        <BlueBox :options="typeOptions" class="col-md-7 col-12" />
         <PinkBox class="col-md-5 col-12" />
       </section>
 
@@ -13,18 +13,20 @@
         <GrayBox
           boldTitle="Companies"
           :options="companies"
+          contributionType="date"
           class="col-12 col-md-6"
         />
         <GrayBox
           boldTitle="Companies"
           :options="companies"
+          contributionType="group"
           class="col-12 col-md-6"
         />
       </section>
 
       <!-- graph section -->
       <section id="sec3" class="pb-5">
-        <GraphBox />
+        <GraphBox :options="companies" />
       </section>
     </div>
 
@@ -113,6 +115,17 @@ export default {
       perPage: 10,
       currentPage: 1,
       rowsItem: 0,
+      typeOptions: [
+        { label: "All Contributions", value: "all" },
+        {
+          label: "Companies contributions",
+          value: "companiesContributions",
+        },
+        {
+          label: "PFA's contributions",
+          value: "pfaContributions",
+        },
+      ],
       companies: [
         { label: "All Companies", value: "all" },
         { label: "Appmart Limited", value: "EC0D43224" },
@@ -145,22 +158,33 @@ export default {
   },
 
   methods: {
-    formatMoney(value) {
-      return "₦" + Number(value).toLocaleString();
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
     },
 
-    lineMonths() {
-      let month = new Date().getMonth();
-      const preMonths = [];
-      for (let i = 1; i <= month + 1; i++) {
-        preMonths.push(this.$months[i].slice(0, 3));
-      }
-      return preMonths;
+    async created() {
+      await this.fetchCompanies();
     },
 
     async fetchItems({ currentPage, perPage }) {
       try {
-        const api = `payment/get-item-contribution?page=${currentPage}&size=${perPage}`;
+        const api = `stat/pink-see-all?page=${currentPage}&size=${perPage}`;
 
         const res = await secureAxios.post(api, {});
 

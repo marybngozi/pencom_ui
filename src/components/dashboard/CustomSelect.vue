@@ -176,7 +176,7 @@ export default {
   /* left: 0; */
   right: 0;
   z-index: 1;
-  max-height: 350px;
+  max-height: 300px;
   overflow-y: scroll;
 }
 .customed-select .items::-webkit-scrollbar {
