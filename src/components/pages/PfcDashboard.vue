@@ -272,14 +272,14 @@ section#sec1 {
 }
 section#sec2 {
   width: 100%;
-  margin-top: 28px;
+  margin-top: 1.75rem;
   gap: 18px;
 }
 section#sec3,
 section#sec4 {
   width: 100%;
   overflow-x: hidden;
-  margin-top: 28px;
+  margin-top: 1.75rem;
 }
 section#sec4 {
   min-height: 50%;
@@ -304,7 +304,7 @@ section#sec4 {
   scrollbar-width: none; /* Firefox */
 }
 .right-dash .out-boxx {
-  padding: 28px;
+  padding: 1.75rem;
 }
 .right-dash .notification-boxx {
   height: 57px;
@@ -313,26 +313,26 @@ section#sec4 {
   padding: 10px;
 }
 .notification-boxx .icon {
-  font-size: 16px;
+  font-size: 1rem;
   color: #0090ff;
   margin-left: 7px;
 }
 .notification-boxx h6 {
   font-weight: 700;
-  font-size: 14px;
-  line-height: 15px;
+  font-size: 0.875rem;
+  line-height: 0.9375rem;
   color: #263238;
   margin-bottom: 0px;
 }
 .notification-boxx small {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #808080;
 }
 .notification-boxx p {
   font-size: 10px;
-  line-height: 13px;
+  line-height: 0.8125rem;
   color: #187a33;
   margin: 0;
 }

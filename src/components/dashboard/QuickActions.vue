@@ -58,13 +58,13 @@ export default {
 <style scoped>
 @import "../../assets/css/transition.css";
 .boxx {
-  padding: 48px 28px 28px;
+  padding: 3rem 1.75rem 1.75rem;
 }
 h6 {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #808080;
-  margin-bottom: 28px;
+  margin-bottom: 1.75rem;
 }
 </style>

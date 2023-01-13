@@ -232,11 +232,11 @@ export default {
 <style scoped>
 @import "../../assets/css/dashboard.css";
 .btn-print {
-  padding: 6px 30px;
-  font-size: 16px;
+  padding: 6px 1.875rem;
+  font-size: 1rem;
   background: #17517e;
   border: none;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   font-weight: 700;
   color: #ffffff;
 }

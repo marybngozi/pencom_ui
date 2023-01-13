@@ -200,31 +200,31 @@ export default {
 #sideNav h6 {
   width: 80%;
   font-weight: 500;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
 }
 #sideNav .small {
   font-weight: 500;
-  font-size: 12px;
-  line-height: 12px;
-  margin-top: 4px;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+  margin-top: 0.25rem;
   color: rgba(255, 255, 255, 0.5);
 }
 #sideNav #leftNav {
   width: 62px;
   background: #053a51;
   height: calc(100vh - 65px);
-  padding-top: 36px;
+  padding-top: 2.25rem;
 }
 #sideNav #rightNav {
   width: calc(100% - 62px);
   background: #03435f;
   height: calc(100vh - 65px);
-  padding-top: 36px;
+  padding-top: 2.25rem;
 }
 #leftNav ul,
 #rightNav ul {
-  margin-top: 29px;
+  margin-top: 1.8125rem;
   padding-left: 0;
 }
 .nav-icon-li {
@@ -239,12 +239,12 @@ export default {
 .nav-icon-li .icon-text {
   font-weight: 400;
   font-size: 8px;
-  line-height: 11px;
+  line-height: 0.6875rem;
   color: #ffffff;
 }
 .nav-icon-li > .icon-div {
-  width: 48px;
-  height: 48px;
+  width: 3rem;
+  height: 3rem;
   background: transparent;
   display: flex;
   justify-content: center;
@@ -273,9 +273,9 @@ button:hover {
 #sideNav > #rightNav > div:last-child {
   font-weight: 500 !important;
   font-size: 14px !important;
-  line-height: 19px;
+  line-height: 1.1875rem;
   position: absolute;
-  bottom: 3px;
+  bottom: 0.1875rem;
 }
 .nav-link-btn {
   width: 100%;
@@ -292,8 +292,8 @@ a.nav-link-item {
   transition: all;
   color: #ffffff;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-overflow: ellipsis;
   cursor: pointer;
 }

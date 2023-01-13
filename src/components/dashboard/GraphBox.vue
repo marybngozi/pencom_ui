@@ -13,8 +13,8 @@
           borderColor="#DDDDDD"
           color="#252A2F"
           width="200px"
-          height="32px"
-          lineHeight="30px"
+          height="2rem"
+          lineHeight="1.875rem"
           v-model="viewOption"
         />
 
@@ -24,8 +24,8 @@
           borderColor="#DDDDDD"
           color="#252A2F"
           width="100px"
-          height="32px"
-          lineHeight="30px"
+          height="2rem"
+          lineHeight="1.875rem"
           v-model="yearOption"
         />
       </div>
@@ -253,9 +253,9 @@ export default {
   /* min-width: 808px; */
   height: 370px;
   background: #ffffff;
-  border: 1.29px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 3px 0 0px;
+  border: 1.1.8125rem solid #e0e0e0;
+  border-radius: 1.25rem;
+  padding: 0.1875rem 0 0px;
 }
 .gap-9 {
   gap: 9px;
@@ -278,7 +278,7 @@ h6 {
 }
 /* Track */
 #chart::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px #109cf1;
+  box-shadow: inset 0 0 0.3125rem #109cf1;
   border-radius: 10px;
   margin: 0 7px;
 }

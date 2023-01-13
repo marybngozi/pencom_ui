@@ -38,19 +38,19 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 2px 1px 2px 20px;
+  padding: 2px 1px 2px 1.25rem;
   width: 100%;
   /* min-width: 698px; */
-  height: 48px;
+  height: 3rem;
   border: 1px solid #d2d2d2;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   position: relative;
 }
 
 .file-select > .select-label {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-align: center;
   color: #808080;
 }
@@ -59,14 +59,14 @@ export default {
   /* background-color: #2ea169;
   border-radius: 0.3rem; */
   text-align: center;
-  /* padding: 10px 2px 10px 20px; */
+  /* padding: 10px 2px 10px 1.25rem; */
   width: 15%;
-  /* height: 48px; */
+  /* height: 3rem; */
   background: #a0d6ff;
-  border-radius: 0px 30px 30px 0px;
+  border-radius: 0px 1.875rem 1.875rem 0px;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #17517e;
 }
 

@@ -21,8 +21,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="yearOption"
             />
 
@@ -30,7 +30,7 @@
               :items="Object.values($months)"
               :default="new Date().getMonth() - 1"
               width="126px"
-              height="32px"
+              height="2rem"
               borderColor="#DDDDDD"
               color="#252A2F"
               v-model="monthOption"
@@ -416,6 +416,6 @@ export default {
   border-bottom: 1px solid #f2f2f2;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

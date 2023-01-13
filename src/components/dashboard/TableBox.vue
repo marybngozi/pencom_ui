@@ -10,8 +10,8 @@
           borderColor="#DDDDDD"
           color="#252A2F"
           width="100px"
-          height="32px"
-          lineHeight="30px"
+          height="2rem"
+          lineHeight="1.875rem"
           v-model="yearOption"
         />
 
@@ -22,8 +22,8 @@
           borderColor="#DDDDDD"
           color="#252A2F"
           width="126px"
-          height="32px"
-          lineHeight="30px"
+          height="2rem"
+          lineHeight="1.875rem"
           v-model="monthOption"
         />
 
@@ -32,7 +32,7 @@
           :items="$monthOptions"
           :default="new Date().getMonth() - 1"
           width="126px"
-          height="32px"
+          height="2rem"
           borderColor="#DDDDDD"
           color="#252A2F"
           v-model="monthOption"
@@ -184,8 +184,8 @@ table {
   width: 100%;
   min-width: 600px;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #252a2f;
 }
 thead {
@@ -199,12 +199,12 @@ thead tr {
 thead tr th,
 tbody tr td {
   width: 25%;
-  padding: 16px 20px;
+  padding: 16px 1.25rem;
 }
 thead tr th:first-child,
 tbody tr td:first-child {
   width: 30%;
-  padding: 16px 20px 16px 30px;
+  padding: 16px 1.25rem 16px 1.875rem;
 }
 thead tr th:last-child,
 tbody tr td:last-child {

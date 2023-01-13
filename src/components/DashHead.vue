@@ -56,8 +56,8 @@ export default {
 <style scoped>
 header {
   background: #ffffff;
-  /* box-shadow: 0px -2px 4px 2px grey; */
-  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); */
+  /* box-shadow: 0px -2px 0.25rem 2px grey; */
+  /* box-shadow: 0px 0.25rem 10px rgba(0, 0, 0, 0.05); */
   border-bottom: 2px solid #03435f22;
   padding-left: 1.1rem;
   height: 4.375rem;
@@ -116,7 +116,7 @@ li a:focus {
   color: #ffffff !important;
   border-radius: 0.313rem;
   width: 240px !important;
-  height: 45px;
+  height: 2.8125rem;
 }
 .btn-dance:hover {
   color: #ffffff !important;

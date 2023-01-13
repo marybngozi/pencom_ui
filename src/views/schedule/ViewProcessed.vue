@@ -18,8 +18,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="112px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="statusOption"
             />
 
@@ -30,8 +30,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="yearOption"
             />
           </div>
@@ -569,8 +569,8 @@ export default {
 }
 .invoice-no {
   font-weight: 700;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #17517e;
 }
 .not-paid {
@@ -580,14 +580,14 @@ export default {
   color: #187a33;
 }
 .btn-modal {
-  padding: 6px 20px;
-  font-size: 16px;
+  padding: 6px 1.25rem;
+  font-size: 1rem;
   background: #17517e;
   border: none;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   font-weight: 700;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

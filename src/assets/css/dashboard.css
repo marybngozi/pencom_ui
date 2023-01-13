@@ -22,39 +22,39 @@
 .left-tab h4,
 .left h4 {
   font-weight: 700;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 1.5rem;
+  line-height: 2rem;
   color: #053a51;
 }
 .right-tab h6,
 .right h6 {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #808080;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 .right-tab h5,
 .right h5 {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #252a2f;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 .right-tab .inner-boxe,
 .right .inner-boxe {
-  padding: 28px;
+  padding: 1.75rem;
 }
 .right-tab .inner-boxe .blue-box,
 .right .inner-boxe .blue-box {
-  margin-top: 24px;
+  margin-top: 1.5rem;
   padding: 16px;
   background: #c9e7ff;
-  border-radius: 20px;
+  border-radius: 1.25rem;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
   color: #17517e;
 }
 .right-tab .inner-boxe .blue-box ul,
@@ -93,16 +93,16 @@
 label > span:last-child {
   font-style: italic;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-align: right;
   color: #808080;
 }
 label > span:first-child {
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   text-align: center;
   color: #808080;
 }
@@ -115,14 +115,14 @@ label > span:first-child {
   align-items: center;
   padding: 10px;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
   text-align: center;
   color: #ffffff;
-  height: 48px;
+  height: 3rem;
   border: none;
   background: #0090ff;
-  border-radius: 40px;
+  border-radius: 2.5rem;
   cursor: pointer;
 }
 .button:disabled {
@@ -138,16 +138,16 @@ label > span:first-child {
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
   /* text-align: center; */
   color: #263238;
-  padding: 19px 0;
+  padding: 1.1875rem 0;
   width: 100%;
   /* height: 56px; */
   background: #ffffff;
   border: 1px solid #c7c7c7;
-  border-radius: 30px;
+  border-radius: 1.875rem;
 }
 .button-outline:hover {
   background: #263238;
@@ -161,16 +161,16 @@ label > span:first-child {
 }
 .custom-input-group label {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   text-align: center;
   color: #808080;
 }
 .custom-input {
-  padding: 10px 20px;
+  padding: 10px 1.25rem;
   width: 100%;
-  height: 48px;
-  border-radius: 30px;
+  height: 3rem;
+  border-radius: 1.875rem;
   background: transparent;
 }
 .custom-input.border-blue {
@@ -181,23 +181,23 @@ label > span:first-child {
 }
 .custom-input::placeholder {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #808080;
 }
 .show-count {
   font-style: italic;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #999999;
 }
 .btn-xsm {
   padding: 6px 10px;
-  font-size: 12px;
-  height: 28px;
+  font-size: 0.75rem;
+  height: 1.75rem;
   border: none;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   font-weight: 700;
 }
 a.btn-xsm {
@@ -245,4 +245,13 @@ a.btn-xsm {
 /* ------------------ Gaps ------------------------ */
 .gap-3 {
   gap: 12px;
+}
+
+/* Specific uses */
+.filename-short {
+  display: inline-block !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 140px;
 }

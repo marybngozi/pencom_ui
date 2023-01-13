@@ -74,7 +74,7 @@ export default {
     },
     height: {
       type: String,
-      default: "32px",
+      default: "2rem",
     },
     borderColor: {
       type: String,
@@ -105,7 +105,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px 10px;
-  border-radius: 30px;
+  border-radius: 1.875rem;
 }
 button {
   border: none;
@@ -113,8 +113,8 @@ button {
 }
 .text {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-align: center;
 }
 </style>

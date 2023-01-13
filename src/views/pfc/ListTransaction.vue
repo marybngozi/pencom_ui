@@ -8,31 +8,33 @@
       <div class="my-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="show-count w-70">
-            Showing {{ items.length }} of {{ rows }} Uploaded schedules
+            Showing {{ showingCount }} of {{ rows }} Uploaded schedules
           </div>
 
           <div class="d-flex justify-content-between gap-3">
-            <SearchInput v-model="searchVal" />
+            <!-- <SearchInput v-model="searchTerm" /> -->
 
-            <CustomSelectInput
+            <CustomSelect
               :options="years"
-              :default="years[0]"
+              default="All years"
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="yearOption"
             />
 
-            <HorizontalSelect
-              :items="Object.values($months)"
-              :default="new Date().getMonth() - 1"
-              width="126px"
-              height="32px"
+            <CustomSelect
+              :options="$monthOptions"
+              default="All months"
+              class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
+              width="126px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="monthOption"
             />
           </div>
@@ -53,12 +55,12 @@
             show-empty
           >
             <template #cell(index)="data">
-              {{ data.index + 1 }}
+              {{ indexer + data.index + 1 }}
             </template>
 
             <template #cell(transmitted)="data">
-              <span v-if="data.value" class="text-primary">Sent</span>
-              <span v-else class="text-secondary">Not sent</span>
+              <span v-if="data.value" class="text-sucess">Yes</span>
+              <span v-else class="text-danger">No</span>
             </template>
 
             <template #cell(createdAt)="data">
@@ -76,13 +78,13 @@
             <template #cell(action)="data">
               <button
                 @click="getPfas(data, data.item._id)"
-                class="btn btn-sm btn-info m-1"
+                class="btn-xsm bg-blue-dark m-1"
               >
                 {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
               </button>
 
               <button
-                class="btn btn-sm btn-secondary m-1"
+                class="btn-xsm bg-outline-blue m-1"
                 @click="downloadItems(data.item._id)"
               >
                 Download
@@ -149,7 +151,7 @@
 
             <!-- Date range from input group -->
             <div class="mt-3">
-              <label class="d-flex justify-content-between" for="dateFrom">
+              <label class="d-flex justify-content-between" for="dateStart">
                 <span> Date range </span>
                 <span>From</span>
               </label>
@@ -158,26 +160,26 @@
               <input
                 class="custom-input border-blue"
                 type="date"
-                id="dateFrom"
+                id="dateStart"
                 placeholder="- select a start date -"
-                v-model="form.dateFrom"
+                v-model="form.dateStart"
               />
             </div>
 
             <!-- Date range to input group -->
             <div class="mt-3">
-              <label class="d-flex justify-content-between" for="dateTo">
+              <label class="d-flex justify-content-between" for="dateEnd">
                 <span> Date range </span>
                 <span>To</span>
               </label>
 
               <!-- Date range to input -->
               <input
-                id="dateTo"
+                id="dateEnd"
                 class="custom-input border-blue"
                 type="date"
                 placeholder="- select a end date -"
-                v-model="form.dateTo"
+                v-model="form.dateEnd"
               />
               <small v-if="dateNotReady" class="text-danger">
                 Both dates should be provided or none
@@ -259,29 +261,23 @@
 
       <template #modal-footer="{ ok }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
-        <b-button variant="primary" class="rounded" @click="ok()">
-          Okay
-        </b-button>
+        <b-button class="btn-xsm bg-blue-dark" @click="ok()"> Okay </b-button>
       </template>
     </b-modal>
   </div>
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import SearchInput from "@/components/form/SearchInput";
+// import SearchInput from "@/components/form/SearchInput";
 import CustomSelect from "@/components/dashboard/CustomSelect";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
 import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
 
 export default {
   name: "PfcListTransaction",
 
   components: {
-    SearchInput,
+    // SearchInput,
     CustomSelect,
-    CustomSelectInput,
-    HorizontalSelect,
     ListPfaTable,
   },
 
@@ -296,21 +292,16 @@ export default {
       companyCode: null,
       pfaCode: null,
       rowsItem: 0,
-      searchVal: null,
+      searchTerm: null,
       yearOption: null,
       monthOption: null,
-      items: [],
       form: {
         company: null,
-        dateFrom: null,
-        dateTo: null,
+        dateStart: null,
+        dateEnd: null,
       },
-      companies: [
-        { label: "All Companies", value: "all" },
-        { label: "Appmart Limited", value: "EC0D43224" },
-        { label: "Basmic Limited", value: "EC993D4322" },
-        { label: "Swizel Tech", value: "EC0D431110" },
-      ],
+      items: [],
+      companies: [],
       fields: [
         {
           key: "index",
@@ -378,30 +369,16 @@ export default {
     };
   },
 
-  async beforeCreate() {
-    try {
-      this.getting = true;
-
-      const api = "payment/get-batch-contribution";
-      const res = await secureAxios.post(api, this.form);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.getProcessedSchedule();
+    await this.fetchCompanies();
   },
+
   computed: {
     dateNotReady() {
       return (
-        (this.form.dateFrom && !this.form.dateTo) ||
-        (!this.form.dateFrom && this.form.dateTo)
+        (this.form.dateStart && !this.form.dateEnd) ||
+        (!this.form.dateStart && this.form.dateEnd)
       );
     },
 
@@ -409,8 +386,18 @@ export default {
       return this.items.length;
     },
 
+    indexer() {
+      return (this.currentPage - 1) * this.perPage;
+    },
+
+    showingCount() {
+      return this.items.length > this.perPage
+        ? this.perPage
+        : this.items.length;
+    },
+
     years() {
-      const yearArr = [];
+      const yearArr = ["All years"];
       for (let i = new Date().getFullYear(); i >= 2000; i--) {
         yearArr.push(i);
       }
@@ -418,7 +405,39 @@ export default {
     },
   },
 
+  watch: {
+    async yearOption() {
+      await this.getProcessedSchedule();
+    },
+    async monthOption() {
+      await this.getProcessedSchedule();
+    },
+    async perPage() {
+      await this.getProcessedSchedule();
+    },
+  },
+
   methods: {
+    async fetchCompanies() {
+      try {
+        const api = "stat/user-companies";
+
+        const res = await secureAxios.get(api);
+
+        if (!res) {
+          return [];
+        }
+
+        const { data } = res;
+
+        this.companies = [{ label: "All Companies", value: "all" }];
+        this.companies.push(...data.data);
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
+
     async getProcessedSchedule() {
       try {
         if (this.dateNotReady) {
@@ -431,8 +450,13 @@ export default {
 
         this.getting = true;
 
-        const api = "payment/get-batch-contribution";
-        const res = await secureAxios.post(api, this.form);
+        const api = `payment/get-batch-contribution?page=${this.currentPage}&size=${this.perPage}`;
+        const res = await secureAxios.post(api, {
+          ...this.form,
+          searchTerm: this.searchTerm,
+          month: this.monthOption,
+          year: this.yearOption,
+        });
 
         this.getting = false;
         if (!res) {
@@ -535,6 +559,6 @@ export default {
   border-bottom: 1px solid #f2f2f2;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

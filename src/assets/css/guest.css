@@ -41,8 +41,8 @@ div.about {
 }
 .group-input {
   width: 100%;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 0.3125rem;
+  margin-right: 0.3125rem;
 }
 input {
   color: #0b2238;
@@ -80,19 +80,19 @@ input::placeholder {
   margin: auto;
   max-width: 567px;
   background: #ffffff;
-  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  box-shadow: 0px 0px 3.125rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
 }
 .box p {
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 0.875rem;
+  line-height: 1rem;
   color: #6c6c64;
 }
 h4 {
   color: #03435f;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: bold;
-  line-height: 30px;
+  line-height: 1.875rem;
 }
 
 /* Large devices (desktops, 992px and up) */

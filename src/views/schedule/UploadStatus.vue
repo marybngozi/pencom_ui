@@ -13,13 +13,13 @@
 
           <div class="d-flex justify-content-between gap-3">
             <CustomSelect
-              :options="statutes"
+              :options="statues"
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
               width="112px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="statusOption"
             />
 
@@ -30,8 +30,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="yearOption"
             />
           </div>
@@ -64,7 +64,9 @@
             </template>
 
             <template #cell(filePath)="data">
-              {{ data.value.split("-").pop() }}
+              <span :title="data.value">
+                {{ data.value }}
+              </span>
             </template>
 
             <template #cell(status)="data">
@@ -259,6 +261,10 @@ export default {
         {
           key: "filePath",
           label: "File name",
+          tdClass: "filename-short",
+          formatter: (val) => {
+            return val.split("-").pop();
+          },
         },
         {
           key: "createdAt",
@@ -279,8 +285,8 @@ export default {
       items: [],
       yearOption: null,
       statusOption: null,
-      statutes: [
-        { label: "All Statutes", value: "all" },
+      statues: [
+        { label: "All Statues", value: "all" },
         { label: "Pending", value: "processing" },
         { label: "Failed", value: "failure" },
         { label: "Successful", value: "success" },
@@ -461,6 +467,6 @@ export default {
   border-bottom: 1px solid #f2f2f2;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

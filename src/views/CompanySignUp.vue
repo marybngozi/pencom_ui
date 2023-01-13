@@ -89,7 +89,8 @@
                       id="phone"
                       v-model="form.phone"
                       class="form-control"
-                      type="text"
+                      type="tel"
+                      maxlength="14"
                       placeholder="phone"
                     />
                   </div>
@@ -298,7 +299,7 @@ export default {
         this.creating = true;
         const body = {
           ...this.form,
-          verifyUrl: window.location.origin + "/verify",
+          verifyUrl: window.location.origin + "/auth/verify",
         };
 
         const api = "auth/company-register";

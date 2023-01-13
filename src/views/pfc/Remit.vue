@@ -8,7 +8,7 @@
       <div class="my-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="show-count w-70">
-            Showing {{ items.length }} of {{ rows }} Uploaded schedules
+            Showing {{ showingCount }} of {{ rows }} Uploaded schedules
           </div>
         </div>
 
@@ -27,7 +27,7 @@
             show-empty
           >
             <template #cell(index)="data">
-              {{ data.index + 1 }}
+              {{ indexer + data.index + 1 }}
             </template>
 
             <template #cell(createdAt)="data">
@@ -39,14 +39,8 @@
             </template>
 
             <template #cell(action)="data">
-              <button
-                v-if="!data.item.transmitted"
-                v-b-tooltip.hover
-                title="Transmit transaction to the PFA"
-                class="btn btn-sm btn-primary m-1"
-                @click="transmit(data.item._id)"
-              >
-                Transmit
+              <button class="button btn-xsm" @click="transmit(data.item._id)">
+                Remit Schedule
               </button>
             </template>
           </b-table>
@@ -211,6 +205,16 @@ export default {
       );
     },
 
+    indexer() {
+      return (this.currentPage - 1) * this.perPage;
+    },
+
+    showingCount() {
+      return this.items.length > this.perPage
+        ? this.perPage
+        : this.items.length;
+    },
+
     rows() {
       return this.items.length;
     },
@@ -257,7 +261,7 @@ export default {
 
         this.getting = true;
 
-        const api = "payment/get-batch-contribution";
+        const api = "payment/get-unremit-contribution";
         const res = await secureAxios.post(api, this.form);
 
         this.getting = false;
@@ -273,11 +277,11 @@ export default {
       }
     },
 
-    async transmit({ batchId, companyCode, pfaCode }) {
+    async transmit(pfaCode) {
       try {
         const result = await this.$swal({
           icon: "info",
-          text: "This batch of contribution will be sent to the individual PFA",
+          text: "This batch of contribution will be sent to the PFA",
           showDenyButton: true,
           confirmButtonText: "Proceed",
           denyButtonText: "No",
@@ -299,8 +303,6 @@ export default {
         const api = "payment/transmit-contributions";
 
         const res = await secureAxios.post(api, {
-          batchId,
-          companyCode,
           pfaCode,
         });
 
@@ -331,6 +333,6 @@ export default {
   border-bottom: 1px solid #f2f2f2;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

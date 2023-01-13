@@ -63,18 +63,18 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 28px;
+  padding: 1.75rem;
   /* border-bottom: 1px solid #f2f2f2; */
 }
 .inner-boxx {
-  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
+  box-shadow: 0.25rem 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  border-radius: 1.25rem;
   padding: 16px;
 }
 .gray-boxx {
   padding: 16px 0;
   background: #f9f9f9;
-  border-radius: 20px;
+  border-radius: 1.25rem;
   display: flex;
   justify-content: space-around;
   gap: 8px;
@@ -88,8 +88,8 @@ export default {
 }
 h5 {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #252a2f;
 }
 .blue-box {
@@ -100,14 +100,14 @@ h5 {
   gap: 10px;
   width: 100%;
   min-width: 150px;
-  height: 48px;
+  height: 3rem;
   background: #eff7ff;
-  border-radius: 24px;
-  margin-top: 4px;
+  border-radius: 1.5rem;
+  margin-top: 0.25rem;
 }
 h6 {
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 140.3%;
   color: #252a2f;
 }
@@ -115,38 +115,38 @@ h6 {
   color: #808080;
 }
 .profile-right .info {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 .profile-right h6 {
   font-weight: 400;
-  line-height: 19px;
+  line-height: 1.1875rem;
 }
 .profile-right a {
   text-decoration: none;
-  padding: 4px 20px;
-  height: 28px;
+  padding: 0.25rem 1.25rem;
+  height: 1.75rem;
   background: #eff7ff;
   border: 1px solid #0090ff;
-  border-radius: 24px;
+  border-radius: 1.5rem;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #0090ff;
 }
 .profile-right .ddate {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 .profile-right .info small,
 .profile-right .ddate small {
   font-weight: 500;
   font-size: 10px;
-  line-height: 13px;
+  line-height: 0.8125rem;
   color: #808080;
 }
 .profile-right .ddate p {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #252a2f;
 }
 </style>

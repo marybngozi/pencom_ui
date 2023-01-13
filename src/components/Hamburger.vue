@@ -81,7 +81,7 @@ export default {
 #nav-icon span {
   display: block;
   position: absolute;
-  height: 4px;
+  height: 0.25rem;
   width: 100%;
   border-radius: 9px;
   opacity: 1;
@@ -107,7 +107,7 @@ export default {
 }
 
 #nav-icon span:nth-child(3) {
-  top: 20px;
+  top: 1.25rem;
 }
 #nav-icon.open {
   margin-top: -0.6rem;

@@ -31,7 +31,7 @@
         v-company
         :items="$monthOptions"
         width="100%"
-        height="44px"
+        height="2.75rem"
         :default="new Date().getMonth() - 1"
         borderColor="#252a2f"
         v-model="monthOption"
@@ -113,30 +113,30 @@ export default {
   /* width: 42%; */
   height: 250px;
   background: #ffecec;
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
   color: #252a2f;
 }
 img {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 h5 {
   font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
   margin-bottom: 0px;
 }
 h6 {
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   margin-bottom: 16px;
 }
 h3 {
   font-weight: 700;
-  font-size: 28px;
-  line-height: 37px;
+  font-size: 1.75rem;
+  line-height: 2.3125rem;
   margin-bottom: 14px;
 }
 .paid {
@@ -148,8 +148,8 @@ h3 {
 }
 .see-all {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-align: center;
   color: #252a2f;
   display: flex;
@@ -157,10 +157,10 @@ h3 {
   justify-content: center;
   align-items: center;
   background: transparent;
-  /* padding: 10px 20px; */
+  /* padding: 10px 1.25rem; */
   width: 100%;
-  height: 44px;
+  height: 2.75rem;
   border: 1px solid #252a2f;
-  border-radius: 30px;
+  border-radius: 1.875rem;
 }
 </style>

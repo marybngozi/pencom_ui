@@ -30,19 +30,19 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 28px;
+  padding: 1.75rem;
 }
 h6 {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #808080;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 .red-box {
   padding: 16px;
   background: #ff0000;
-  border-radius: 20px;
+  border-radius: 1.25rem;
 }
 ul {
   margin: 0;
@@ -56,24 +56,24 @@ li:not(:last-child) {
   margin-bottom: 16px;
 }
 .dark-red-box {
-  width: 48px;
-  height: 48px;
+  width: 3rem;
+  height: 3rem;
   background: #700404;
-  border-radius: 24px;
+  border-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 11px 21px;
+  padding: 0.6875rem 1.3125rem;
   color: #ffffff;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
 }
 .text {
   font-weight: 500;
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
   color: #ffffff;
   padding-left: 8px;
 }

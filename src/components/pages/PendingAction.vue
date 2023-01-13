@@ -48,7 +48,7 @@ section {
   right: 1px;
   border-bottom: 1px solid #f2f2f2;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 1.25rem;
 }
 .cover {
   overflow-y: scroll;
@@ -81,12 +81,12 @@ h6.head {
 }
 .action .icon {
   color: #808080;
-  font-size: 19px;
+  font-size: 1.1875rem;
 }
 .action p {
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #808080;
 }
 button {
@@ -97,14 +97,14 @@ button {
   padding: 10px;
   gap: 10px;
   width: 100%;
-  height: 44px;
+  height: 2.75rem;
   background: #0090ff;
-  border-radius: 40px;
+  border-radius: 2.5rem;
   border: none;
   color: #ffffff;
   font-weight: 700;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   text-align: center;
 }
 </style>

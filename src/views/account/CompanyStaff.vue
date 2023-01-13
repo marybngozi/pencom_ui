@@ -376,6 +376,6 @@ export default {
   border-bottom: 1px solid #f2f2f2;
 }
 .gap-4 {
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

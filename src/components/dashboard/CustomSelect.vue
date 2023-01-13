@@ -57,11 +57,11 @@ export default {
     },
     height: {
       type: String,
-      default: "44px",
+      default: "2.75rem",
     },
     lineHeight: {
       type: String,
-      default: "40px",
+      default: "2.5rem",
     },
     borderColor: {
       type: String,
@@ -126,12 +126,12 @@ export default {
   text-align: left;
   outline: none;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .customed-select .selected {
   background-color: transparent;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   padding-left: 1em;
   padding-right: 0.5em;
   cursor: pointer;
@@ -148,7 +148,7 @@ export default {
 }
 .customed-select .selected.open {
   border: 1px solid #ffffff;
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 1.875rem 1.875rem 0px 0px;
 }
 
 .customed-select .selected:after {
@@ -158,7 +158,7 @@ export default {
   right: 1.8em;
   width: 0;
   height: 0;
-  border: 5px solid transparent;
+  border: 0.3125rem solid transparent;
   border-color: var(--borderColor) transparent transparent transparent;
 }
 

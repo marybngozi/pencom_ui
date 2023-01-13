@@ -43,7 +43,7 @@ export default {
   height: 200px;
 }
 .bar {
-  flex: 0 7 26px;
+  flex: 0 7 1.625rem;
   height: 100%;
   background-color: #a6b0b6;
   border-radius: 2px;
@@ -67,7 +67,7 @@ export default {
   animation-delay: 100ms;
 }
 .bar:nth-of-type(4) {
-  height: 40px;
+  height: 2.5rem;
   animation: graph4 1s ease-in-out infinite;
   animation-delay: 150ms;
 }
@@ -141,7 +141,7 @@ export default {
 
 @keyframes graph4 {
   0% {
-    height: 40px;
+    height: 2.5rem;
   }
   25% {
     height: 80px;

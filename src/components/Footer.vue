@@ -78,9 +78,9 @@ p span {
   font-size: 0.875rem;
 }
 .button {
-  width: 50px;
-  height: 50px;
-  border-radius: 20px;
+  width: 3.125rem;
+  height: 3.125rem;
+  border-radius: 1.25rem;
   background-color: rgba(11, 34, 56, 0.05);
   padding-top: 0.7rem;
 }

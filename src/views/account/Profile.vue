@@ -242,18 +242,18 @@ export default {
 }
 .gray-plane button {
   border: none;
-  padding: 12px 20px;
+  padding: 12px 1.25rem;
   width: 100px;
-  height: 40px;
+  height: 2.5rem;
   background: #0090ff;
-  border-radius: 50px;
+  border-radius: 3.125rem;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: #ffffff;
 }
 .profile-body {
-  margin: 39px auto 0 auto;
+  margin: 2.4375rem auto 0 auto;
   width: 97%;
   max-width: 750px;
 }
@@ -262,7 +262,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 1.25rem;
   width: 100%;
   height: 160px;
   border: 1px solid #dddddd;
@@ -270,8 +270,8 @@ export default {
 }
 .logo-round-box p {
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   margin: 0;
   padding: 0;
   color: #5e6974;
@@ -287,11 +287,11 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 1.25rem;
   margin-bottom: 15px;
-  height: 48px;
+  height: 3rem;
   border: 1px solid #dddddd;
-  border-radius: 50px;
+  border-radius: 3.125rem;
 }
 .profile-info p {
   margin: 0;
@@ -300,14 +300,14 @@ export default {
 .profile-info p:first-child {
   font-style: italic;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #5e6974;
 }
 .profile-info p:last-child {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #252a2f;
 }
 .small-boxes {
@@ -318,18 +318,18 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 1.25rem;
   gap: 12px;
   width: 230px;
   height: 156px;
-  border-radius: 20px;
+  border-radius: 1.25rem;
 }
 .small-box p {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   text-align: center;
-  /* padding: 0 30px; */
+  /* padding: 0 1.875rem; */
 }
 .small-box div {
   display: flex;
@@ -339,8 +339,8 @@ export default {
   padding: 10px 12px;
   margin-top: 12px;
   width: 99%;
-  height: 41px;
-  border-radius: 20px;
+  height: 2.5625rem;
+  border-radius: 1.25rem;
 }
 .small-box.box-1 {
   background: #f9f9f9;

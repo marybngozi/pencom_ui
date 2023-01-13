@@ -15,7 +15,7 @@
           :items="$monthOptions"
           :default="new Date().getMonth() - 1"
           width="126px"
-          height="32px"
+          height="2rem"
           borderColor="#252a2f"
           v-model="monthOption"
         />
@@ -48,7 +48,7 @@
         :items="$monthOptions"
         :default="new Date().getMonth() - 1"
         width="100%"
-        height="44px"
+        height="2.75rem"
         borderColor="#252a2f"
         v-model="monthOption"
       />
@@ -60,8 +60,8 @@
         borderColor="#DDDDDD"
         color="#252A2F"
         width="100%"
-        height="44px"
-        lineHeight="40px"
+        height="2.75rem"
+        lineHeight="2.5rem"
         v-model="viewOption"
       />
     </div>
@@ -158,33 +158,33 @@ export default {
   /* min-width: 300px; */
   height: 250px;
   background: #f9f9f9 !important;
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
 }
 h5 {
   font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
   margin-bottom: 0px;
   color: #252a2f;
 }
 h6 {
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   margin-bottom: 16px;
   color: #acacac;
 }
 .p-left {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   color: #808080;
 }
 .p-right {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   text-align: right;
   color: #252a2f;
 }

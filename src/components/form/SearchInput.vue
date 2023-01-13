@@ -25,7 +25,7 @@ export default {
     },
     height: {
       type: String,
-      default: "32px",
+      default: "2rem",
     },
   },
 
@@ -53,19 +53,19 @@ form {
   padding: 1px;
 }
 input {
-  width: calc(100% - 40px);
+  width: calc(100% - 2.5rem);
   border: none;
   outline: none;
   height: 100%;
   padding: 0 0 0 10px;
   border-radius: 16px 0 0 16px;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 0.875rem;
+  line-height: 1rem;
 }
 button {
   width: 16%;
-  max-width: 40px;
+  max-width: 2.5rem;
   border: none;
   outline: none;
   background: transparent;
@@ -74,12 +74,12 @@ button {
 input::placeholder {
   text-align: right;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 13px;
+  font-size: 0.75rem;
+  line-height: 0.8125rem;
   color: #939ea9;
 }
 img {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 </style>

@@ -58,11 +58,11 @@ export default {
     },
     height: {
       type: String,
-      default: "44px",
+      default: "2.75rem",
     },
     lineHeight: {
       type: String,
-      default: "40px",
+      default: "2.5rem",
     },
     borderColor: {
       type: String,
@@ -97,12 +97,12 @@ export default {
   text-align: left;
   outline: none;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .customed-select .selected {
   background-color: transparent;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   padding-left: 1.5em;
   cursor: pointer;
   user-select: none;
@@ -120,7 +120,7 @@ export default {
 
 .customed-select .selected.open {
   border: 1px solid #ffffff;
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 1.875rem 1.875rem 0px 0px;
 }
 
 .customed-select .selected:after {
@@ -130,14 +130,14 @@ export default {
   right: 1.8em;
   width: 0;
   height: 0;
-  border: 5px solid transparent;
+  border: 0.3125rem solid transparent;
   border-color: var(--borderColor) transparent transparent transparent;
 }
 
 .customed-select .items {
   color: #fff;
   background: #ffffff;
-  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0.25rem 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
   /* border-radius: 16px; */
   border-radius: 0px 0px 6px 6px;
   overflow: hidden;
@@ -163,12 +163,12 @@ export default {
 .customed-select .items div {
   color: #252a2f;
   /* padding-left: 1.4em; */
-  padding: 10px 20px;
+  padding: 10px 1.25rem;
   cursor: pointer;
   user-select: none;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .customed-select .items div:hover {

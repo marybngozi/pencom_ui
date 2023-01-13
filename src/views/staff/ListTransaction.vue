@@ -18,8 +18,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="200px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="form.companyOption"
             />
 
@@ -30,8 +30,8 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="100px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="form.yearOption"
             />
 
@@ -42,14 +42,14 @@
               borderColor="#DDDDDD"
               color="#252A2F"
               width="126px"
-              height="32px"
-              lineHeight="30px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="form.monthOption"
             />
             <!-- <HorizontalSelect
               :items="$monthOptions"
               width="126px"
-              height="32px"
+              height="2rem"
               borderColor="#DDDDDD"
               color="#252A2F"
               v-model="form.monthOption"

@@ -117,7 +117,8 @@
                       id="phone"
                       v-model="form.phone"
                       class="form-control"
-                      type="text"
+                      type="tel"
+                      maxlength="14"
                       placeholder="phone"
                     />
                   </div>

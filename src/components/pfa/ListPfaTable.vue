@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-table
+      class="my-table"
       id="pfas-table"
       :fields="fieldsPfas"
       small
@@ -13,8 +14,8 @@
       show-empty
     >
       <template #cell(transmitted)="data">
-        <span v-if="data.value" class="text-primary">Sent</span>
-        <span v-else class="text-secondary">Not sent</span>
+        <span v-if="data.value" class="text-success">Yes</span>
+        <span v-else class="text-danger">No</span>
       </template>
 
       <template #cell(amount)="data">
@@ -23,27 +24,17 @@
 
       <template #cell(action)="data">
         <button
-          class="btn btn-sm btn-info m-1"
+          class="btn-xsm bg-blue-dark m-1"
           @click="showItems(data.item._id)"
         >
           Show Items
         </button>
 
         <button
-          class="btn btn-sm btn-secondary m-1"
+          class="btn-xsm bg-outline-blue m-1"
           @click="getDownloads(data.item._id)"
         >
           Download
-        </button>
-
-        <button
-          v-if="!data.item.transmitted"
-          v-b-tooltip.hover
-          title="Transmit transaction to the PFA"
-          class="btn btn-sm btn-primary m-1"
-          @click="transmit(data.item._id)"
-        >
-          Transmit
         </button>
       </template>
     </b-table>
@@ -55,6 +46,8 @@
       aria-controls="pfas-table"
       size="sm"
       limit="10"
+      pills
+      align="center"
     >
     </b-pagination>
   </div>
@@ -93,7 +86,7 @@ export default {
         },
         {
           key: "transmitted",
-          label: "Status",
+          label: "Remit Status",
         },
         {
           key: "amount",
@@ -118,14 +111,6 @@ export default {
 
     getDownloads(pfaCode) {
       this.$emit("getDownloads", {
-        pfaCode,
-        batchId: this.batchId,
-        companyCode: this.companyCode,
-      });
-    },
-
-    transmit(pfaCode) {
-      this.$emit("transmit", {
         pfaCode,
         batchId: this.batchId,
         companyCode: this.companyCode,

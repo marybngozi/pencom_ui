@@ -8,7 +8,7 @@
       <HorizontalSelect
         :items="years"
         width="126px"
-        height="32px"
+        height="2rem"
         borderColor="#ffffff"
         v-model="yearOption"
       />
@@ -148,34 +148,34 @@ export default {
 
 <style scoped>
 .boxx {
-  padding: 20px;
+  padding: 1.25rem;
   /* min-width: 300px; */
   /* width: 56%; */
   height: 250px;
   background: #17517e;
-  border-radius: 20px;
+  border-radius: 1.25rem;
   color: #ffffff;
 }
 img {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 h5 {
   font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
   margin-bottom: 0px;
 }
 h6 {
   font-weight: 400;
-  font-size: 16px;
-  line-height: 21px;
+  font-size: 1rem;
+  line-height: 1.3125rem;
   margin-bottom: 16px;
 }
 h3 {
   font-weight: 700;
-  font-size: 28px;
-  line-height: 37px;
+  font-size: 1.75rem;
+  line-height: 2.3125rem;
   margin-bottom: 14px;
 }
 .paid {

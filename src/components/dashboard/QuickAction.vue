@@ -71,22 +71,22 @@ a {
   width: 100%;
   /* min-width: 281px; */
   min-height: 56px;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   padding: 12px 18px;
 }
 h6 {
   margin-bottom: 0;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 15px;
+  font-size: 0.875rem;
+  line-height: 0.9375rem;
 }
 small {
   font-weight: 400;
   font-size: 10px;
-  line-height: 13px;
+  line-height: 0.8125rem;
 }
 img {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 </style>
