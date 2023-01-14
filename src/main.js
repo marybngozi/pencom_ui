@@ -34,13 +34,12 @@ Vue.filter("toCurrency", (value) => {
     return value;
   }
   var formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "Ngn",
     minimumFractionDigits: 0,
   });
-  return formatter.format(Number(value));
+  return "₦ " + formatter.format(Number(value));
 });
 
+/* -------------------------- MONTHS PROTOTYPES -------------------------- */
 const months = {
   1: "January",
   2: "February",
@@ -67,7 +66,14 @@ for (const value in months) {
 }
 Vue.prototype.$monthOptions = monthsArr;
 
-// vue-directives
+/* -------------------------- YEARS PROTOTYPES -------------------------- */
+const yearArr = [];
+for (let i = new Date().getFullYear(); i >= 2020; i--) {
+  yearArr.push(i);
+}
+Vue.prototype.$yearOptions = yearArr;
+
+/* -------------------------- DRIECTIVES -------------------------- */
 Vue.directive("company", {
   bind: (el) => {
     if (store.getters.userType != 100) el.style.display = "none";

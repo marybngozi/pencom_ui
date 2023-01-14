@@ -19,7 +19,7 @@
         />
 
         <CustomSelect
-          :options="years"
+          :options="$yearOptions"
           class="select"
           borderColor="#DDDDDD"
           color="#252A2F"
@@ -53,7 +53,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
-import CustomSelect from "./CustomSelect.vue";
+import CustomSelect from "../form/CustomSelect.vue";
 import BarChartLoader from "@/components/BarChartLoader.vue";
 export default {
   name: "GraphBox",
@@ -185,14 +185,6 @@ export default {
         (item) => item == 0
       );
     },
-
-    years() {
-      const years = [];
-      for (let i = new Date().getFullYear(); i >= 2020; i--) {
-        years.push(i);
-      }
-      return years;
-    },
   },
 
   methods: {
@@ -253,7 +245,7 @@ export default {
   /* min-width: 808px; */
   height: 370px;
   background: #ffffff;
-  border: 1.1.8125rem solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 1.25rem;
   padding: 0.1875rem 0 0px;
 }

@@ -40,50 +40,52 @@
 
         <!-- table section -->
         <div class="table-div">
-          <b-table
-            id="my-table"
-            class="my-table"
-            :fields="fields"
-            small
-            :busy="getting"
-            hover
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            show-empty
-          >
-            <template #cell(index)="data">
-              {{ data.index + 1 }}
-            </template>
+          <div class="only-table-div">
+            <b-table
+              id="my-table"
+              class="my-table"
+              :fields="fields"
+              small
+              :busy="getting"
+              hover
+              :items="items"
+              :per-page="perPage"
+              :current-page="currentPage"
+              show-empty
+            >
+              <template #cell(index)="data">
+                {{ data.index + 1 }}
+              </template>
 
-            <template #cell(createdAt)="data">
-              {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
+              <template #cell(createdAt)="data">
+                {{ data.value | moment("DD-MM-YYYY") }}
+              </template>
 
-            <template #cell(period)="data">
-              {{ $months[data.item.month] }}, {{ data.item.year }}
-            </template>
+              <template #cell(period)="data">
+                {{ $months[data.item.month] }}, {{ data.item.year }}
+              </template>
 
-            <template #cell(amount)="data">
-              {{ data.value | toCurrency }}
-            </template>
+              <template #cell(amount)="data">
+                {{ data.value | toCurrency }}
+              </template>
 
-            <template #cell(action)="data">
-              <button
-                @click="getItems(data.item._id)"
-                class="btn btn-sm btn-info m-1"
-              >
-                Show Items
-              </button>
+              <template #cell(action)="data">
+                <button
+                  @click="getItems(data.item._id)"
+                  class="btn btn-sm btn-info m-1"
+                >
+                  Show Items
+                </button>
 
-              <button
-                class="btn btn-sm btn-secondary m-1"
-                @click="downloadItems(data.item._id)"
-              >
-                Download
-              </button>
-            </template>
-          </b-table>
+                <button
+                  class="btn btn-sm btn-secondary m-1"
+                  @click="downloadItems(data.item._id)"
+                >
+                  Download
+                </button>
+              </template>
+            </b-table>
+          </div>
 
           <!-- table pagination -->
           <b-pagination
@@ -169,8 +171,8 @@
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
 import SearchInput from "@/components/form/SearchInput";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
+import CustomSelectInput from "@/components/form/CustomSelectInput";
+import HorizontalSelect from "@/components/form/HorizontalSelect";
 
 export default {
   name: "PfaListTransaction",

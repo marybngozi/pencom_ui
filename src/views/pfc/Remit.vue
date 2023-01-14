@@ -14,36 +14,38 @@
 
         <!-- table section -->
         <div class="table-div">
-          <b-table
-            id="my-table"
-            class="my-table"
-            :fields="fields"
-            small
-            :busy="getting"
-            hover
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            show-empty
-          >
-            <template #cell(index)="data">
-              {{ indexer + data.index + 1 }}
-            </template>
+          <div class="only-table-div">
+            <b-table
+              id="my-table"
+              class="my-table"
+              :fields="fields"
+              small
+              :busy="getting"
+              hover
+              :items="items"
+              :per-page="perPage"
+              :current-page="currentPage"
+              show-empty
+            >
+              <template #cell(index)="data">
+                {{ indexer + data.index + 1 }}
+              </template>
 
-            <template #cell(createdAt)="data">
-              {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
+              <template #cell(createdAt)="data">
+                {{ data.value | moment("DD-MM-YYYY") }}
+              </template>
 
-            <template #cell(amount)="data">
-              {{ data.value | toCurrency }}
-            </template>
+              <template #cell(amount)="data">
+                {{ data.value | toCurrency }}
+              </template>
 
-            <template #cell(action)="data">
-              <button class="button btn-xsm" @click="transmit(data.item._id)">
-                Remit Schedule
-              </button>
-            </template>
-          </b-table>
+              <template #cell(action)="data">
+                <button class="button btn-xsm" @click="transmit(data.item._id)">
+                  Remit Schedule
+                </button>
+              </template>
+            </b-table>
+          </div>
 
           <!-- table pagination -->
           <b-pagination
@@ -145,7 +147,7 @@
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import CustomSelect from "@/components/dashboard/CustomSelect";
+import CustomSelect from "@/components/form/CustomSelect";
 
 export default {
   name: "PfcListTransaction",

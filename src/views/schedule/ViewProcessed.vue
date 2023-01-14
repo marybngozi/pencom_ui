@@ -40,82 +40,84 @@
 
       <!-- table section -->
       <div class="table-div">
-        <b-table
-          class="my-table"
-          id="my-table"
-          :fields="fields"
-          small
-          striped
-          :busy="getting"
-          hover
-          :items="items"
-          :per-page="perPage"
-          :current-page="currentPage"
-          show-empty
-        >
-          <template #cell(invoiceNo)="data">
-            <span class="invoice-no">{{ data.value }}</span>
-          </template>
+        <div class="only-table-div">
+          <b-table
+            class="my-table"
+            id="my-table"
+            :fields="fields"
+            small
+            striped
+            :busy="getting"
+            hover
+            :items="items"
+            :per-page="perPage"
+            :current-page="currentPage"
+            show-empty
+          >
+            <template #cell(invoiceNo)="data">
+              <span class="invoice-no">{{ data.value }}</span>
+            </template>
 
-          <template #cell(createdAt)="data">
-            {{ data.value | moment("DD-MM-YYYY") }}
-          </template>
+            <template #cell(createdAt)="data">
+              {{ data.value | moment("DD-MM-YYYY") }}
+            </template>
 
-          <template #cell(period)="data">
-            {{ $months[data.item.month].slice(0, 3).toUpperCase() }},
-            {{ data.item.year }}
-          </template>
+            <template #cell(period)="data">
+              {{ $months[data.item.month].slice(0, 3).toUpperCase() }},
+              {{ data.item.year }}
+            </template>
 
-          <template #cell(paymentStatus)="data">
-            <div class="text-center not-paid" v-if="data.value == 0">
-              Not Paid
-            </div>
-            <div class="text-center paid" v-if="data.value == 1">Paid</div>
-          </template>
+            <template #cell(paymentStatus)="data">
+              <div class="text-center not-paid" v-if="data.value == 0">
+                Not Paid
+              </div>
+              <div class="text-center paid" v-if="data.value == 1">Paid</div>
+            </template>
 
-          <template #cell(amount)="data">
-            {{ data.value | toCurrency }}
-          </template>
+            <template #cell(amount)="data">
+              {{ data.value | toCurrency }}
+            </template>
 
-          <template #cell(action)="data">
-            <div class="d-flex justify-content-end gap-4">
-              <router-link
-                v-show="data.item.paymentStatus == 0"
-                class="btn-xsm bg-blue-light"
-                :to="{
-                  name: 'schedule-make-payment',
-                  params: { invoiceNo: data.item.invoiceNo },
-                }"
-              >
-                Make Payment
-              </router-link>
+            <template #cell(action)="data">
+              <div class="d-flex justify-content-end gap-4">
+                <router-link
+                  v-show="data.item.paymentStatus == 0"
+                  class="btn-xsm bg-blue-light"
+                  :to="{
+                    name: 'schedule-make-payment',
+                    params: { invoiceNo: data.item.invoiceNo },
+                  }"
+                >
+                  Make Payment
+                </router-link>
 
-              <router-link
-                class="btn-xsm bg-blue-dark"
-                :to="{
-                  name: 'schedule-mandate',
-                  params: { invoiceNo: data.item.invoiceNo },
-                }"
-              >
-                Mandate
-              </router-link>
+                <router-link
+                  class="btn-xsm bg-blue-dark"
+                  :to="{
+                    name: 'schedule-mandate',
+                    params: { invoiceNo: data.item.invoiceNo },
+                  }"
+                >
+                  Mandate
+                </router-link>
 
-              <button
-                class="btn-xsm bg-blue-dark"
-                @click="getItems(data.item.invoiceNo)"
-              >
-                Show Items
-              </button>
+                <button
+                  class="btn-xsm bg-blue-dark"
+                  @click="getItems(data.item.invoiceNo)"
+                >
+                  Show Items
+                </button>
 
-              <button
-                class="btn-xsm bg-outline-blue"
-                @click="downloadItems(data.item.invoiceNo)"
-              >
-                Download
-              </button>
-            </div>
-          </template>
-        </b-table>
+                <button
+                  class="btn-xsm bg-outline-blue"
+                  @click="downloadItems(data.item.invoiceNo)"
+                >
+                  Download
+                </button>
+              </div>
+            </template>
+          </b-table>
+        </div>
 
         <!-- table pagination -->
         <b-pagination
@@ -311,8 +313,8 @@
 <script>
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import CustomSelect from "@/components/dashboard/CustomSelect";
+import CustomSelectInput from "@/components/form/CustomSelectInput";
+import CustomSelect from "@/components/form/CustomSelect";
 
 export default {
   name: "ViewProcessed",

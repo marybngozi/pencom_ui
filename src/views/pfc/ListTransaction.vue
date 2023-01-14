@@ -42,70 +42,72 @@
 
         <!-- table section -->
         <div class="table-div">
-          <b-table
-            id="my-table"
-            class="my-table"
-            :fields="fields"
-            small
-            :busy="getting"
-            hover
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            show-empty
-          >
-            <template #cell(index)="data">
-              {{ indexer + data.index + 1 }}
-            </template>
+          <div class="only-table-div">
+            <b-table
+              id="my-table"
+              class="my-table"
+              :fields="fields"
+              small
+              :busy="getting"
+              hover
+              :items="items"
+              :per-page="perPage"
+              :current-page="currentPage"
+              show-empty
+            >
+              <template #cell(index)="data">
+                {{ indexer + data.index + 1 }}
+              </template>
 
-            <template #cell(transmitted)="data">
-              <span v-if="data.value" class="text-sucess">Yes</span>
-              <span v-else class="text-danger">No</span>
-            </template>
+              <template #cell(transmitted)="data">
+                <span v-if="data.value" class="text-sucess">Yes</span>
+                <span v-else class="text-danger">No</span>
+              </template>
 
-            <template #cell(createdAt)="data">
-              {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
+              <template #cell(createdAt)="data">
+                {{ data.value | moment("DD-MM-YYYY") }}
+              </template>
 
-            <template #cell(period)="data">
-              {{ $months[data.item.month] }}, {{ data.item.year }}
-            </template>
+              <template #cell(period)="data">
+                {{ $months[data.item.month] }}, {{ data.item.year }}
+              </template>
 
-            <template #cell(amount)="data">
-              {{ data.value | toCurrency }}
-            </template>
+              <template #cell(amount)="data">
+                {{ data.value | toCurrency }}
+              </template>
 
-            <template #cell(action)="data">
-              <button
-                @click="getPfas(data, data.item._id)"
-                class="btn-xsm bg-blue-dark m-1"
-              >
-                {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
-              </button>
+              <template #cell(action)="data">
+                <button
+                  @click="getPfas(data, data.item._id)"
+                  class="btn-xsm bg-blue-dark m-1"
+                >
+                  {{ data.detailsShowing ? "Hide" : "Show" }} PFAs
+                </button>
 
-              <button
-                class="btn-xsm bg-outline-blue m-1"
-                @click="downloadItems(data.item._id)"
-              >
-                Download
-              </button>
-            </template>
+                <button
+                  class="btn-xsm bg-outline-blue m-1"
+                  @click="downloadItems(data.item._id)"
+                >
+                  Download
+                </button>
+              </template>
 
-            <template #row-details>
-              <b-card bg-variant="light">
-                <!-- START PFA INNER TABLE -->
-                <ListPfaTable
-                  :batchId="batchId"
-                  :companyCode="companyCode"
-                  @showItems="getItems"
-                  @getDownloads="downloadItems"
-                  @transmit="transmit"
-                />
+              <template #row-details>
+                <b-card bg-variant="light">
+                  <!-- START PFA INNER TABLE -->
+                  <ListPfaTable
+                    :batchId="batchId"
+                    :companyCode="companyCode"
+                    @showItems="getItems"
+                    @getDownloads="downloadItems"
+                    @transmit="transmit"
+                  />
 
-                <!-- END PFA INNER TABLE -->
-              </b-card>
-            </template>
-          </b-table>
+                  <!-- END PFA INNER TABLE -->
+                </b-card>
+              </template>
+            </b-table>
+          </div>
 
           <!-- table pagination -->
           <b-pagination
@@ -269,7 +271,7 @@
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
 // import SearchInput from "@/components/form/SearchInput";
-import CustomSelect from "@/components/dashboard/CustomSelect";
+import CustomSelect from "@/components/form/CustomSelect";
 import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
 
 export default {

@@ -46,52 +46,46 @@
               lineHeight="1.875rem"
               v-model="form.monthOption"
             />
-            <!-- <HorizontalSelect
-              :items="$monthOptions"
-              width="126px"
-              height="2rem"
-              borderColor="#DDDDDD"
-              color="#252A2F"
-              v-model="form.monthOption"
-            /> -->
           </div>
         </div>
 
         <!-- table section -->
         <div class="table-div">
-          <b-table
-            class="my-table"
-            id="my-table"
-            :fields="fields"
-            small
-            striped
-            :busy="getting"
-            hover
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            show-empty
-          >
-            <template #cell(index)="data">
-              {{ data.index + 1 }}
-            </template>
+          <div class="only-table-div">
+            <b-table
+              class="my-table"
+              id="my-table"
+              :fields="fields"
+              small
+              striped
+              :busy="getting"
+              hover
+              :items="items"
+              :per-page="perPage"
+              :current-page="currentPage"
+              show-empty
+            >
+              <template #cell(index)="data">
+                {{ data.index + 1 }}
+              </template>
 
-            <template #cell(createdAt)="data">
-              {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
+              <template #cell(createdAt)="data">
+                {{ data.value | moment("DD-MM-YYYY") }}
+              </template>
 
-            <template #cell(period)="data">
-              {{ $months[data.item.month] }}, {{ data.item.year }}
-            </template>
+              <template #cell(period)="data">
+                {{ $months[data.item.month] }}, {{ data.item.year }}
+              </template>
 
-            <template #cell(company)="data">
-              {{ data.value[0].companyName }}
-            </template>
+              <template #cell(company)="data">
+                {{ data.value[0].companyName }}
+              </template>
 
-            <template #cell(amount)="data">
-              {{ data.value | toCurrency }}
-            </template>
-          </b-table>
+              <template #cell(amount)="data">
+                {{ data.value | toCurrency }}
+              </template>
+            </b-table>
+          </div>
 
           <b-pagination
             v-model="currentPage"
@@ -111,16 +105,14 @@
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import CustomSelect from "@/components/dashboard/CustomSelect";
-// import HorizontalSelect from "@/components/dashboard/HorizontalSelect";
+import CustomSelectInput from "@/components/form/CustomSelectInput";
+import CustomSelect from "@/components/form/CustomSelect";
 
 export default {
   name: "StaffListTransaction",
   components: {
     CustomSelectInput,
     CustomSelect,
-    // HorizontalSelect,
   },
   data() {
     return {

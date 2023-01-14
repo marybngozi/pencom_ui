@@ -10,30 +10,44 @@
         </h6>
       </div>
 
-      <div v-spfca>
-        <HorizontalSelect
-          :items="$monthOptions"
-          :default="new Date().getMonth() - 1"
+      <div>
+        <CustomSelect
+          v-companystaff
+          :options="$yearOptions"
+          class="select"
+          borderColor="#252a2f"
+          color="#252A2F"
+          width="100px"
+          height="2rem"
+          lineHeight="1.875rem"
+          v-model="yearOption"
+        />
+
+        <CustomSelectMonth
+          v-pfca
+          :default="prevMonth"
+          class="select"
+          borderColor="#252a2f"
           width="126px"
           height="2rem"
-          borderColor="#252a2f"
+          lineHeight="2rem"
           v-model="monthOption"
         />
       </div>
     </div>
 
     <!-- mid data -->
-    <div class="mt-3">
+    <div :class="secMargin">
       <div class="d-flex justify-content-between">
-        <p class="p-left">Previous month</p>
-        <p class="p-right">
+        <p :class="pMargin" class="p-left">{{ pText1 }}</p>
+        <p :class="pMargin" class="p-right">
           <loader class="text-secondary" v-if="fetching" />
           <span v-else>{{ data1 | toCurrency }}</span>
         </p>
       </div>
 
       <div class="d-flex justify-content-between">
-        <p class="p-left">YTD</p>
+        <p class="p-left">{{ pText2 }}</p>
         <p class="p-right">
           <loader class="text-secondary" v-if="fetching" />
           <span v-else>{{ data2 | toCurrency }}</span>
@@ -42,42 +56,54 @@
     </div>
 
     <!-- Last section -->
-    <div class="mt-3">
-      <HorizontalSelect
-        v-company
-        :items="$monthOptions"
-        :default="new Date().getMonth() - 1"
+    <div :class="secMargin">
+      <CustomSelectMonth
+        v-companystaff
+        :default="prevMonth"
+        class="select"
+        borderColor="#252a2f"
         width="100%"
         height="2.75rem"
-        borderColor="#252a2f"
         v-model="monthOption"
       />
 
-      <CustomSelect
-        v-spfca
-        :options="options"
-        class="select"
-        borderColor="#DDDDDD"
-        color="#252A2F"
-        width="100%"
-        height="2.75rem"
-        lineHeight="2.5rem"
-        v-model="viewOption"
-      />
+      <div v-pfca>
+        <CustomSelect
+          :options="$yearOptions"
+          class="select mb-2"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="100%"
+          height="2rem"
+          lineHeight="2rem"
+          v-model="yearOption"
+        />
+
+        <CustomSelect
+          :options="options"
+          class="select"
+          borderColor="#DDDDDD"
+          color="#252A2F"
+          width="100%"
+          height="2rem"
+          lineHeight="2rem"
+          v-model="viewOption"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import HorizontalSelect from "./HorizontalSelect.vue";
-import CustomSelect from "./CustomSelect.vue";
+import CustomSelectMonth from "../form/CustomSelectMonth.vue";
+import CustomSelect from "../form/CustomSelect.vue";
 export default {
   name: "GrayBox",
 
   components: {
-    HorizontalSelect,
     CustomSelect,
+    CustomSelectMonth,
   },
 
   props: {
@@ -100,7 +126,8 @@ export default {
   data() {
     return {
       fetching: false,
-      monthOption: new Date().getMonth(),
+      monthOption: this.prevMonth,
+      yearOption: new Date().getFullYear(),
       viewOption: null,
       data1: 0,
       data2: 0,
@@ -111,7 +138,39 @@ export default {
     await this.fetchData();
   },
 
+  computed: {
+    prevMonth() {
+      const month = new Date().getMonth();
+      return month == 0 ? 12 : month;
+    },
+
+    pText1() {
+      return this.$store.getters.userType == 500 &&
+        this.contributionType == "group"
+        ? "Employer"
+        : "For the month";
+    },
+
+    pText2() {
+      return this.$store.getters.userType == 500 &&
+        this.contributionType == "group"
+        ? "Employee"
+        : "YTD";
+    },
+
+    secMargin() {
+      return this.$store.getters.userType > 300 ? "mt-1" : "mt-3";
+    },
+
+    pMargin() {
+      return this.$store.getters.userType > 300 ? "mb-8" : "mb-13";
+    },
+  },
+
   watch: {
+    async yearOption() {
+      await this.fetchData();
+    },
     async monthOption() {
       await this.fetchData();
     },
@@ -129,6 +188,7 @@ export default {
 
         const api = "stat/gray-box";
         const res = await secureAxios.post(api, {
+          year: this.yearOption,
           month: this.monthOption,
           contributionType: this.contributionType,
           viewOption: this.viewOption,
@@ -169,17 +229,17 @@ h5 {
   color: #252a2f;
 }
 h6 {
-  font-weight: 400;
+  font-weight: 300;
   font-size: 1rem;
   line-height: 1.3125rem;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   color: #acacac;
 }
 .p-left {
   font-weight: 700;
   font-size: 1rem;
   line-height: 1.3125rem;
-  color: #808080;
+  color: #17517e;
 }
 .p-right {
   font-weight: 700;
@@ -194,5 +254,11 @@ h6 {
   border-radius: 17px;
   font-size: 0.715em;
   color: #ffffff;
+}
+.mb-8 {
+  margin-bottom: 8px;
+}
+.mb-13 {
+  margin-bottom: 13px;
 }
 </style>

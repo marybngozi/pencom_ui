@@ -4,12 +4,14 @@
     <div class="d-flex justify-content-between">
       <img src="@/assets/images/wallet.svg" alt="wallet icon" />
 
-      <!-- :default="0" -->
-      <HorizontalSelect
-        :items="years"
-        width="126px"
-        height="2rem"
+      <CustomSelect
+        v-companystaff
+        :options="years"
+        class="select"
         borderColor="#ffffff"
+        width="6.875rem"
+        height="2rem"
+        lineHeight="1.875rem"
         v-model="yearOption"
       />
     </div>
@@ -38,18 +40,17 @@
       class="select"
       v-model="viewOption"
     />
+    <CustomSelect v-pfca :options="years" class="select" v-model="yearOption" />
   </div>
 </template>
 
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import HorizontalSelect from "./HorizontalSelect.vue";
-import CustomSelect from "./CustomSelect.vue";
+import CustomSelect from "../form/CustomSelect.vue";
 export default {
   name: "BlueBox",
 
   components: {
-    HorizontalSelect,
     CustomSelect,
   },
 

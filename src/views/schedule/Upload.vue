@@ -57,6 +57,23 @@
 
           <!-- File Options -->
           <FileSelect v-model="form.fileUpload" />
+
+          <div class="d-flex justify-content-between">
+            <button
+              class="btnLink"
+              :disabled="gettingTemplate"
+              @click="downloadFile(item.excelSamplePath, 'gettingTemplate')"
+            >
+              Click to download Our Schedule template
+            </button>
+            <button
+              class="btnLink"
+              :disabled="gettingPfacodes"
+              @click="downloadFile(item.excelPfaCodes, 'gettingPfacodes')"
+            >
+              Click to download PFA Codes
+            </button>
+          </div>
         </div>
 
         <!-- Submit button -->
@@ -158,7 +175,7 @@
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
+import CustomSelectInput from "@/components/form/CustomSelectInput";
 import FileSelect from "@/components/schedule/FileSelect";
 
 export default {
@@ -268,4 +285,17 @@ export default {
 </script>
 <style scoped>
 @import "../../assets/css/dashboard.css";
+.btnLink {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1.3125rem;
+  color: #0090ff;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+.btnLink:hover {
+  text-decoration: underline;
+}
 </style>

@@ -51,7 +51,7 @@ export default {
       default: "100%",
     },
     default: {
-      type: String,
+      type: [String, Number],
       required: false,
       default: null,
     },
@@ -77,6 +77,7 @@ export default {
       default: 0,
     },
   },
+
   data() {
     return {
       open: false,
@@ -96,22 +97,25 @@ export default {
         : null,
     };
   },
+
   watch: {
     options() {
-      this.selectedLabel = this.default
-        ? this.default
-        : this.options.length > 0
-        ? this.options[0].label
+      this.selectedLabel =
+        this.default || this.default === 0
+          ? this.default
+          : this.options.length > 0
           ? this.options[0].label
-          : this.options[0]
-        : null;
-      this.selected = this.default
-        ? this.default
-        : this.options.length > 0
-        ? this.options[0].value
+            ? this.options[0].label
+            : this.options[0]
+          : null;
+      this.selected =
+        this.default || this.default === 0
+          ? this.default
+          : this.options.length > 0
           ? this.options[0].value
-          : this.options[0]
-        : null;
+            ? this.options[0].value
+            : this.options[0]
+          : null;
     },
   },
   mounted() {

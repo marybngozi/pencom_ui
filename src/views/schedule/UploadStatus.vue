@@ -39,79 +39,82 @@
 
         <!-- table section -->
         <div class="table-div">
-          <b-table
-            class="my-table"
-            id="my-table"
-            :fields="fields"
-            small
-            striped
-            hover
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            show-empty
-          >
-            <template #cell(index)="data">
-              {{ data.index + 1 }}
-            </template>
+          <div class="only-table-div">
+            <b-table
+              class="my-table"
+              id="my-table"
+              :fields="fields"
+              small
+              striped
+              hover
+              :items="items"
+              :per-page="perPage"
+              :current-page="currentPage"
+              show-empty
+            >
+              <template #cell(index)="data">
+                {{ data.index + 1 }}
+              </template>
 
-            <template #cell(period)="data">
-              {{ $months[data.item.month].toUpperCase() }}, {{ data.item.year }}
-            </template>
+              <template #cell(period)="data">
+                {{ $months[data.item.month].toUpperCase() }},
+                {{ data.item.year }}
+              </template>
 
-            <template #cell(createdAt)="data">
-              {{ data.value | moment("DD-MM-YYYY") }}
-            </template>
+              <template #cell(createdAt)="data">
+                {{ data.value | moment("DD-MM-YYYY") }}
+              </template>
 
-            <template #cell(filePath)="data">
-              <span :title="data.value">
-                {{ data.value }}
-              </span>
-            </template>
+              <template #cell(filePath)="data">
+                <span :title="data.value">
+                  {{ data.value }}
+                </span>
+              </template>
 
-            <template #cell(status)="data">
-              <span v-if="data.value == 'success'" class="text-success fw-7">
-                Successful
-              </span>
-              <span v-else-if="data.value == 'failure'" class="text-danger">
-                Failed
-              </span>
-              <span v-else class="text-secondary"> Pending </span>
-            </template>
+              <template #cell(status)="data">
+                <span v-if="data.value == 'success'" class="text-success fw-7">
+                  Successful
+                </span>
+                <span v-else-if="data.value == 'failure'" class="text-danger">
+                  Failed
+                </span>
+                <span v-else class="text-secondary"> Pending </span>
+              </template>
 
-            <template #cell(action)="data">
-              <div class="d-flex justify-content-start gap-4">
-                <button
-                  v-if="data.item.status == 'success'"
-                  class="btn-xsm bg-blue-light"
-                  @click="uploadSchedule(data.item.id)"
-                >
-                  Process
-                </button>
+              <template #cell(action)="data">
+                <div class="d-flex justify-content-start gap-4">
+                  <button
+                    v-if="data.item.status == 'success'"
+                    class="btn-xsm bg-blue-light"
+                    @click="uploadSchedule(data.item.id)"
+                  >
+                    Process
+                  </button>
 
-                <button
-                  v-if="data.item.status == 'failure'"
-                  class="btn-xsm bg-outline-blue"
-                  @click="downloadFile(data.item.filePath)"
-                >
-                  Download
-                </button>
+                  <button
+                    v-if="data.item.status == 'failure'"
+                    class="btn-xsm bg-outline-blue"
+                    @click="downloadFile(data.item.filePath)"
+                  >
+                    Download
+                  </button>
 
-                <button
-                  v-b-tooltip.hover
-                  title="This schedule has not been uploaded"
-                  v-if="
-                    data.item.status == 'success' ||
-                    data.item.status == 'failure'
-                  "
-                  class="btn-xsm bg-red"
-                  @click="deleteTask(data.item.id)"
-                >
-                  Delete
-                </button>
-              </div>
-            </template>
-          </b-table>
+                  <button
+                    v-b-tooltip.hover
+                    title="This schedule has not been uploaded"
+                    v-if="
+                      data.item.status == 'success' ||
+                      data.item.status == 'failure'
+                    "
+                    class="btn-xsm bg-red"
+                    @click="deleteTask(data.item.id)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </template>
+            </b-table>
+          </div>
 
           <!-- table pagination -->
           <b-pagination
@@ -232,8 +235,8 @@
 import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
-import CustomSelectInput from "@/components/dashboard/CustomSelectInput";
-import CustomSelect from "@/components/dashboard/CustomSelect";
+import CustomSelectInput from "@/components/form/CustomSelectInput";
+import CustomSelect from "@/components/form/CustomSelect";
 
 export default {
   name: "UploadStatus",

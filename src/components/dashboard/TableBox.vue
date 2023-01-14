@@ -5,7 +5,7 @@
 
       <div class="d-flex justify-content-between gap-9">
         <CustomSelect
-          :options="years"
+          :options="$yearOptions"
           class="select"
           borderColor="#DDDDDD"
           color="#252A2F"
@@ -15,28 +15,17 @@
           v-model="yearOption"
         />
 
-        <CustomSelect
-          :options="$monthOptions"
-          default="All months"
+        <CustomSelectMonth
+          v-pfca
+          :default="prevMonth"
           class="select"
           borderColor="#DDDDDD"
           color="#252A2F"
           width="126px"
           height="2rem"
+          v-model="monthOption"
           lineHeight="1.875rem"
-          v-model="monthOption"
         />
-
-        <!--  <HorizontalSelect
-          v-pfc
-          :items="$monthOptions"
-          :default="new Date().getMonth() - 1"
-          width="126px"
-          height="2rem"
-          borderColor="#DDDDDD"
-          color="#252A2F"
-          v-model="monthOption"
-        /> -->
       </div>
     </div>
 
@@ -75,14 +64,14 @@
 
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import CustomSelect from "./CustomSelect.vue";
-// import HorizontalSelect from "./HorizontalSelect.vue";
+import CustomSelect from "../form/CustomSelect.vue";
+import CustomSelectMonth from "../form/CustomSelectMonth.vue";
 export default {
   name: "TableBox",
 
   components: {
     CustomSelect,
-    // HorizontalSelect,
+    CustomSelectMonth,
   },
 
   props: {
@@ -117,12 +106,9 @@ export default {
   },
 
   computed: {
-    years() {
-      const years = [];
-      for (let i = new Date().getFullYear(); i >= 2020; i--) {
-        years.push(i);
-      }
-      return years;
+    prevMonth() {
+      const month = new Date().getMonth();
+      return month == 0 ? 12 : month;
     },
   },
 

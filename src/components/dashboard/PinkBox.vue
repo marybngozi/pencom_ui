@@ -1,7 +1,19 @@
 <template>
   <div class="boxx">
-    <div>
+    <div class="d-flex justify-content-between">
       <img src="@/assets/images/people_group.svg" alt="peoples icon" />
+
+      <CustomSelect
+        v-company
+        :options="$yearOptions"
+        class="select"
+        borderColor="#252a2f"
+        color="#252A2F"
+        width="100px"
+        height="2rem"
+        lineHeight="1.875rem"
+        v-model="yearOption"
+      />
     </div>
 
     <div v-company class="mt-3">
@@ -27,13 +39,13 @@
     </div>
 
     <div>
-      <HorizontalSelect
+      <CustomSelectMonth
         v-company
-        :items="$monthOptions"
+        :default="prevMonth"
+        class="select"
+        borderColor="#252a2f"
         width="100%"
         height="2.75rem"
-        :default="new Date().getMonth() - 1"
-        borderColor="#252a2f"
         v-model="monthOption"
       />
 
@@ -44,12 +56,14 @@
 
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import HorizontalSelect from "./HorizontalSelect.vue";
+import CustomSelectMonth from "../form/CustomSelectMonth.vue";
+import CustomSelect from "../form/CustomSelect.vue";
 export default {
   name: "PinkBox",
 
   components: {
-    HorizontalSelect,
+    CustomSelect,
+    CustomSelectMonth,
   },
 
   inject: {
@@ -57,10 +71,13 @@ export default {
   },
 
   data() {
+    let prevMonth = new Date().getMonth();
+    prevMonth = prevMonth == 0 ? 12 : prevMonth;
     return {
       fetching: false,
       count: 0,
-      monthOption: new Date().getMonth(),
+      monthOption: prevMonth,
+      yearOption: new Date().getFullYear(),
     };
   },
 
@@ -69,8 +86,18 @@ export default {
   },
 
   watch: {
+    async yearOption() {
+      await this.fetchCount();
+    },
     async monthOption() {
       await this.fetchCount();
+    },
+  },
+
+  computed: {
+    prevMonth() {
+      const month = new Date().getMonth();
+      return month == 0 ? 12 : month;
     },
   },
 
@@ -88,6 +115,7 @@ export default {
         const api = "stat/pink-box";
         const res = await secureAxios.post(api, {
           month: this.monthOption,
+          year: this.yearOption,
         });
 
         this.fetching = false;
