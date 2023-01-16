@@ -3,7 +3,7 @@
     class="d-flex flex-column justify-content-center align-items-center my-5"
   >
     <!-- socials -->
-    <div>
+    <div class="d-flex">
       <a
         href="https://www.instagram.com/appmartng/"
         target="_blank"

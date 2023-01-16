@@ -52,6 +52,9 @@ export default new Vuex.Store({
     companyCode: (state) => {
       return state.user ? state.user.companyCode : null;
     },
+    pfaCode: (state) => {
+      return state.user ? state.user.pfaCode : null;
+    },
     rsaPin: (state) => {
       return state.user ? state.user.rsaPin : null;
     },

@@ -396,7 +396,7 @@ export default {
 
         const res = await secureAxios.post(api, {
           id,
-          scheduleUrl: window.location.origin + "/schedule/make-payment",
+          scheduleUrl: window.location.origin + "/mandate",
         });
 
         this.uploading = false;

@@ -12,11 +12,11 @@
           </div>
 
           <div class="d-flex justify-content-between gap-3">
-            <SearchInput v-model="searchVal" />
+            <!-- <SearchInput v-model="searchVal" /> -->
 
             <CustomSelectInput
-              :options="years"
-              :default="years[0]"
+              :options="$yearOptions"
+              default="All years"
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
@@ -26,13 +26,14 @@
               v-model="yearOption"
             />
 
-            <HorizontalSelect
-              :items="Object.values($months)"
-              :default="new Date().getMonth() - 1"
-              width="126px"
-              height="2rem"
+            <CustomSelectMonth
+              :default="0"
+              class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
+              width="126px"
+              height="2rem"
+              lineHeight="1.875rem"
               v-model="monthOption"
             />
           </div>
@@ -72,13 +73,13 @@
               <template #cell(action)="data">
                 <button
                   @click="getItems(data.item._id)"
-                  class="btn btn-sm btn-info m-1"
+                  class="btn-xsm bg-blue-dark m-1"
                 >
                   Show Items
                 </button>
 
                 <button
-                  class="btn btn-sm btn-secondary m-1"
+                  class="btn-xsm bg-outline-blue m-1"
                   @click="downloadItems(data.item._id)"
                 >
                   Download
@@ -161,26 +162,24 @@
 
       <template #modal-footer="{ ok }">
         <!-- Emulate built in modal footer ok and cancel button actions -->
-        <b-button variant="primary" class="rounded" @click="ok()">
-          Okay
-        </b-button>
+        <b-button class="btn-xsm bg-blue-dark" @click="ok()"> Okay </b-button>
       </template>
     </b-modal>
   </div>
 </template>
 <script>
 import { secureAxios } from "../../services/AxiosInstance";
-import SearchInput from "@/components/form/SearchInput";
+// import SearchInput from "@/components/form/SearchInput";
 import CustomSelectInput from "@/components/form/CustomSelectInput";
-import HorizontalSelect from "@/components/form/HorizontalSelect";
+import CustomSelectMonth from "@/components/form/CustomSelectMonth";
 
 export default {
   name: "PfaListTransaction",
 
   components: {
-    SearchInput,
+    // SearchInput,
     CustomSelectInput,
-    HorizontalSelect,
+    CustomSelectMonth,
   },
 
   data() {
@@ -261,61 +260,36 @@ export default {
     };
   },
 
-  async beforeCreate() {
-    try {
-      this.getting = true;
-
-      const api = "payment/get-batch-contribution";
-      const res = await secureAxios.post(api, this.form);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.getProcessedSchedule();
   },
-  computed: {
-    dateNotReady() {
-      return (
-        (this.form.dateFrom && !this.form.dateTo) ||
-        (!this.form.dateFrom && this.form.dateTo)
-      );
-    },
 
+  computed: {
     rows() {
       return this.items.length;
     },
+  },
 
-    years() {
-      const yearArr = [];
-      for (let i = new Date().getFullYear(); i >= 2000; i--) {
-        yearArr.push(i);
-      }
-      return yearArr;
+  watch: {
+    async yearOption() {
+      await this.getProcessedSchedule();
+    },
+    async monthOption() {
+      await this.getProcessedSchedule();
     },
   },
 
   methods: {
     async getProcessedSchedule() {
       try {
-        if (this.dateNotReady) {
-          this.$swal({
-            icon: "error",
-            text: "Both dates have to be provided",
-          });
-          return;
-        }
-
         this.getting = true;
 
-        const api = "payment/get-batch-contribution";
-        const res = await secureAxios.post(api, this.form);
+        const api = `payment/get-batch-contribution?page=${this.currentPage}&size=${this.perPage}`;
+        const res = await secureAxios.post(api, {
+          searchTerm: this.searchVal,
+          month: this.monthOption,
+          year: this.yearOption,
+        });
 
         this.getting = false;
         if (!res) {
@@ -337,10 +311,10 @@ export default {
       data.toggleDetails();
     },
 
-    async getItems({ batchId, companyCode, pfaCode }) {
+    async getItems({ batchId, companyCode }) {
       this.batchId = batchId;
       this.companyCode = companyCode;
-      this.pfaCode = pfaCode;
+      this.pfaCode = this.$store.getters.pfaCode;
 
       this.$bvModal.show("show-items");
     },
@@ -369,7 +343,7 @@ export default {
       }
     },
 
-    async downloadItems({ batchId, companyCode, pfaCode }) {
+    async downloadItems({ batchId, companyCode }) {
       try {
         const loader = this.$loading.show({
           // Optional parameters
@@ -384,7 +358,7 @@ export default {
 
         const res = await secureAxios.post(
           api,
-          { batchId, companyCode, pfaCode },
+          { batchId, companyCode, pfaCode: this.$store.getters.pfaCode },
           { responseType: "blob" }
         );
 

@@ -37,7 +37,7 @@
 
           <!-- Months Options -->
           <CustomSelectInput
-            :options="$monthOptions"
+            :options="months"
             placeHolder="- select a month -"
             class="select"
             borderColor="#D2D2D2"
@@ -214,6 +214,15 @@ export default {
       return yearArr;
     },
 
+    months() {
+      const monthsArr = [];
+      for (const value in this.$months) {
+        const label = this.$months[value];
+        monthsArr.push({ label, value: Number(value) });
+      }
+      return monthsArr;
+    },
+
     item() {
       return this.allItems[0];
     },
@@ -239,6 +248,10 @@ export default {
         Object.keys(this.form).forEach((key) => {
           formData.append(key, this.form[key]);
         });
+        formData.append(
+          "scheduleUrl",
+          window.location.origin + "/schedule/upload-status"
+        );
 
         const res = await secureAxios.post(api, formData, {
           headers: {

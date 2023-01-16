@@ -93,6 +93,7 @@ export default {
   computed: {
     ...mapGetters([
       "companyCode",
+      "pfaCode",
       "username",
       "userEmail",
       "userDateOfCreation",

@@ -1,7 +1,7 @@
 <template>
   <div id="dash" class="d-flex justify-content-between flex-wrap">
     <!-- left side -->
-    <div class="left-tab col-lg-9 border-right pt-5 px-5">
+    <div class="left-tab col-lg-9 border-right pt-5 px-3 px-lg-5">
       <h4>Processed Pension Schedules</h4>
 
       <!-- paagination and filter details -->

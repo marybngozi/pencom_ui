@@ -15,7 +15,7 @@
             <!-- <SearchInput v-model="searchTerm" /> -->
 
             <CustomSelect
-              :options="years"
+              :options="$yearOptions"
               default="All years"
               class="select"
               borderColor="#DDDDDD"
@@ -26,9 +26,7 @@
               v-model="yearOption"
             />
 
-            <CustomSelect
-              :options="$monthOptions"
-              default="All months"
+            <CustomSelectMonth
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
@@ -272,6 +270,7 @@
 import { secureAxios } from "../../services/AxiosInstance";
 // import SearchInput from "@/components/form/SearchInput";
 import CustomSelect from "@/components/form/CustomSelect";
+import CustomSelectMonth from "@/components/form/CustomSelectMonth";
 import ListPfaTable from "@/components/pfa/ListPfaTable.vue";
 
 export default {
@@ -280,6 +279,7 @@ export default {
   components: {
     // SearchInput,
     CustomSelect,
+    CustomSelectMonth,
     ListPfaTable,
   },
 
@@ -396,14 +396,6 @@ export default {
       return this.items.length > this.perPage
         ? this.perPage
         : this.items.length;
-    },
-
-    years() {
-      const yearArr = ["All years"];
-      for (let i = new Date().getFullYear(); i >= 2000; i--) {
-        yearArr.push(i);
-      }
-      return yearArr;
     },
   },
 

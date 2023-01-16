@@ -33,7 +33,7 @@
 
           <div v-pfa class="ddate">
             <small>PFA Code</small>
-            <p>27</p>
+            <p>{{ pfaCode }}</p>
           </div>
 
           <div v-staff class="ddate">
@@ -56,7 +56,13 @@ import { mapGetters } from "vuex";
 export default {
   name: "ProfileBox",
   computed: {
-    ...mapGetters(["username", "userEmail", "userDateOfCreation", "rsaPin"]),
+    ...mapGetters([
+      "username",
+      "pfaCode",
+      "userEmail",
+      "userDateOfCreation",
+      "rsaPin",
+    ]),
   },
 };
 </script>

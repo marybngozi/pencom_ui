@@ -39,7 +39,7 @@ export default {
   props: {
     value: [String, Number],
     options: {
-      type: Array,
+      type: [Array, Object],
       required: true,
     },
     width: {

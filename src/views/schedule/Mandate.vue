@@ -1,120 +1,229 @@
 <template>
-  <section class="dash rounded px-3 pb-5 pt-2">
+  <section class="dash px-3 pb-5 pt-2">
     <div class="coln mb-5">
       <!-- print button -->
-      <div class="d-flex justify-content-end py-2">
+      <div id="control-btns" class="d-flex justify-content-end gap-5 py-2 mb-3">
+        <button v-if="loggedIn" @click="$router.go(-1)" class="btn-back">
+          Back
+        </button>
         <button class="btn-print" v-print="printObj">Print</button>
       </div>
 
       <!-- start Print Content-->
       <div v-if="showMandate" class="container-fluid" id="printArea">
-        <div class="row" id="scheduleReciept">
-          <div class="card-body p-0">
-            <div class="row d-flex justify-content-between p-3 px-1">
-              <div class="col-md-4">
-                <h1 class="font-weight-bold">MANDATE</h1>
-              </div>
-              <div class="col-md-3 text-right">
-                Date: {{ new Date() | moment("DD-MM-YYYY") }}
-              </div>
-            </div>
+        <table
+          style="width: 95%; margin: 0 auto; page-break-inside: auto"
+          id="scheduleReciept"
+        >
+          <!-- title -->
+          <tr>
+            <td
+              style="
+                width: 50%;
+                font-weight: 700;
+                font-size: 1.5rem;
+                line-height: 2rem;
+                color: #053a51;
+                padding-bottom: 1.125rem;
+              "
+            >
+              Pension Contribution Mandate
+            </td>
+            <td
+              style="
+                width: 50%;
+                text-align: right;
+                font-weight: 700;
+                font-size: 1rem;
+                line-height: 1.5rem;
+                color: #808080;
+                padding-bottom: 1.125rem;
+              "
+            >
+              {{ new Date() | moment("MMMM DD, YYYY") }}
+            </td>
+          </tr>
 
-            <hr class="my-3" />
-
-            <div class="row pb-3 p-3 px-5">
-              <div class="col-md-6 col-xs-12">
-                <h5 class="font-weight-bold mb-4">Beneficiary Information</h5>
-                <p class="mb-1">
-                  Name: <b>{{ companyName }}</b>
-                </p>
-                <p class="mb-1">
-                  Company Code:
-                  <b>{{ companyCode }}</b>
-                </p>
-                <p>
-                  Period:
-                  <b>{{ this.month }}, {{ this.year }}</b>
-                </p>
-              </div>
-
-              <div class="col-md-6 col-xs-12 text-right">
-                <h4 class="font-weight-bold mb-4">Payment Information</h4>
-                <h5>
-                  Item: <b>{{ itemName }}</b>
-                </h5>
-                <p class="mb-1 text-uppercase">
-                  Invoice No:
-                  <b class="h5 font-weight-bolder">{{ invoiceNo }}</b>
-                </p>
-                <p class="text-uppercase">
-                  Amount:
-                  <b class="h5 font-weight-bolder">{{ amount | toCurrency }}</b>
-                </p>
-                <p class="mb-1">&nbsp;</p>
-              </div>
-            </div>
-
-            <div class="row p-3 px-5">
-              <div class="col-md-12">
-                <table class="table border">
-                  <template v-for="(pfc, i) in items">
-                    <thead class="" :key="pfc._id">
+          <!-- blue part -->
+          <tr>
+            <td
+              colspan="2"
+              style="
+                background: #def1ff;
+                padding: 2.5rem 1.4375rem;
+                width: 100%;
+              "
+            >
+              <table style="width: 100%">
+                <tr>
+                  <td style="width: 50%">
+                    <table>
                       <tr>
-                        <th style="width: 10%" scope="col">PFC</th>
-                        <th style="width: 60%" scope="col">
-                          {{ pfc.pfc }}
-                        </th>
-                        <th style="width: 5%" scope="col">Count</th>
-                        <th style="width: 20%" cope="col">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody :key="i">
-                      <tr v-for="(pfa, k) in pfc.pfas" :key="k">
-                        <th></th>
-                        <td>{{ pfa.pfa }}</td>
-                        <td>{{ pfa.itemCount }}</td>
-                        <td>{{ pfa.pfaAmount | toCurrency }}</td>
+                        <td class="blue-small-text">Beneficiary Information</td>
                       </tr>
                       <tr>
-                        <th>Total</th>
-                        <td></td>
-                        <td>{{ pfc.itemCount }}</td>
-                        <td>{{ pfc.pfcAmount | toCurrency }}</td>
+                        <td>
+                          <span class="blue-slant-text">Company Name:</span>
+                          <span class="blue-bold-text">
+                            {{ companyName }}
+                          </span>
+                        </td>
                       </tr>
-                    </tbody>
-                  </template>
+                      <tr>
+                        <td>
+                          <span class="blue-slant-text">Company Code:</span>
+                          <span class="blue-bold-text">{{ companyCode }}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="blue-slant-text">Schedule Period:</span>
+                          <span class="blue-bold-text">
+                            {{ this.month }}, {{ this.year }}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
 
-                  <tfoot>
-                    <tr>
-                      <th style="width: 10%" scope="col"></th>
-                      <th style="width: 60%" scope="col">Grand Total</th>
-                      <th style="width: 5%" scope="col"></th>
-                      <th style="width: 20%" scope="col">
-                        {{ grandTotal | toCurrency }}
-                      </th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
+                  <td style="width: 50%; text-align: right">
+                    <table style="width: 100%; text-align: right">
+                      <tr>
+                        <td class="blue-small-text" style="width: 100%">
+                          Payment Information
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 100%">
+                          <span class="blue-slant-text">Invoice No:</span>
+                          <span class="blue-bold-text">{{ invoiceNo }}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 100%">
+                          <span class="blue-slant-text">Total Amount:</span>
+                          <span class="blue-bold-text">
+                            {{ amount | toCurrency }}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-            <div class="container-fluid border border-dark text-dark mb-5">
-              <div class="row p-5 d-flex justify-content-between">
-                <div class="">
-                  <span class="">
-                    <img :src="qCode" alt="" width="90" height="90" />
-                  </span>
-                </div>
-                <div class="">
-                  <div class="">
-                    <h5 class="">Note to Agent</h5>
-                    <span>
-                      Proceed to any Bank to make Payment to fund your wallet.
-                      Mandate also sent to email
-                    </span>
-                  </div>
-                  <div class="mt-5">
-                    <h5 class="">Note to Bank Teller</h5>
+          <!-- data part -->
+          <tr>
+            <td colspan="2" style="padding: 2.5rem 1.4375rem; width: 100%">
+              <table style="width: 100%">
+                <tr class="thead" style="width: 100%">
+                  <td style="width: 20%">PFC</td>
+                  <td style="width: 50%">PFA</td>
+                  <td style="width: 10%">Staff Count</td>
+                  <td style="width: 20%">AMOUNT (₦)</td>
+                </tr>
+
+                <template v-for="(pfc, i) in items">
+                  <tr v-for="(pfa, k) in pfc.pfas" :key="i + '-' + k">
+                    <td
+                      style="
+                        font-weight: 400;
+                        font-size: 1.25rem;
+                        line-height: 1.875rem;
+                        color: #17517e;
+                      "
+                    >
+                      <span v-if="k == 0">{{ pfc.pfc }}</span>
+                    </td>
+                    <td>{{ pfa.pfa }}</td>
+                    <td class="gray-sm-box">{{ pfa.itemCount }}</td>
+                    <td class="blue-sm-box">
+                      {{ pfa.pfaAmount | toCurrency }}
+                    </td>
+                  </tr>
+
+                  <!-- eslint-disable-next-line vue/require-v-for-key -->
+                  <tr>
+                    <td
+                      style="
+                        font-weight: 700;
+                        font-size: 1rem;
+                        line-height: 1.5rem;
+                        color: #c0c0c0;
+                      "
+                    >
+                      Subtotal
+                    </td>
+                    <td></td>
+                    <td class="gray-sm-box" style="background: #f3efef">
+                      {{ pfc.itemCount }}
+                    </td>
+                    <td class="blue-sm-box" style="background: #eff7ff">
+                      {{ pfc.pfcAmount | toCurrency }}
+                    </td>
+                  </tr>
+                </template>
+
+                <tr>
+                  <td colspan="4" style="padding-top: 1rem"></td>
+                </tr>
+
+                <tr>
+                  <td
+                    style="
+                      padding: 10px;
+                      background: #eff7ff;
+                      font-weight: 700;
+                      font-size: 2rem;
+                      line-height: 3rem;
+                    "
+                  >
+                    TOTAL
+                  </td>
+                  <td></td>
+                  <td
+                    colspan="2"
+                    style="
+                      padding: 0.625rem 1.25rem;
+                      background: #eff7ff;
+                      font-weight: 700;
+                      font-size: 1.5rem;
+                      line-height: 2.25rem;
+                    "
+                  >
+                    {{ grandTotal | toCurrency }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--  -->
+          <tr>
+            <td style="padding: 2.5rem 0 2.5rem 1.4375rem; width: 40%">
+              <span class="">
+                <img :src="qCode" alt="" width="90" height="90" />
+              </span>
+            </td>
+
+            <td style="padding: 2.5rem 1.4375rem 2.5rem 0; width: 60%">
+              <table>
+                <tr>
+                  <th>Note to Agent</th>
+                </tr>
+                <tr>
+                  <td>
+                    Proceed to any Bank to make Payment to fund your wallet.
+                    Mandate was also sent to your email
+                  </td>
+                </tr>
+                <tr>
+                  <th>Note to Bank Teller</th>
+                </tr>
+                <tr>
+                  <td>
                     <span>
                       Visit
                       <a
@@ -125,12 +234,12 @@
                       >
                       to make payment for this mandate.
                     </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
       </div>
       <!-- end Print content -->
 
@@ -178,6 +287,12 @@ export default {
       items: [],
       grandTotal: 0,
     };
+  },
+
+  computed: {
+    loggedIn() {
+      return !!this.$store.state.user;
+    },
   },
 
   async beforeCreate() {
@@ -230,19 +345,23 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../assets/css/dashboard.css";
-.btn-print {
-  padding: 6px 1.875rem;
-  font-size: 1rem;
-  background: #17517e;
-  border: none;
-  border-radius: 1.875rem;
-  font-weight: 700;
-  color: #ffffff;
+table {
+  border-collapse: inherit;
+}
+@media print {
+  table {
+    page-break-inside: avoid;
+  }
+  #control-btns {
+    display: none !important;
+  }
+  #hubspot-messages-iframe-container {
+    display: none !important;
+  }
 }
 #printArea {
-  overflow-y: scroll;
-  height: calc(100vh - 150px);
+  overflow-y: auto;
+  height: calc(100vh - 90px);
 }
 #printArea::-webkit-scrollbar {
   display: none;
@@ -250,5 +369,69 @@ export default {
 #printArea {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+.btn-print {
+  padding: 0.375rem 1.875rem;
+  font-size: 1rem;
+  background: #17517e;
+  border: none;
+  border-radius: 1.875rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+.btn-back {
+  padding: 0.375rem 1.875rem;
+  border: 1px solid #c7c7c7;
+  border-radius: 2.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  color: #808080;
+}
+.gap-5 {
+  gap: 0.4rem;
+}
+.blue-small-text {
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+  color: #03435f;
+}
+.blue-slant-text {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #252a2f;
+}
+.blue-bold-text {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #252a2f;
+  margin-left: 4px;
+}
+.thead {
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+  color: #17517e;
+}
+.blue-sm-box {
+  padding: 10px;
+  border: 2px solid #bde2ff;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #2b2b2b;
+}
+.gray-sm-box {
+  padding: 10px;
+  border: 2px solid #eeeeee;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #2b2b2b;
 }
 </style>

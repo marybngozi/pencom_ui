@@ -76,11 +76,11 @@
   .right,
   .right-tab {
     /* width: 70%; */
-    overflow-y: visible;
+    overflow-y: auto;
     height: auto;
   }
   #dash {
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   #dash::-webkit-scrollbar {
     display: none;
