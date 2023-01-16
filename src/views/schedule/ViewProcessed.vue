@@ -13,7 +13,7 @@
 
           <div class="d-flex justify-content-between gap-3">
             <CustomSelect
-              :options="statutes"
+              :options="statues"
               class="select"
               borderColor="#DDDDDD"
               color="#252A2F"
@@ -21,18 +21,6 @@
               height="2rem"
               lineHeight="1.875rem"
               v-model="statusOption"
-            />
-
-            <CustomSelectInput
-              :options="years"
-              :default="years[0]"
-              class="select"
-              borderColor="#DDDDDD"
-              color="#252A2F"
-              width="100px"
-              height="2rem"
-              lineHeight="1.875rem"
-              v-model="yearOption"
             />
           </div>
         </div>
@@ -331,16 +319,13 @@ export default {
       currentPageItem: 1,
       invoiceNo: null,
       fetchedItems: [],
-      yearOption: null,
       statusOption: null,
-      statutes: [
-        { label: "All Statutes", value: "all" },
-        { label: "Pending", value: "processing" },
-        { label: "Failed", value: "failure" },
-        { label: "Successful", value: "success" },
+      statues: [
+        { label: "All Statues", value: -1 },
+        { label: "Paid", value: 1 },
+        { label: "Not Paid", value: 0 },
       ],
       form: {
-        itemCode: "7000",
         year: null,
         month: null,
       },
@@ -430,37 +415,29 @@ export default {
       ],
     };
   },
-  async beforeCreate() {
-    try {
-      this.getting = true;
 
-      const api = "schedule/list-processed";
-      const res = await secureAxios.post(api, this.form);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  async created() {
+    await this.getProcessedSchedule();
   },
+
+  watch: {
+    async statusOption() {
+      await this.getProcessedSchedule();
+    },
+  },
+
   computed: {
     ...mapGetters(["allItems"]),
 
     years() {
-      const yearArr = [];
+      const yearArr = ["All years"];
       for (let i = new Date().getFullYear(); i >= 1990; i--) {
         yearArr.push(i);
       }
       return yearArr;
     },
     months() {
-      const monthsArr = [];
+      const monthsArr = [{ label: "All months", value: 0 }];
       for (const value in this.$months) {
         if (Object.hasOwnProperty.call(this.$months, value)) {
           const label = this.$months[value];
@@ -485,7 +462,10 @@ export default {
         this.getting = true;
 
         const api = "schedule/list-processed";
-        const res = await secureAxios.post(api, this.form);
+        const res = await secureAxios.post(api, {
+          ...this.form,
+          statusOption: this.statusOption,
+        });
 
         this.getting = false;
         if (!res) {

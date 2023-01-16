@@ -13,7 +13,18 @@
         <div class="logo-round-box">
           <p>Company Logo</p>
           <div class="logo-div">
-            <img src="@/assets/images/null_female.png" alt="user image" />
+            <img :src="logoLink" alt="user image" />
+
+            <div class="select-icon">
+              <img src="@/assets/images/selectFile.svg" alt="icon" />
+              <input
+                name="profilePics"
+                id="profilePics"
+                accept="image/png, image/jpeg"
+                type="file"
+                @change="handleFileChange"
+              />
+            </div>
           </div>
         </div>
 
@@ -51,19 +62,19 @@
 
         <!-- small boxes -->
         <div class="small-boxes mt-5 pb-5">
-          <div class="small-box box-1">
+          <div class="col-12 col-lg-3 small-box box-1">
             <p v-company class="m-0 px-4">Number of uploaded schedules</p>
             <p v-spfca class="m-0 px-3">
               Number of Companies contributing pension
             </p>
             <div>20</div>
           </div>
-          <div class="small-box box-1">
+          <div class="col-12 col-lg-3 small-box box-1">
             <p v-company class="m-0 px-4">Number of processed schedules</p>
             <p v-spfca class="m-0 px-4">Last <br />processed pension month</p>
             <div>18</div>
           </div>
-          <div class="small-box box-2">
+          <div class="col-12 col-lg-4 small-box box-2">
             <p v-company class="m-0 px-4">Total pension processed</p>
             <p v-spfca class="m-0 px-4">Total pension Received</p>
             <div>{{ "200095400" | toCurrency }}</div>
@@ -75,8 +86,8 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { secureAxios } from "../../services/AxiosInstance";
+import { mapGetters } from "vuex";
+// import { secureAxios } from "../../services/AxiosInstance";
 
 export default {
   name: "Profile",
@@ -85,9 +96,8 @@ export default {
       checking: false,
       verifying: false,
       logoUpload: null,
-      form2: {
-        token: null,
-      },
+      logoLink:
+        "https://res.cloudinary.com/dnbbhvcbt/image/upload/v1673867354/pencom/null_female_r83gc5.png",
     };
   },
   computed: {
@@ -102,112 +112,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["setCompanyCode"]),
-
-    async checkCompanyCode() {
-      if (!this.checkReady) {
-        this.$swal({
-          icon: "error",
-          text: "Fill all fields",
-        });
-        return;
-      }
-
-      try {
-        this.checking = true;
-
-        const api = "auth/company-validate";
-        const res = await secureAxios.post(api, this.form1);
-
-        this.checking = false;
-        if (!res) {
-          return;
-        }
-
-        const { data } = res;
-
-        this.stage = 2;
-        this.$swal({
-          icon: "success",
-          text: data.message,
-        });
-      } catch (err) {
-        console.log(err);
-        this.checking = false;
-      }
-    },
-
-    async resendToken() {
-      if (!this.checkReady) {
-        this.$swal({
-          icon: "error",
-          text: "Fill all fields",
-        });
-        return;
-      }
-
-      try {
-        this.checking = true;
-
-        const api = "auth/resend-verify";
-        const res = await secureAxios.post(api, this.form1);
-
-        this.checking = false;
-        if (!res) {
-          return;
-        }
-
-        const { data } = res;
-
-        this.stage = 2;
-        this.$swal({
-          icon: "success",
-          text: data.message,
-        });
-      } catch (err) {
-        console.log(err);
-        this.checking = false;
-      }
-    },
-
-    async checkToken() {
-      if (!this.tokenReady) {
-        this.$swal({
-          icon: "error",
-          text: "Fill all fields",
-        });
-        return;
-      }
-
-      try {
-        this.verifying = true;
-
-        const api = "auth/company-verify";
-
-        const res = await secureAxios.post(api, {
-          token: this.form2.token,
-          companyCode: this.form1.companyCode,
-        });
-
-        this.verifying = false;
-        if (!res) {
-          return;
-        }
-
-        const { data } = res;
-
-        this.$swal({
-          icon: "success",
-          text: data.message,
-        });
-
-        // go to dashboard
-        this.setCompanyCode();
-        this.$router.push("/app");
-      } catch (err) {
-        console.log(err);
-        this.verifying = false;
-      }
+    handleFileChange(e) {
+      this.logoUpload = e.target.files[0];
     },
   },
 };
@@ -283,6 +189,36 @@ export default {
   border-radius: 100%;
   border: 2px solid #0090ff;
 }
+.logo-div {
+  position: relative;
+}
+.logo-div > .select-icon {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  top: 40%;
+  left: 40%;
+}
+.logo-div > .select-icon > img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+.logo-div > .select-icon > input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+}
 .profile-info {
   display: flex;
   flex-direction: row;
@@ -293,6 +229,7 @@ export default {
   height: 3rem;
   border: 1px solid #dddddd;
   border-radius: 3.125rem;
+  background: #f9f9f9;
 }
 .profile-info p {
   margin: 0;
@@ -314,6 +251,8 @@ export default {
 .small-boxes {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.7rem;
 }
 .small-box {
   display: flex;
@@ -321,7 +260,7 @@ export default {
   align-items: center;
   padding: 1.25rem;
   gap: 12px;
-  width: 230px;
+  /* width: 30%; */
   height: 156px;
   border-radius: 1.25rem;
 }

@@ -5,6 +5,7 @@
 .right-tab {
   overflow-y: scroll;
   height: calc(100vh - 70px);
+  padding-bottom: 2rem;
 }
 .left::-webkit-scrollbar,
 .left-tab::-webkit-scrollbar,
@@ -81,13 +82,14 @@
   }
   #dash {
     overflow-y: auto;
+    height: calc(100vh - 4.4rem);
   }
   #dash::-webkit-scrollbar {
     display: none;
   }
   #dash {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 label > span:last-child {

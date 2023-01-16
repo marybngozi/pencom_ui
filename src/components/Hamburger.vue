@@ -7,13 +7,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Hamburger",
+
   props: {
-    clicked: {
-      type: Boolean,
-      default: false,
-    },
     hamBlue: {
       type: Boolean,
       default: false,
@@ -28,8 +26,12 @@ export default {
     },
   },
 
+  computed: {
+    ...mapGetters(["isMenuOpen"]),
+  },
+
   watch: {
-    clicked() {
+    isMenuOpen() {
       document.querySelector("#nav-icon").classList.toggle("open");
       if (this.hamBlue) {
         document.querySelectorAll("#nav-icon span").forEach((e) => {

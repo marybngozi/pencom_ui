@@ -86,6 +86,7 @@
               class="nav-link-item"
               :class="pagePath == '/app' ? 'active' : ''"
               to="/app"
+              @click.native="closeMenu()"
             >
               Dashboard
             </router-link>
@@ -103,6 +104,7 @@
               class="nav-link-item"
               :class="pagePath == menu.path ? 'active' : ''"
               :to="menu.path"
+              @click.native="closeMenu()"
             >
               {{ menu.name }}
             </router-link>
@@ -130,12 +132,12 @@
   </nav>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   name: "SideNav",
 
   computed: {
-    ...mapGetters(["username", "userEmail", "userMenus"]),
+    ...mapGetters(["username", "userEmail", "userMenus", "isMenuOpen"]),
 
     pagePath() {
       return this.$route.path;
@@ -168,6 +170,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["toggleIsMenuOpen"]),
     ...mapActions(["logout"]),
     logoutUser() {
       setTimeout(() => {
@@ -182,6 +185,9 @@ export default {
     getPos(e) {
       const liPos = e.currentTarget.getBoundingClientRect().top;
       this.subMenuOffset = Math.round(liPos - 179);
+    },
+    closeMenu() {
+      if (this.isMenuOpen) this.toggleIsMenuOpen();
     },
   },
 };

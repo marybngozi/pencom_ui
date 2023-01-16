@@ -7,23 +7,19 @@
     </div>
 
     <div class="col-5 col-lg-8 d-flex justify-content-end mr-0 mr-mlg-5">
-      <button @click="showNavList" class="btn bell">
+      <button class="btn bell">
         <i class="far fa-bell"></i>
       </button>
 
       <button id="menuBtn" @click="showNavList" class="btn d-block d-mlg-none">
-        <Hamburger
-          :width="32"
-          :height="30"
-          :clicked="hamClicked"
-          :hamBlue="scrolled"
-        />
+        <Hamburger :width="32" :height="30" :hamBlue="scrolled" />
       </button>
     </div>
   </header>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import Hamburger from "./Hamburger.vue";
 export default {
   name: "DashHead",
@@ -46,8 +42,11 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["toggleIsMenuOpen"]),
+
     showNavList() {
-      this.hamClicked = !this.hamClicked;
+      this.toggleIsMenuOpen();
+      // this.hamClicked = !this.hamClicked;
     },
   },
 };

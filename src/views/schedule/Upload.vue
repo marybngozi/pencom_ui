@@ -1,7 +1,7 @@
 <template>
   <div id="dash" class="d-flex justify-content-between flex-wrap">
     <!-- left side -->
-    <div class="left col-lg-8 border-right pt-5 px-5">
+    <div class="left col-lg-8 border-right pt-5 px-3 px-lg-5">
       <h4 class="m-0">Upload Pension Schedule</h4>
 
       <form @submit.prevent="sendSchdeule" class="">
@@ -60,14 +60,14 @@
 
           <div class="d-flex justify-content-between">
             <button
-              class="btnLink"
+              class="btnLink text-left"
               :disabled="gettingTemplate"
               @click="downloadFile(item.excelSamplePath, 'gettingTemplate')"
             >
               Click to download Our Schedule template
             </button>
             <button
-              class="btnLink"
+              class="btnLink text-right"
               :disabled="gettingPfacodes"
               @click="downloadFile(item.excelPfaCodes, 'gettingPfacodes')"
             >
@@ -176,7 +176,7 @@ import { mapGetters } from "vuex";
 import { secureAxios } from "../../services/AxiosInstance";
 import { downloader } from "../../services/sourceData";
 import CustomSelectInput from "@/components/form/CustomSelectInput";
-import FileSelect from "@/components/schedule/FileSelect";
+import FileSelect from "@/components/form/FileSelect";
 
 export default {
   name: "UploadSchedule",
@@ -310,5 +310,11 @@ export default {
 }
 .btnLink:hover {
   text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .btnLink {
+    font-size: 0.75rem;
+    line-height: 0.9rem;
+  }
 }
 </style>

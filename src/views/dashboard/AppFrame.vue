@@ -52,28 +52,39 @@ export default {
     this.$store.dispatch("getMenus");
   },
 
-  mounted() {
-    const menuBtn = document.querySelector("#menuBtn");
-    const sideNav = document.querySelector("#sideNav");
-    // const mainSide = document.querySelector("#main");
-    let sideNavStatus = false;
-
-    menuBtn.addEventListener("click", () => {
-      if (!sideNavStatus) {
+  watch: {
+    isMenuOpen(newValue) {
+      const sideNav = document.querySelector("#sideNav");
+      if (newValue) {
         sideNav.style.width = "284px";
-        // let w = screen.width - 284;
-        // mainSide.style.width = `${w}px`;
-        sideNavStatus = !sideNavStatus;
       } else {
         sideNav.style.width = "0";
-        // mainSide.style.width = screen.width;
-        sideNavStatus = !sideNavStatus;
       }
-    });
+    },
   },
 
+  // mounted() {
+  //   const menuBtn = document.querySelector("#menuBtn");
+  //   const sideNav = document.querySelector("#sideNav");
+  //   // const mainSide = document.querySelector("#main");
+  //   let sideNavStatus = false;
+
+  //   menuBtn.addEventListener("click", () => {
+  //     if (!sideNavStatus) {
+  //       sideNav.style.width = "284px";
+  //       // let w = screen.width - 284;
+  //       // mainSide.style.width = `${w}px`;
+  //       sideNavStatus = !sideNavStatus;
+  //     } else {
+  //       sideNav.style.width = "0";
+  //       // mainSide.style.width = screen.width;
+  //       sideNavStatus = !sideNavStatus;
+  //     }
+  //   });
+  // },
+
   computed: {
-    ...mapState(["showMainOverlay"]),
+    ...mapState(["showMainOverlay", "isMenuOpen"]),
   },
 
   data() {

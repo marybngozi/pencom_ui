@@ -1,7 +1,7 @@
 <template>
   <div id="dash" class="d-flex justify-content-between flex-wrap">
     <!-- left side -->
-    <div class="left-tab col-lg-9 border-right pt-5 px-5">
+    <div class="left-tab col-lg-9 border-right pt-5 px-3 px-lg-5">
       <h4>Uploaded Pension Schedule Status</h4>
 
       <!-- pagination and filter details -->
@@ -23,7 +23,7 @@
               v-model="statusOption"
             />
 
-            <CustomSelectInput
+            <!-- <CustomSelectInput
               :options="years"
               :default="years[0]"
               class="select"
@@ -33,7 +33,7 @@
               height="2rem"
               lineHeight="1.875rem"
               v-model="yearOption"
-            />
+            /> -->
           </div>
         </div>
 
@@ -143,7 +143,7 @@
           <h5>Search Schedule</h5>
 
           <!-- form -->
-          <form @submit.prevent="getStatus" class="">
+          <form @submit.prevent="getUploadStatues" class="">
             <!-- year inout -->
             <div class="mt-3">
               <label class="d-flex justify-content-between" for="year">
@@ -185,7 +185,11 @@
             </div>
 
             <!-- Submit button -->
-            <button :disabled="getting" @click="getStatus" class="button mt-4">
+            <button
+              :disabled="getting"
+              @click="getUploadStatues"
+              class="button mt-4"
+            >
               <span>Search for schedule</span>
               <span
                 v-if="getting"
@@ -241,7 +245,10 @@ import CustomSelect from "@/components/form/CustomSelect";
 export default {
   name: "UploadStatus",
 
-  components: { CustomSelectInput, CustomSelect },
+  components: {
+    CustomSelectInput,
+    CustomSelect,
+  },
 
   data() {
     return {
@@ -289,7 +296,7 @@ export default {
       yearOption: null,
       statusOption: null,
       statues: [
-        { label: "All Statues", value: "all" },
+        { label: "All Statues", value: "0" },
         { label: "Pending", value: "processing" },
         { label: "Failed", value: "failure" },
         { label: "Successful", value: "success" },
@@ -297,24 +304,14 @@ export default {
     };
   },
 
-  async beforeCreate() {
-    try {
-      this.getting = true;
+  async created() {
+    await this.getUploadStatues();
+  },
 
-      const api = "schedule/upload-status";
-      const res = await secureAxios.get(api);
-
-      this.getting = false;
-      if (!res) {
-        return;
-      }
-
-      const { data } = res;
-      this.items = data.data;
-    } catch (err) {
-      console.log(err);
-      this.getting = false;
-    }
+  watch: {
+    async statusOption() {
+      await this.getUploadStatues();
+    },
   },
 
   computed: {
@@ -354,12 +351,15 @@ export default {
       return item ? item.itemName : null;
     },
 
-    async getStatus() {
+    async getUploadStatues() {
       try {
         this.getting = true;
 
         const api = "schedule/upload-status";
-        const res = await secureAxios.get(api);
+        const res = await secureAxios.post(api, {
+          ...this.form,
+          statusOption: this.statusOption,
+        });
 
         this.getting = false;
         if (!res) {
@@ -454,7 +454,7 @@ export default {
         });
 
         // refresh the status data
-        this.getStatus();
+        this.getUploadStatues();
       } catch (err) {
         console.log(err);
         this.uploading = false;

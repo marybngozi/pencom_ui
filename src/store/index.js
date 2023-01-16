@@ -11,6 +11,7 @@ const intialState = {
   user: null,
   items: null,
   allStates: null,
+  isMenuOpen: false,
   newMenus: [],
   menus: {
     mainMenus: [],
@@ -73,6 +74,9 @@ export default new Vuex.Store({
     userMenus: (state) => {
       return state.menus;
     },
+    isMenuOpen: (state) => {
+      return state.isMenuOpen;
+    },
   },
 
   mutations: {
@@ -94,6 +98,9 @@ export default new Vuex.Store({
     },
     saveMenus(state, menus) {
       state.menus = menus;
+    },
+    toggleIsMenuOpen(state) {
+      state.isMenuOpen = !state.isMenuOpen;
     },
     clearState(state) {
       Object.keys(state).forEach((key) => {
