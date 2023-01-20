@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 // SECURE AXIOS
 export const secureAxios = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL: process.env.VUE_APP_API_URL + "pencom",
   headers: {
     "Content-Type": "application/json",
   },
@@ -65,7 +65,7 @@ secureAxios.interceptors.response.use(
 
 // GUEST AXIOS
 export const guestAxios = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL: process.env.VUE_APP_API_URL + "pencom",
   headers: {
     "Content-Type": "application/json",
   },

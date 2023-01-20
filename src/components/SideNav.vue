@@ -8,7 +8,7 @@
           class="rounded"
           width="40"
           height="40"
-          src="@/assets/images/null_female.png"
+          :src="userLogo"
           alt="user image"
         />
       </div>
@@ -137,7 +137,13 @@ export default {
   name: "SideNav",
 
   computed: {
-    ...mapGetters(["username", "userEmail", "userMenus", "isMenuOpen"]),
+    ...mapGetters([
+      "username",
+      "userEmail",
+      "userLogo",
+      "userMenus",
+      "isMenuOpen",
+    ]),
 
     pagePath() {
       return this.$route.path;

@@ -9,75 +9,141 @@
         <button @click="$router.go(-1)" class="btn-back">Go Back</button>
       </div>
 
-      <!-- for payment -->
-      <div
-        v-if="showData"
-        id="dataArea"
-        class="d-flex justify-content-around flex-wrap mt-1 mt-lg-4"
-      >
-        <div class="box-card col-11 mx-auto mx-lg-0 col-lg-7 mt-3 mt-lg-0">
-          <div class="box-head">
-            <h6 class="font-weight-bolder">Your Payment details</h6>
+      <!-- for payment details -->
+      <div class="justify-content-center col-md-11 col-lg-9 mx-auto my-5">
+        <div v-if="showData" class="row justify-content-around mt-3">
+          <div>
+            <p class="bg-light py-3 px-4">
+              Name:
+              <span class="font-weight-bold">{{
+                paymentDetails.companyName
+              }}</span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Email:
+              <span class="font-weight-bold">{{ paymentDetails.email }}</span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Company Code:
+              <span class="font-weight-bold">{{
+                paymentDetails.companyCode
+              }}</span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Month:
+              <span class="font-weight-bold">
+                {{ $months[paymentDetails.month] }}
+              </span>
+            </p>
           </div>
 
-          <div class="box-info">
-            <p>Company Name</p>
-            <p>{{ paymentDetails.companyName }}</p>
-          </div>
-          <div class="box-info">
-            <p>Company Code</p>
-            <p>{{ paymentDetails.companyCode }}</p>
-          </div>
-          <div class="box-info">
-            <p>Invoice No</p>
-            <p>{{ paymentDetails.invoiceNo }}</p>
-          </div>
-          <div class="box-info">
-            <p>Total Amount</p>
-            <p>{{ paymentDetails.amount | toCurrency }}</p>
-          </div>
-          <div class="box-info">
-            <p>Contributing year</p>
-            <p>{{ paymentDetails.year }}</p>
-          </div>
-          <div class="box-info">
-            <p>Contributing month</p>
-            <p>{{ $months[paymentDetails.month] }}</p>
+          <div>
+            <p class="bg-light py-3 px-4">
+              Invoice No:
+              <span class="font-weight-bold">{{
+                paymentDetails.invoiceNo
+              }}</span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Amount:
+              <span class="font-weight-bold">
+                {{ paymentDetails.amount | toCurrency }}
+              </span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Item:
+              <span class="font-weight-bold">
+                {{ paymentDetails.itemName }}
+              </span>
+            </p>
+            <p class="bg-light py-3 px-4">
+              Year:
+              <span class="font-weight-bold">
+                {{ paymentDetails.year }}
+              </span>
+            </p>
           </div>
         </div>
 
-        <!-- for payment options -->
-        <div
-          class="box-card col-11 mx-auto mx-lg-0 col-lg-4 mt-5 mt-lg-0 mb-4 mb-lg-0"
-        >
-          <div class="box-head">
-            <h6 class="font-weight-bolder">Your Payment Options</h6>
+        <div v-if="!showData" class="row justify-content-center mt-5">
+          <div
+            class="spinner-grow text-secondary"
+            style="width: 3rem; height: 3rem"
+            role="status"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <hr v-if="showData" />
+
+      <!-- for payment options -->
+      <div
+        v-if="showData"
+        class="justify-content-center col-md-11 col-lg-9 mx-auto mt-3 mb-4"
+      >
+        <h6 class="text-center font-weight-bolder">Select Payment Options</h6>
+
+        <div class="row justify-content-around mt-3">
+          <div class="col-md-4" style="height: 200px">
+            <button
+              @click="walletPayment()"
+              class="btn py-4 w-100 h-100 bg-light"
+              :disabled="!enableWallet || wpaying"
+            >
+              <span class="text-info font-weight-bold">Wallet</span>
+              <br /><br />
+              <span
+                >Wallet Amount:
+                <span class="font-weight-bold">{{
+                  wallet.amount | toCurrency
+                }}</span></span
+              ><br /><br />
+              <small class="text-black-50" v-if="enableWallet">
+                Your Wallet will be debited, since there is enough fund
+              </small>
+              <small class="text-black-50" v-else>
+                Your wallet is empty<br />
+                Use the Quick Teller to fund your Wallet
+              </small>
+            </button>
           </div>
 
-          <div class="pay-btns">
-            <button class="pay-btn pay-btn-blue">Pay by Bank Transfer</button>
-            <button class="pay-btn pay-btn-white">Pay by USSD</button>
+          <div class="col-md-4" style="height: 200px">
+            <!-- TODO Disabled untill real book and hold is implemented -->
+            <button
+              disabled
+              @click="bookAndHold()"
+              class="btn py-4 w-100 h-100 bg-light"
+            >
+              <span class="text-info font-weight-bold">Web Payment</span>
+              <br /><br />
+              <small class="text-black-50">
+                Click to Pay using Quickteller, Bank Transfer, Card or USSD
+              </small>
+            </button>
+          </div>
+
+          <div class="col-md-4" style="height: 200px">
             <router-link
               target="_blank"
               :to="{
                 name: 'schedule-mandate',
                 params: { invoiceNo: paymentDetails.invoiceNo },
               }"
-              class="pay-btn pay-btn-blue"
+              class="btn w-100 h-100 bg-light text-info font-weight-bold pt-5"
+              :disabled="!enableWallet"
             >
-              Pay at Bank
+              <span> Bank Branch </span>
+              <br /><br />
+              <small class="text-black-50">
+                You have to take the Mandate and proceed to make payment in the
+                Bank over the counter
+              </small>
             </router-link>
           </div>
         </div>
-      </div>
-
-      <!-- loader -->
-      <div
-        v-else-if="!showData && getting"
-        class="text-center mt-5 text-secondary"
-      >
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-        <span>Getting Payment details...</span>
       </div>
     </div>
   </section>
@@ -239,17 +305,6 @@ export default {
   height: 72px;
   background: #f9f9f9;
 }
-#dataArea {
-  overflow-y: auto;
-  height: calc(100vh - 185px);
-}
-#dataArea::-webkit-scrollbar {
-  display: none;
-}
-#dataArea {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
 .btn-back {
   padding: 0.275rem 1.25rem;
   height: 2.6rem;
@@ -261,62 +316,5 @@ export default {
   color: #808080;
   margin-right: 2.19rem;
   background: transparent;
-}
-.gap-51 {
-  gap: 3.1rem;
-}
-.box-card {
-  border: 1px solid #c7c7c7;
-  border-radius: 20px;
-  padding: 0;
-  height: fit-content;
-}
-.box-head {
-  background: #f9f9f9;
-  border-radius: 20px 20px 0 0;
-}
-.box-head h6 {
-  padding: 1.6rem 1.5rem;
-}
-.box-info {
-  display: flex;
-  justify-content: space-between;
-  padding: 1.2rem 1.5rem 0 1.5rem;
-}
-.box-info p {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #252a2f;
-}
-.box-info p:first-child {
-  text-transform: uppercase;
-  font-weight: 400;
-}
-.box-info p:last-child {
-  font-weight: 700;
-}
-.pay-btns {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.pay-btn {
-  padding: 0.625rem 1.25rem;
-  border-radius: 2.5rem;
-  width: 85%;
-  margin: 1rem auto;
-  text-align: center;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  border: 1px solid #0090ff;
-}
-.pay-btn.pay-btn-blue {
-  background: #0090ff;
-  color: #ffffff;
-}
-.pay-btn.pay-btn-white {
-  color: #0090ff;
-  background: #ffffff;
 }
 </style>

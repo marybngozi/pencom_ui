@@ -58,7 +58,7 @@
           <!-- File Options -->
           <FileSelect v-model="form.fileUpload" />
 
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between mt-2">
             <button
               class="btnLink text-left"
               :disabled="gettingTemplate"

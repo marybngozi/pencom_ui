@@ -3,11 +3,7 @@
     <div class="inner-boxx">
       <div class="gray-boxx">
         <!-- left picture -->
-        <img
-          class="dp"
-          src="@/assets/images/null_female.png"
-          alt="profile picture"
-        />
+        <img class="dp" :src="userLogo" alt="profile picture" />
 
         <div class="profile-right">
           <h5>{{ username }}</h5>
@@ -57,6 +53,7 @@ export default {
   name: "ProfileBox",
   computed: {
     ...mapGetters([
+      "userLogo",
       "username",
       "pfaCode",
       "userEmail",

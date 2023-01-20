@@ -39,6 +39,8 @@ Vue.filter("toCurrency", (value) => {
   return "₦ " + formatter.format(Number(value));
 });
 
+Vue.prototype.$appUrl = process.env.VUE_APP_API_URL;
+
 /* -------------------------- MONTHS PROTOTYPES -------------------------- */
 const months = {
   1: "January",

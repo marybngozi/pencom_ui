@@ -1,7 +1,7 @@
 <template>
   <section class="dash px-3 pb-5 pt-2">
     <div class="coln mb-5">
-      <!-- print button -->
+      <!-- print & back button -->
       <div id="control-btns" class="d-flex justify-content-end gap-5 py-2 mb-3">
         <button v-if="loggedIn" @click="$router.go(-1)" class="btn-back">
           Back
@@ -211,16 +211,16 @@
             <td style="padding: 2.5rem 1.4375rem 2.5rem 0; width: 60%">
               <table>
                 <tr>
-                  <th>Note to Agent</th>
+                  <th style="font-size: 1.3rem">To make payment</th>
                 </tr>
                 <tr>
                   <td>
-                    Proceed to any Bank to make Payment to fund your wallet.
-                    Mandate was also sent to your email
+                    Proceed to any commercial bank, use
+                    <b>Paydirect Pencom Payment</b> to make payment
                   </td>
                 </tr>
                 <tr>
-                  <th>Note to Bank Teller</th>
+                  <td style="font-size: 0.7rem"><b>OR</b></td>
                 </tr>
                 <tr>
                   <td>
@@ -229,10 +229,10 @@
                       <a
                         class="text-decoration-none"
                         target="_blank"
-                        href="https://www.quickteller.com/"
-                        >https://www.quickteller.com</a
+                        href="https://biopay.ng/pencom/"
+                        >https://biopay.ng/pencom</a
                       >
-                      to make payment for this mandate.
+                      to make payment via the web.
                     </span>
                   </td>
                 </tr>

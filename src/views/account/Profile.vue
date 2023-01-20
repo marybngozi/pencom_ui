@@ -3,7 +3,13 @@
     <!-- Gray plane -->
     <div class="gray-plane">
       <h5>{{ username }} Profile</h5>
-      <button>Edit</button>
+      <div>
+        <span v-if="updateMode">
+          <button @click="saveUpdate" class="btn-blue">Save</button>
+          <button @click="cancelUpdate" class="btn-gray">Cancel</button>
+        </span>
+        <button v-else @click="setEdit" class="btn-blue">Edit</button>
+      </div>
     </div>
 
     <!-- Profile body  -->
@@ -30,10 +36,12 @@
 
         <!-- profile details -->
         <div class="mt-5">
-          <div class="profile-info">
+          <div class="profile-info" :class="`${updateMode ? 'active' : ''}`">
             <p><span v-company>Company</span> Name</p>
-            <p>{{ username }}</p>
+            <input v-if="updateMode" type="text" v-model="form.username" />
+            <p v-else>{{ username }}</p>
           </div>
+
           <div class="profile-info">
             <p><span v-company>Company</span> Email</p>
             <p>{{ userEmail }}</p>
@@ -41,6 +49,10 @@
           <div v-company class="profile-info">
             <p>Employer Code</p>
             <p>{{ companyCode }}</p>
+          </div>
+          <div v-company class="profile-info">
+            <p>Company RC</p>
+            <p>RC-{{ user ? user.companyRc : "" }}</p>
           </div>
           <div v-staff class="profile-info">
             <p>PFA</p>
@@ -50,9 +62,25 @@
             <p>RSA PIN</p>
             <p>{{ rsaPin }}</p>
           </div>
-          <div v-staff class="profile-info">
+          <div class="profile-info" :class="`${updateMode ? 'active' : ''}`">
             <p>Phone Number</p>
-            <p>08101194108</p>
+            <input v-if="updateMode" type="tel" v-model="form.phone" />
+            <p v-else>{{ user ? user.phone : "" }}</p>
+          </div>
+          <div class="profile-info" :class="`${updateMode ? 'active' : ''}`">
+            <p>Address</p>
+            <input v-if="updateMode" type="text" v-model="form.address" />
+            <p v-else>{{ user ? user.address : "" }}</p>
+          </div>
+          <div class="profile-info" :class="`${updateMode ? 'active' : ''}`">
+            <p>City</p>
+            <input v-if="updateMode" type="text" v-model="form.city" />
+            <p v-else>{{ user ? user.city : "" }}</p>
+          </div>
+          <div class="profile-info" :class="`${updateMode ? 'active' : ''}`">
+            <p>State</p>
+            <input v-if="updateMode" type="text" v-model="form.state" />
+            <p v-else>{{ user ? user.state : "" }}</p>
           </div>
           <div class="profile-info">
             <p>Date of Registration</p>
@@ -63,21 +91,19 @@
         <!-- small boxes -->
         <div class="small-boxes mt-5 pb-5">
           <div class="col-12 col-lg-3 small-box box-1">
-            <p v-company class="m-0 px-4">Number of uploaded schedules</p>
-            <p v-spfca class="m-0 px-3">
-              Number of Companies contributing pension
-            </p>
-            <div>20</div>
+            <p v-company class="m-0">Number of uploaded schedules</p>
+            <p v-spfca class="m-0">Number of Companies contributing pension</p>
+            <div>{{ countAll }}</div>
           </div>
           <div class="col-12 col-lg-3 small-box box-1">
-            <p v-company class="m-0 px-4">Number of processed schedules</p>
-            <p v-spfca class="m-0 px-4">Last <br />processed pension month</p>
-            <div>18</div>
+            <p v-company class="m-0">Number of paid schedules</p>
+            <p v-spfca class="m-0">Last <br />processed pension month</p>
+            <div>{{ countPaid }}</div>
           </div>
           <div class="col-12 col-lg-4 small-box box-2">
             <p v-company class="m-0 px-4">Total pension processed</p>
             <p v-spfca class="m-0 px-4">Total pension Received</p>
-            <div>{{ "200095400" | toCurrency }}</div>
+            <div>{{ totalProcessed | toCurrency }}</div>
           </div>
         </div>
       </div>
@@ -86,18 +112,42 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-// import { secureAxios } from "../../services/AxiosInstance";
+import { mapGetters, mapActions } from "vuex";
+import { secureAxios } from "../../services/AxiosInstance";
 
 export default {
   name: "Profile",
   data() {
+    const user = this.$store.state.user;
+    const form = {
+      username: this.$store.getters.username,
+      firstName: null,
+      lastName: null,
+      otherName: null,
+      companyName: null,
+      city: null,
+      address: null,
+      state: null,
+      phone: null,
+    };
+
+    for (const key in form) {
+      if (Object.hasOwnProperty.call(form, key)) {
+        form[key] = user[key] ? user[key] : form[key];
+      }
+    }
     return {
-      checking: false,
-      verifying: false,
+      updating: false,
+      getting: false,
+      updateMode: false,
       logoUpload: null,
-      logoLink:
-        "https://res.cloudinary.com/dnbbhvcbt/image/upload/v1673867354/pencom/null_female_r83gc5.png",
+      logoLink: this.$store.getters.userLogo,
+      user: this.$store.state.user,
+      userType: this.$store.getters.userType,
+      countAll: 0,
+      countPaid: 0,
+      totalProcessed: 0,
+      form: form,
     };
   },
   computed: {
@@ -108,12 +158,113 @@ export default {
       "userEmail",
       "userDateOfCreation",
       "rsaPin",
+      "userLogo",
     ]),
-  },
 
+    updateReady() {
+      return true;
+    },
+  },
+  async created() {
+    await this.getProfile();
+  },
+  watch: {
+    "form.username"(newValue) {
+      if (!newValue) return;
+      if (this.userType != 200 && this.userType != 300) {
+        this.form.companyName = newValue;
+        return;
+      }
+      const names = newValue.split(" ");
+      this.form.lastName = names[0];
+      this.form.firstName = names[1] ? names[1] : null;
+      this.form.otherName = names[2] ? names[2] : null;
+    },
+  },
   methods: {
+    ...mapActions(["saveUserInfo"]),
     handleFileChange(e) {
       this.logoUpload = e.target.files[0];
+      this.logoLink = URL.createObjectURL(this.logoUpload);
+      this.form.logoUpload = this.logoUpload;
+      this.updateMode = true;
+    },
+    setEdit() {
+      this.updateMode = true;
+    },
+    cancelUpdate() {
+      this.logoLink = this.userLogo;
+      this.updateMode = false;
+    },
+    async getProfile() {
+      try {
+        this.getting = true;
+
+        const api = "auth/profile";
+
+        const res = await secureAxios.get(api);
+
+        this.getting = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        this.data = data.data;
+        this.countAll = data.data.countAll;
+        this.countPaid = data.data.countPaid;
+        this.totalProcessed = data.data.totalProcessed;
+      } catch (err) {
+        console.log(err);
+        this.getting = false;
+      }
+    },
+    async saveUpdate() {
+      if (!this.updateReady) {
+        this.$swal({
+          icon: "error",
+          text: "Fill all fields",
+        });
+        return;
+      }
+
+      try {
+        this.updating = true;
+
+        const api = "auth/profile";
+
+        // build the multipart form data
+        const formData = new FormData();
+        Object.keys(this.form).forEach((key) => {
+          formData.append(key, this.form[key]);
+        });
+
+        const res = await secureAxios.post(api, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.updating = false;
+        if (!res) {
+          return;
+        }
+
+        const { data } = res;
+
+        // clear the form
+        this.saveUserInfo({ user: data.data, token: null });
+        this.updateMode = false;
+
+        this.$swal({
+          icon: "success",
+          text: data.message,
+        });
+      } catch (err) {
+        console.log(err);
+        this.updating = false;
+      }
     },
   },
 };
@@ -147,22 +298,33 @@ export default {
   color: #252a2f;
   margin-bottom: 0;
 }
+.gray-plane > div > span {
+  display: flex;
+  gap: 0.6rem;
+}
 .gray-plane button {
   border: none;
-  padding: 12px 1.25rem;
+  padding: 0.7rem 1.25rem;
   width: 100px;
-  height: 2.5rem;
-  background: #0090ff;
+  /* height: 2.5rem; */
   border-radius: 3.125rem;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 1rem;
+}
+.gray-plane button.btn-blue {
   color: #ffffff;
+  background: #0090ff;
+}
+.gray-plane button.btn-gray {
+  color: #000000;
+  background: transparent;
+  border: 1px solid #000000;
 }
 .profile-body {
   margin: 2.4375rem auto 0 auto;
   width: 97%;
-  max-width: 750px;
+  max-width: 800px;
 }
 .logo-round-box {
   display: flex;
@@ -183,7 +345,7 @@ export default {
   padding: 0;
   color: #5e6974;
 }
-.logo-round-box img {
+.logo-div > img {
   width: 120px;
   height: 120px;
   border-radius: 100%;
@@ -224,12 +386,16 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem;
-  margin-bottom: 15px;
+  padding: 1rem;
+  margin-bottom: 0.9rem;
   height: 3rem;
   border: 1px solid #dddddd;
   border-radius: 3.125rem;
   background: #f9f9f9;
+}
+.profile-info.active {
+  border: 1px solid #80b7ff;
+  background: #ffffff;
 }
 .profile-info p {
   margin: 0;
@@ -247,6 +413,15 @@ export default {
   font-size: 1rem;
   line-height: 1.3125rem;
   color: #252a2f;
+}
+.profile-info input {
+  width: 80%;
+  border: none;
+  background: transparent;
+  text-align: right;
+}
+.profile-info input:focus {
+  outline: none;
 }
 .small-boxes {
   display: flex;

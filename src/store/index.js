@@ -62,6 +62,11 @@ export default new Vuex.Store({
     userEmail: (state) => {
       return state.user ? state.user.email : null;
     },
+    userLogo: (state) => {
+      return state.user && state.user.logo
+        ? process.env.VUE_APP_API_URL + "logos/" + state.user.logo
+        : process.env.VUE_APP_API_URL + "logos/null_female.png";
+    },
     userDateOfCreation: (state) => {
       return state.user ? state.user.createdAt : null;
     },
@@ -114,7 +119,7 @@ export default new Vuex.Store({
 
   actions: {
     saveUserInfo({ commit }, { user, token }) {
-      localStorage.setItem(process.env.VUE_APP_tokenName, token);
+      if (token) localStorage.setItem(process.env.VUE_APP_tokenName, token);
 
       if (user.userType == 100 && !user.companyCode) {
         commit("toggleMainOverlay", true);

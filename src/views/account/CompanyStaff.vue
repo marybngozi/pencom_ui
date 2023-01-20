@@ -265,7 +265,7 @@ export default {
         /*  warn */
         const result = await this.$swal({
           icon: "question",
-          title: `Are you sure you want to make ${this.staff.firstName} ${this.staff.lastName} an Admin staff?`,
+          title: `Are you sure you want to make ${this.staff.firstName} ${this.staff.lastName} a Sub-admin staff?`,
           text: "This staff will be able to perform authorized actions for this company",
           showDenyButton: true,
           confirmButtonText: "Yes",
