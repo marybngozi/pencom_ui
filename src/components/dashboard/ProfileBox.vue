@@ -88,6 +88,7 @@ export default {
   height: 80px;
   border: 2px solid #d7e0ff;
   border-radius: 60px;
+  object-fit: cover;
 }
 h5 {
   font-weight: 700;

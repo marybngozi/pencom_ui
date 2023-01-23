@@ -6,6 +6,7 @@
       <div class="d-flex justify-content-center">
         <img
           class="rounded"
+          style="object-fit: cover"
           width="40"
           height="40"
           :src="userLogo"

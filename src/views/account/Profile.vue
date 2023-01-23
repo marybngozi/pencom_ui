@@ -350,6 +350,7 @@ export default {
   height: 120px;
   border-radius: 100%;
   border: 2px solid #0090ff;
+  object-fit: cover;
 }
 .logo-div {
   position: relative;
