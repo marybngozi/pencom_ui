@@ -64,8 +64,8 @@ export default new Vuex.Store({
     },
     userLogo: (state) => {
       return state.user && state.user.logo
-        ? process.env.VUE_APP_API_URL + "logos/" + state.user.logo
-        : process.env.VUE_APP_API_URL + "logos/null_female.png";
+        ? process.env.VUE_APP_API_URL + "/public/logos/" + state.user.logo
+        : process.env.VUE_APP_API_URL + "/public/logos/null_female.png";
     },
     userDateOfCreation: (state) => {
       return state.user ? state.user.createdAt : null;
